@@ -1,0 +1,107 @@
+{
+  "id": "4ff56c54-b5f0-4500-860b-b895a4943ee8",
+  "sku": "DPS-4FF56C54",
+  "title": "Aesthetic Instagram Canva Carousel Templates | Social Media & Canva Templates | Instant Download",
+  "slug": "aesthetic-instagram-canva-carousel-templates",
+  "category": "Social Media & Canva Templates",
+  "sub_category": "Templates",
+  "status": "pending_approval",
+  "version": "1.0.0",
+  "file_hash": "430ff56cd5c6c2dfd2e4a40440fb53280a91eb14e2610da04af7169c19302c9d",
+  "pricing": {
+    "base_price": 19.99,
+    "currency": "USD",
+    "discount_percent": 0
+  },
+  "license": "Commercial Use Included",
+  "marketplaces": {
+    "etsy": {
+      "status": "draft",
+      "listing_id": null
+    },
+    "gumroad": {
+      "status": "draft",
+      "product_id": null
+    },
+    "lemonsqueezy": {
+      "status": "draft",
+      "variant_id": null
+    },
+    "custom_web": {
+      "status": "draft",
+      "slug": "aesthetic-instagram-canva-carousel-templates"
+    }
+  },
+  "created_at": "2026-08-08T23:49:40Z",
+  "updated_at": "2026-08-08T23:49:40Z",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-08T23:49:40Z",
+      "changes": "Initial payload ingestion & SEO generation",
+      "author": "AI COO"
+    }
+  ],
+  "tags": [
+    "social media canva t",
+    "aesthetic instagram",
+    "digital download",
+    "instant download",
+    "printable template",
+    "aesthetic planner",
+    "minimalist design",
+    "custom template",
+    "productivity os",
+    "commercial license",
+    "creator assets",
+    "digital os",
+    "pro bundle"
+  ],
+  "description": "# Aesthetic Instagram Canva Carousel Templates - Instant Digital Download\n\nElevate your workflow with **Aesthetic Instagram Canva Carousel Templates**, professionally crafted by Digital Product Studio. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.\n\n---\n\n### \ud83c\udf1f WHAT IS INCLUDED\n- **1x Primary Digital Payload Asset** (High-Resolution / Source Format)\n- **1x PDF Instant Customer Guide** (Step-by-step setup instructions)\n- **Bonus Creator Resources & Licensing Document**\n\n---\n\n### \ud83c\udfaf KEY HIGHLIGHTS\n- **Instant Access**: Download immediately upon purchase confirmation.\n- **Fully Customizable**: Personalize colors, layouts, and data fields effortlessly.\n- **Cross-Platform Compatibility**: Works flawlessly on Desktop, Laptop, and Tablet devices.\n- **Commercial Use Option**: Suitable for personal and client projects.\n\n---\n\n### \u2753 FREQUENTLY ASKED QUESTIONS (FAQ)\n\n**Q: How do I receive my download?**\nA: Once payment is processed, Etsy / the sales platform will provide an instant link to download your PDF guide and zip archive.\n\n**Q: Can I edit these files?**\nA: Yes! Files are fully unlocked for customization based on your personal license.\n\n---\n*\u00a9 Digital Product Studio. All rights reserved.*\n",
+  "faqs": [
+    {
+      "question": "How do I download my file?",
+      "answer": "Instant download available via order confirmation page."
+    },
+    {
+      "question": "Is commercial use allowed?",
+      "answer": "Included under Commercial Use Included."
+    }
+  ],
+  "previews": [
+    {
+      "type": "cover",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\previews\\preview_1_cover.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "feature",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\previews\\preview_2_feature.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "usage",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\previews\\preview_3_usage.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "palette",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\previews\\preview_4_palette.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "mockup",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\previews\\preview_5_mockup.png",
+      "width": 2700,
+      "height": 2025
+    }
+  ],
+  "files": {
+    "primary_asset": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\payload.zip",
+    "customer_instructions_pdf": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\4ff56c54-b5f0-4500-860b-b895a4943ee8\\Customer_Instructions.pdf"
+  }
+}
