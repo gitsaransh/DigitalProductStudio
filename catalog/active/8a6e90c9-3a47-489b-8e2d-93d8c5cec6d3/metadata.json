@@ -1,107 +1,107 @@
-{
-  "id": "8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3",
-  "sku": "DPS-8A6E90C9",
-  "title": "10,000+ ChatGPT & Claude Prompt Vault | Ai Prompts & Automation Kits | Instant Download",
-  "slug": "10,000+-chatgpt-&-claude-prompt-vault",
-  "category": "AI Prompts & Automation Kits",
-  "sub_category": "Templates",
-  "status": "pending_approval",
-  "version": "1.0.0",
-  "file_hash": "59df926e6566f964773587205de6268b87cf1549c023cf3c35c85f178fdc87e4",
-  "pricing": {
-    "base_price": 29.99,
-    "currency": "USD",
-    "discount_percent": 0
-  },
-  "license": "Personal Use Only",
-  "marketplaces": {
-    "etsy": {
-      "status": "draft",
-      "listing_id": null
-    },
-    "gumroad": {
-      "status": "draft",
-      "product_id": null
-    },
-    "lemonsqueezy": {
-      "status": "draft",
-      "variant_id": null
-    },
-    "custom_web": {
-      "status": "draft",
-      "slug": "10,000+-chatgpt-&-claude-prompt-vault"
-    }
-  },
-  "created_at": "2026-08-08T23:49:42Z",
-  "updated_at": "2026-08-08T23:49:42Z",
-  "changelog": [
-    {
-      "version": "1.0.0",
-      "date": "2026-08-08T23:49:42Z",
-      "changes": "Initial payload ingestion & SEO generation",
-      "author": "AI COO"
-    }
-  ],
-  "tags": [
-    "ai prompts automatio",
-    "10000 chatgpt claude",
-    "digital download",
-    "instant download",
-    "printable template",
-    "aesthetic planner",
-    "minimalist design",
-    "custom template",
-    "productivity os",
-    "commercial license",
-    "creator assets",
-    "digital os",
-    "pro bundle"
-  ],
-  "description": "# 10,000+ ChatGPT & Claude Prompt Vault - Instant Digital Download\n\nElevate your workflow with **10,000+ ChatGPT & Claude Prompt Vault**, professionally crafted by Digital Product Studio. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.\n\n---\n\n### \ud83c\udf1f WHAT IS INCLUDED\n- **1x Primary Digital Payload Asset** (High-Resolution / Source Format)\n- **1x PDF Instant Customer Guide** (Step-by-step setup instructions)\n- **Bonus Creator Resources & Licensing Document**\n\n---\n\n### \ud83c\udfaf KEY HIGHLIGHTS\n- **Instant Access**: Download immediately upon purchase confirmation.\n- **Fully Customizable**: Personalize colors, layouts, and data fields effortlessly.\n- **Cross-Platform Compatibility**: Works flawlessly on Desktop, Laptop, and Tablet devices.\n- **Commercial Use Option**: Suitable for personal and client projects.\n\n---\n\n### \u2753 FREQUENTLY ASKED QUESTIONS (FAQ)\n\n**Q: How do I receive my download?**\nA: Once payment is processed, Etsy / the sales platform will provide an instant link to download your PDF guide and zip archive.\n\n**Q: Can I edit these files?**\nA: Yes! Files are fully unlocked for customization based on your personal license.\n\n---\n*\u00a9 Digital Product Studio. All rights reserved.*\n",
-  "faqs": [
-    {
-      "question": "How do I download my file?",
-      "answer": "Instant download available via order confirmation page."
-    },
-    {
-      "question": "Is commercial use allowed?",
-      "answer": "Included under Personal Use Only."
-    }
-  ],
-  "previews": [
-    {
-      "type": "cover",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_1_cover.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "feature",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_2_feature.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "usage",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_3_usage.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "palette",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_4_palette.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "mockup",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_5_mockup.png",
-      "width": 2700,
-      "height": 2025
-    }
-  ],
-  "files": {
-    "primary_asset": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\payload.zip",
-    "customer_instructions_pdf": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\Customer_Instructions.pdf"
-  }
+{
+  "id": "8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3",
+  "sku": "DPH-8A6E90C9",
+  "title": "10,000+ ChatGPT & Claude Prompt Vault | Ai Prompts & Automation Kits | Instant Download",
+  "slug": "10,000+-chatgpt-&-claude-prompt-vault",
+  "category": "AI Prompts & Automation Kits",
+  "sub_category": "Templates",
+  "status": "pending_approval",
+  "version": "1.0.0",
+  "file_hash": "59df926e6566f964773587205de6268b87cf1549c023cf3c35c85f178fdc87e4",
+  "pricing": {
+    "base_price": 29.99,
+    "currency": "USD",
+    "discount_percent": 0
+  },
+  "license": "Personal Use Only",
+  "marketplaces": {
+    "etsy": {
+      "status": "draft",
+      "listing_id": null
+    },
+    "gumroad": {
+      "status": "draft",
+      "product_id": null
+    },
+    "lemonsqueezy": {
+      "status": "draft",
+      "variant_id": null
+    },
+    "custom_web": {
+      "status": "draft",
+      "slug": "10,000+-chatgpt-&-claude-prompt-vault"
+    }
+  },
+  "created_at": "2026-08-08T23:49:42Z",
+  "updated_at": "2026-08-08T23:49:42Z",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-08-08T23:49:42Z",
+      "changes": "Initial payload ingestion & SEO generation",
+      "author": "AI COO"
+    }
+  ],
+  "tags": [
+    "ai prompts automatio",
+    "10000 chatgpt claude",
+    "digital download",
+    "instant download",
+    "printable template",
+    "aesthetic planner",
+    "minimalist design",
+    "custom template",
+    "productivity os",
+    "commercial license",
+    "creator assets",
+    "digital os",
+    "pro bundle"
+  ],
+  "description": "# 10,000+ ChatGPT & Claude Prompt Vault - Instant Digital Download\n\nElevate your workflow with **10,000+ ChatGPT & Claude Prompt Vault**, professionally crafted by Digital Products House. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.\n\n---\n\n### \ud83c\udf1f WHAT IS INCLUDED\n- **1x Primary Digital Payload Asset** (High-Resolution / Source Format)\n- **1x PDF Instant Customer Guide** (Step-by-step setup instructions)\n- **Bonus Creator Resources & Licensing Document**\n\n---\n\n### \ud83c\udfaf KEY HIGHLIGHTS\n- **Instant Access**: Download immediately upon purchase confirmation.\n- **Fully Customizable**: Personalize colors, layouts, and data fields effortlessly.\n- **Cross-Platform Compatibility**: Works flawlessly on Desktop, Laptop, and Tablet devices.\n- **Commercial Use Option**: Suitable for personal and client projects.\n\n---\n\n### \u2753 FREQUENTLY ASKED QUESTIONS (FAQ)\n\n**Q: How do I receive my download?**\nA: Once payment is processed, Etsy / the sales platform will provide an instant link to download your PDF guide and zip archive.\n\n**Q: Can I edit these files?**\nA: Yes! Files are fully unlocked for customization based on your personal license.\n\n---\n*\u00a9 Digital Products House. All rights reserved.*\n",
+  "faqs": [
+    {
+      "question": "How do I download my file?",
+      "answer": "Instant download available via order confirmation page."
+    },
+    {
+      "question": "Is commercial use allowed?",
+      "answer": "Included under Personal Use Only."
+    }
+  ],
+  "previews": [
+    {
+      "type": "cover",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_1_cover.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "feature",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_2_feature.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "usage",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_3_usage.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "palette",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_4_palette.png",
+      "width": 2700,
+      "height": 2025
+    },
+    {
+      "type": "mockup",
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\previews\\preview_5_mockup.png",
+      "width": 2700,
+      "height": 2025
+    }
+  ],
+  "files": {
+    "primary_asset": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\payload.zip",
+    "customer_instructions_pdf": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3\\Customer_Instructions.pdf"
+  }
 }
