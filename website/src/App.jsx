@@ -12,6 +12,7 @@ import './coo/coo.css';
 import Home from './pages/Home.jsx';
 import Products from './pages/Products.jsx';
 import Categories from './pages/Categories.jsx';
+import CategoryDetail from './pages/CategoryDetail.jsx';
 import Bundles from './pages/Bundles.jsx';
 import FreeResources from './pages/FreeResources.jsx';
 import About from './pages/About.jsx';
@@ -104,6 +105,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/categories" element={<Categories />} />
+          <Route path="/categories/:slug" element={<CategoryDetail />} />
           <Route path="/bundles" element={<Bundles />} />
           <Route path="/membership" element={<Membership />} />
           <Route path="/free" element={<FreeResources />} />

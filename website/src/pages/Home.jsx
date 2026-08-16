@@ -9,6 +9,8 @@ import BlogCard from '../components/BlogCard.jsx';
 import TestimonialCard from '../components/TestimonialCard.jsx';
 import { PRODUCTS, CATEGORIES, BLOG_POSTS, TESTIMONIALS } from '../data/index.js';
 
+const VISIBLE_CATEGORIES = CATEGORIES.filter(c => c.visible);
+
 
 /* ─── WHY CHOOSE US data ─── */
 const WHY = [
@@ -99,9 +101,9 @@ export default function Home() {
               gap: '10px',
               alignItems: 'center',
             }}>
-              {['Excel', 'Notion', 'Canva', 'AI', 'Business Templates'].map((cat, i) => (
+              {['Excel Templates', 'Notion', 'Canva', 'AI', 'Business Templates'].map((cat, i) => (
                 <React.Fragment key={cat}>
-                  <span style={{ color: 'var(--text-muted)' }}>{cat}</span>
+                  <span style={{ color: cat === 'Excel Templates' ? 'var(--emerald)' : 'var(--text-muted)' }}>{cat}</span>
                   {i < 4 && <span style={{ color: 'var(--border-accent)', fontSize: '18px', lineHeight: 1 }}>•</span>}
                 </React.Fragment>
               ))}
@@ -146,8 +148,8 @@ export default function Home() {
           </div>
 
           <div className="cat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-            {CATEGORIES.map((cat, i) => (
-              <Link key={cat.slug} to="/categories" style={{ textDecoration: 'none' }}>
+            {VISIBLE_CATEGORIES.map((cat, i) => (
+              <Link key={cat.slug} to={`/categories/${cat.slug}`} style={{ textDecoration: 'none' }}>
                 <div
                   className="glass category-card-premium animate-fade-in-up"
                   style={{ animationDelay: `${i * 0.06}s` }}

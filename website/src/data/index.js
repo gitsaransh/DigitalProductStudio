@@ -190,15 +190,129 @@ export const PRODUCTS = [
   },
 ];
 
+// LAUNCH CATEGORY CONFIG
+// visible: true  → shown in UI
+// visible: false → hidden in UI, preserved for future activation
+// Finance is intentionally absent here — it lives as an Excel subcategory below.
 export const CATEGORIES = [
-  { slug: "excel", name: "Excel Templates", icon: "📊", count: 32, color: "#217346", gradient: "linear-gradient(135deg, rgba(33,115,70,0.18), rgba(33,115,70,0.05))", description: "Power-user spreadsheets for finance, budgeting, project tracking and business ops." },
-  { slug: "notion", name: "Notion Systems", icon: "⬛", count: 24, color: "var(--text-muted)", gradient: "linear-gradient(135deg, rgba(148,163,184,0.18), rgba(148,163,184,0.04))", description: "Complete Notion workspaces — creator OS, business dashboards, project management." },
-  { slug: "canva", name: "Canva Templates", icon: "🎨", count: 41, color: "#7D2AE8", gradient: "linear-gradient(135deg, rgba(125,42,232,0.18), rgba(125,42,232,0.05))", description: "Instagram carousels, brand kits, Pinterest graphics and social media templates." },
-  { slug: "ai-prompts", name: "AI Prompt Packs", icon: "🤖", count: 18, color: "var(--cyan)", gradient: "linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.05))", description: "Curated prompt vaults for ChatGPT, Claude, Gemini and Midjourney." },
-  { slug: "business", name: "Business Templates", icon: "💼", count: 27, color: "var(--primary)", gradient: "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(99,102,241,0.05))", description: "SOPs, proposals, pitch decks, contracts and HR documents." },
-  { slug: "productivity", name: "Productivity", icon: "⚡", count: 19, color: "var(--amber)", gradient: "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(245,158,11,0.05))", description: "Daily planners, habit trackers, time-blocking systems and goal frameworks." },
-  { slug: "finance", name: "Finance", icon: "💰", count: 15, color: "var(--emerald)", gradient: "linear-gradient(135deg, rgba(16,185,129,0.18), rgba(16,185,129,0.05))", description: "P&L trackers, tax prep, cash flow dashboards and personal budget sheets." },
-  { slug: "marketing", name: "Marketing", icon: "📣", count: 22, color: "var(--rose)", gradient: "linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.05))", description: "Email sequences, content calendars, ad copy frameworks and launch checklists." },
+  {
+    slug: "excel",
+    name: "Excel Templates",
+    icon: "📊",
+    count: 32,
+    color: "#217346",
+    gradient: "linear-gradient(135deg, rgba(33,115,70,0.18), rgba(33,115,70,0.05))",
+    description: "Power-user spreadsheets for finance, budgeting, project tracking and business ops.",
+    visible: true,
+    launchStatus: "LIVE",
+  },
+  // ─── Hidden categories — preserved for future activation ───────────────────
+  {
+    slug: "notion",
+    name: "Notion Systems",
+    icon: "⬛",
+    count: 24,
+    color: "var(--text-muted)",
+    gradient: "linear-gradient(135deg, rgba(148,163,184,0.18), rgba(148,163,184,0.04))",
+    description: "Complete Notion workspaces — creator OS, business dashboards, project management.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+  {
+    slug: "canva",
+    name: "Canva Templates",
+    icon: "🎨",
+    count: 41,
+    color: "#7D2AE8",
+    gradient: "linear-gradient(135deg, rgba(125,42,232,0.18), rgba(125,42,232,0.05))",
+    description: "Instagram carousels, brand kits, Pinterest graphics and social media templates.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+  {
+    slug: "ai-prompts",
+    name: "AI Prompt Packs",
+    icon: "🤖",
+    count: 18,
+    color: "var(--cyan)",
+    gradient: "linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.05))",
+    description: "Curated prompt vaults for ChatGPT, Claude, Gemini and Midjourney.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+  {
+    slug: "business",
+    name: "Business Templates",
+    icon: "💼",
+    count: 27,
+    color: "var(--primary)",
+    gradient: "linear-gradient(135deg, rgba(99,102,241,0.18), rgba(99,102,241,0.05))",
+    description: "SOPs, proposals, pitch decks, contracts and HR documents.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+  {
+    slug: "productivity",
+    name: "Productivity",
+    icon: "⚡",
+    count: 19,
+    color: "var(--amber)",
+    gradient: "linear-gradient(135deg, rgba(245,158,11,0.18), rgba(245,158,11,0.05))",
+    description: "Daily planners, habit trackers, time-blocking systems and goal frameworks.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+  {
+    slug: "marketing",
+    name: "Marketing",
+    icon: "📣",
+    count: 22,
+    color: "var(--rose)",
+    gradient: "linear-gradient(135deg, rgba(239,68,68,0.18), rgba(239,68,68,0.05))",
+    description: "Email sequences, content calendars, ad copy frameworks and launch checklists.",
+    visible: false,
+    launchStatus: "coming-soon",
+  },
+];
+
+// Finance is a subcategory of Excel Templates (not a standalone category).
+// Standalone finance slug is intentionally absent from CATEGORIES above.
+export const EXCEL_SUBCATEGORIES = [
+  {
+    slug: "finance",
+    name: "Finance",
+    icon: "💰",
+    color: "var(--emerald)",
+    description: "P&L trackers, tax prep, cash flow dashboards and personal budget sheets.",
+  },
+  {
+    slug: "project-management",
+    name: "Project Management",
+    icon: "📋",
+    color: "var(--primary-light)",
+    description: "Sprint planners, Gantt charts, risk registers and milestone trackers.",
+  },
+  {
+    slug: "business-operations",
+    name: "Business Operations",
+    icon: "🏢",
+    color: "var(--cyan)",
+    description: "KPI dashboards, OKR systems, resource allocation and process logs.",
+  },
+  {
+    slug: "productivity",
+    name: "Productivity",
+    icon: "⚡",
+    color: "var(--amber)",
+    description: "Time-blocking, habit tracking, daily reviews and goal frameworks.",
+  },
+  {
+    slug: "hr-admin",
+    name: "HR & Admin",
+    icon: "👥",
+    color: "var(--purple)",
+    description: "Headcount planners, leave trackers, onboarding checklists and pay-roll tools.",
+  },
 ];
 
 
