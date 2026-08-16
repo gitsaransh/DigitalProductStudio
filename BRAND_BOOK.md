@@ -141,7 +141,7 @@ All external correspondence from the studio must use the standardized email sign
 --
 [Operator/Director Name]
 Operations & Swarm Director | Digital Product Studio
-Email: support@digitalproductstudio.in
+Email: hello@digitalproductstudio.in
 Web: https://digitalproductstudio.in
 
 CONFIDENTIALITY NOTICE: This email and any attachments are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the sender immediately and delete it from your system.

@@ -38,7 +38,7 @@ export default function TopBar({ page, subtitle }) {
           <span className="topbar-notif-dot" />
         </button>
 
-        <a href="http://localhost:5175" target="_blank" rel="noopener noreferrer" className="topbar-badge" title="View public website">
+        <a href="/" target="_blank" rel="noopener noreferrer" className="topbar-badge" title="View public website">
           <ExternalLink size={14} />
         </a>
       </div>

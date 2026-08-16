@@ -21,7 +21,11 @@ app = FastAPI(
 # In production, replace with the actual deployed domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174", "http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5174",
+        "http://localhost:5173",
+        "https://digitalproductstudio.in"
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],

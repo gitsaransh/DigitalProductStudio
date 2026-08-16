@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /coo
+
+# Host
+Host: https://digitalproductstudio.in
+
+# Sitemaps
+Sitemap: https://digitalproductstudio.in/sitemap.xml
