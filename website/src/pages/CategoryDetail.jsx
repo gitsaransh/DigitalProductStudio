@@ -47,6 +47,19 @@ export default function CategoryDetail() {
             {category.name}
           </h1>
           <p style={{ maxWidth: '560px' }}>{category.description}</p>
+          {category.collectionLabel && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+              <span style={{
+                fontSize: '11px', fontWeight: '800', textTransform: 'uppercase',
+                letterSpacing: '0.08em', color: category.color.startsWith('#') ? category.color : 'var(--emerald)',
+                background: 'rgba(33,115,70,0.10)', border: '1px solid rgba(33,115,70,0.22)',
+                padding: '4px 10px', borderRadius: '12px',
+              }}>{category.collectionLabel}</span>
+              <span style={{ fontSize: '13px', color: 'var(--text-sub)', fontWeight: '600' }}>
+                {category.countLabel}
+              </span>
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
             <Link

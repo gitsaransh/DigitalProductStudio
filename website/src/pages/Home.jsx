@@ -170,7 +170,16 @@ export default function Home() {
                     {cat.icon}
                   </div>
                   <div className="category-card-title">{cat.name}</div>
-                  <div className="category-card-count">{cat.count} products</div>
+                  {cat.collectionLabel ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <div style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em', color: cat.color.startsWith('#') ? cat.color : 'var(--emerald)' }}>
+                        {cat.collectionLabel}
+                      </div>
+                      <div className="category-card-count">{cat.countLabel}</div>
+                    </div>
+                  ) : (
+                    <div className="category-card-count">{cat.count} products</div>
+                  )}
                   <div className="category-card-link" style={{ color: cat.color.startsWith('#') ? cat.color : 'var(--primary-light)' }}>
                     Browse <ChevronRight size={13} />
                   </div>

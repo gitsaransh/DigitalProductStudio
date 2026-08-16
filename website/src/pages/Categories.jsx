@@ -63,12 +63,19 @@ export default function Categories() {
                         }}>
                           {cat.icon}
                         </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
                         <span style={{
                           fontSize: '10px', fontWeight: '800', textTransform: 'uppercase',
                           letterSpacing: '0.08em', color: 'var(--emerald)',
                           background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.2)',
                           padding: '3px 8px', borderRadius: '12px',
                         }}>LIVE</span>
+                        {cat.collectionLabel && (
+                          <span style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.07em', color: cat.color.startsWith('#') ? cat.color : 'var(--emerald)' }}>
+                            {cat.collectionLabel}
+                          </span>
+                        )}
+                      </div>
                       </div>
                       <h3 className="category-card-title" style={{ fontSize: '16px' }}>{cat.name}</h3>
                       <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5', margin: 0, flex: 1 }}>{cat.description}</p>
