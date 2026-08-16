@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Sparkles, ShieldCheck, Zap } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 export default function Membership() {
   const [billing, setBilling] = useState('monthly'); // 'monthly' | 'yearly'
@@ -23,6 +24,10 @@ export default function Membership() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Membership' },
+          ]} />
           <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Tier 4 Membership</span>
           <h1>Unlimited Creator Pass</h1>
           <p>Ditch individual purchases. Build your entire system with a predictable, recurring membership.</p>

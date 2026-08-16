@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { FAQS } from '../data/index.js';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 export default function FAQ() {
   const [open, setOpen] = useState(null);
@@ -11,6 +12,10 @@ export default function FAQ() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'FAQ' },
+          ]} />
           <span className="badge badge-amber" style={{ marginBottom: '12px' }}>FAQ</span>
           <h1>Frequently Asked Questions</h1>
           <p>Everything you need to know before buying. Can't find your answer? Contact our support team.</p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import BlogCard from '../components/BlogCard.jsx';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 import { BLOG_POSTS } from '../data/index.js';
 
 export default function Blog() {
@@ -11,6 +12,10 @@ export default function Blog() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Blog' },
+          ]} />
           <span className="badge badge-cyan" style={{ marginBottom: '12px' }}>Blog</span>
           <h1>Creator Insights & Guides</h1>
           <p>Practical strategies for building, scaling, and monetizing your digital product business.</p>

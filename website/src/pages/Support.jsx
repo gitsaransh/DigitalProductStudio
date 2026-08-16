@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Send, MessageCircle, Clock, Mail } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 export default function Support() {
   const [form, setForm] = useState({ name: '', email: '', orderId: '', category: '', message: '' });
@@ -15,6 +16,10 @@ export default function Support() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Support Center' },
+          ]} />
           <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Support</span>
           <h1>Support Center</h1>
           <p>We're here to help. Submit a request and we'll respond within 24 hours.</p>

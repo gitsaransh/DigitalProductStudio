@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, MapPin, Clock, Mail, MessageCircle } from 'lucide-react';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -14,6 +15,10 @@ export default function Contact() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Contact' },
+          ]} />
           <span className="badge badge-emerald" style={{ marginBottom: '12px' }}>Get In Touch</span>
           <h1>Contact Us</h1>
           <p>Whether it's a product question, partnership enquiry, or just a hello — we'd love to hear from you.</p>
