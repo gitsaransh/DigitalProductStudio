@@ -307,6 +307,7 @@ export const EXCEL_SUBCATEGORIES = [
     icon: "💰",
     color: "var(--emerald)",
     description: "P&L trackers, tax prep, cash flow dashboards and personal budget sheets.",
+    items: ["Budget Dashboard", "Expense Tracker", "Bill Planner", "Net Worth Tracker", "Savings Goal Planner"],
   },
   {
     slug: "project-management",
@@ -314,6 +315,7 @@ export const EXCEL_SUBCATEGORIES = [
     icon: "📋",
     color: "var(--primary-light)",
     description: "Sprint planners, Gantt charts, risk registers and milestone trackers.",
+    items: ["Gantt Chart Planner", "Sprint Tracker", "Risk Register", "Milestone Roadmap", "RACI Matrix"],
   },
   {
     slug: "business-operations",
@@ -321,6 +323,7 @@ export const EXCEL_SUBCATEGORIES = [
     icon: "🏢",
     color: "var(--cyan)",
     description: "KPI dashboards, OKR systems, resource allocation and process logs.",
+    items: ["KPI Dashboard", "OKR Tracker", "Resource Planner", "Process Log", "Weekly Report"],
   },
   {
     slug: "productivity",
@@ -328,6 +331,7 @@ export const EXCEL_SUBCATEGORIES = [
     icon: "⚡",
     color: "var(--amber)",
     description: "Time-blocking, habit tracking, daily reviews and goal frameworks.",
+    items: ["Daily Planner", "Habit Tracker", "Time Blocker", "Goal Framework", "Weekly Review"],
   },
   {
     slug: "hr-admin",
@@ -335,6 +339,7 @@ export const EXCEL_SUBCATEGORIES = [
     icon: "👥",
     color: "var(--purple)",
     description: "Headcount planners, leave trackers, onboarding checklists and pay-roll tools.",
+    items: ["Headcount Planner", "Leave Tracker", "Onboarding Checklist", "Payroll Summary", "Job Description Builder"],
   },
 ];
 

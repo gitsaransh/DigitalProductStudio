@@ -194,7 +194,7 @@ export default function CategoryDetail() {
                   className="glass category-card-premium animate-fade-in-up"
                   style={{ animationDelay: `${i * 0.07}s` }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', width: '100%' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px', width: '100%' }}>
                     <div className="category-card-icon" style={{
                       background: 'rgba(99,102,241,0.10)',
                       border: '1px solid rgba(99,102,241,0.20)',
@@ -205,9 +205,28 @@ export default function CategoryDetail() {
                       {sub.icon}
                     </div>
                   </div>
-                  <h3 className="category-card-title" style={{ fontSize: '16px' }}>{sub.name}</h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5', margin: 0, flex: 1 }}>{sub.description}</p>
-                  <div className="category-card-link" style={{ color: sub.color, marginTop: '16px' }}>
+                  <h3 className="category-card-title" style={{ fontSize: '16px', marginBottom: '12px' }}>{sub.name}</h3>
+
+                  {/* Template name list */}
+                  {sub.items && (
+                    <ul style={{ listStyle: 'none', margin: '0 0 16px', padding: 0, display: 'flex', flexDirection: 'column', gap: '7px' }}>
+                      {sub.items.map(item => (
+                        <li key={item} style={{
+                          display: 'flex', alignItems: 'center', gap: '8px',
+                          fontSize: '13px', color: 'var(--text-sub)', fontWeight: '500',
+                        }}>
+                          <span style={{
+                            width: '5px', height: '5px', borderRadius: '50%', flexShrink: 0,
+                            background: sub.color.startsWith('var') ? 'var(--primary-light)' : sub.color,
+                            opacity: 0.8,
+                          }} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="category-card-link" style={{ color: sub.color, marginTop: 'auto' }}>
                     Browse Templates <ArrowRight size={13} />
                   </div>
                 </div>
