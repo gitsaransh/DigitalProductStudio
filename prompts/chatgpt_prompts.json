@@ -1,0 +1,15 @@
+{
+  "system": "Digital Products House - ChatGPT Prompt Library",
+  "ai_target": "ChatGPT 4o / o1",
+  "categories": [
+    {
+      "category": "Social Media Templates",
+      "prompts": [
+        {
+          "title": "Canva Carousel Copy Strategy",
+          "prompt": "Generate 10 viral Canva Carousel hook ideas and slide-by-slide copy for digital product sellers."
+        }
+      ]
+    }
+  ]
+}

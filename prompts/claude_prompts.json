@@ -1,0 +1,24 @@
+{
+  "system": "Digital Products House - AI Creator Prompt Library",
+  "ai_target": "Claude 3.5 Sonnet / Claude 3 Opus",
+  "categories": [
+    {
+      "category": "Planners & Notion OS",
+      "prompts": [
+        {
+          "title": "Aesthetic Life OS Planner Generator",
+          "prompt": "Create a comprehensive Notion template structure for a 2026 Life OS Planner containing Goal Tracker, Habit Loop, Daily Schedule, Expense Log, and Meal Planner with dark-mode aesthetic styling."
+        }
+      ]
+    },
+    {
+      "category": "Copywriting & SEO",
+      "prompts": [
+        {
+          "title": "Etsy High-Converting Listing Description",
+          "prompt": "Write a 500-word SEO markdown listing description for a digital product. Include What Is Included bullet list, 5 Key Features, License Summary, and 3 FAQs."
+        }
+      ]
+    }
+  ]
+}

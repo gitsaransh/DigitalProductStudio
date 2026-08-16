@@ -1,0 +1,45 @@
+# Digital Products House Configuration
+
+studio:
+  name: "Digital Products House"
+  version: "1.0.0"
+  environment: "production"
+  default_currency: "USD"
+
+catalog:
+  base_path: "./catalog"
+  raw_ingest_path: "./catalog/raw_ingest"
+  active_path: "./catalog/active"
+  archived_path: "./catalog/archived"
+  db_path: "./catalog/studio_catalog.db"
+  max_capacity: 100000
+
+marketplaces:
+  etsy:
+    enabled: true
+    max_title_length: 140
+    max_tags: 13
+    max_tag_length: 20
+    default_section: "Digital Downloads"
+    is_digital: true
+  gumroad:
+    enabled: true
+    default_currency: "usd"
+  lemonsqueezy:
+    enabled: true
+    store_id: ""
+  custom_web:
+    enabled: true
+    base_url: "https://digitalproductshouse.com"
+
+media:
+  thumbnail_width: 2700
+  thumbnail_height: 2025
+  aspect_ratio: "4:3"
+  dpi: 300
+  watermark_text: "DIGITAL PRODUCTS HOUSE - PREVIEW"
+  export_format: "PNG"
+
+approvals:
+  require_human_review: true
+  auto_approve_threshold: 0.95

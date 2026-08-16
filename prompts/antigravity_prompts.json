@@ -1,0 +1,15 @@
+{
+  "system": "Digital Products House - Antigravity Agent Prompt Library",
+  "ai_target": "Antigravity Coding Agent",
+  "categories": [
+    {
+      "category": "Orchestration & Automation",
+      "prompts": [
+        {
+          "title": "Ingestion Engine Execution",
+          "prompt": "Scan raw_ingest folder, verify SHA-256 hashes, generate 5 preview slides, build customer instruction PDF, and enqueue to approval state."
+        }
+      ]
+    }
+  ]
+}

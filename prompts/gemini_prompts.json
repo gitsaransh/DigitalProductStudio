@@ -1,0 +1,15 @@
+{
+  "system": "Digital Products House - Gemini Prompt Library",
+  "ai_target": "Gemini 1.5 Pro / 3.6 Flash",
+  "categories": [
+    {
+      "category": "Market Analysis",
+      "prompts": [
+        {
+          "title": "Etsy Niche Keyword Gap Analysis",
+          "prompt": "Analyze search intent trends for digital wall art and Notion templates to identify underserved sub-niches."
+        }
+      ]
+    }
+  ]
+}

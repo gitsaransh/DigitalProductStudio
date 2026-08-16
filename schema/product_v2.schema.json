@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DigitalProductV2",
+  "description": "Enterprise schema supporting 100,000+ digital products with 9-state lifecycle governance, multi-language localization, intelligence scores, and automated recommendations",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "slug",
+    "category",
+    "version",
+    "lifecycle_state",
+    "file_hash",
+    "created_at",
+    "updated_at",
+    "pricing",
+    "marketplaces",
+    "intelligence_scores"
+  ],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "sku": { "type": "string" },
+    "title": { "type": "string", "maxLength": 140 },
+    "slug": { "type": "string" },
+    "category": { "type": "string" },
+    "sub_category": { "type": "string" },
+    "lifecycle_state": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "research",
+        "generating",
+        "review",
+        "approved",
+        "published",
+        "scaling",
+        "updating",
+        "retired"
+      ],
+      "default": "idea"
+    },
+    "version": { "type": "string", "default": "1.0.0" },
+    "file_hash": { "type": "string" },
+    "pricing": {
+      "type": "object",
+      "required": ["base_price", "currency"],
+      "properties": {
+        "base_price": { "type": "number", "minimum": 0 },
+        "sale_price": { "type": ["number", "null"] },
+        "currency": { "type": "string", "default": "USD" },
+        "cost_per_unit": { "type": "number", "default": 0.5 },
+        "discount_percent": { "type": "number", "default": 0 }
+      }
+    },
+    "intelligence_scores": {
+      "type": "object",
+      "properties": {
+        "quality_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 90 },
+        "seo_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 85 },
+        "competition_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 45 },
+        "estimated_monthly_sales": { "type": "number", "default": 120 },
+        "difficulty_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 30 },
+        "profit_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 92 },
+        "confidence_score": { "type": "number", "minimum": 0, "maximum": 100, "default": 88 }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "localizations": {
+      "type": "object",
+      "properties": {
+        "de": { "type": "object" },
+        "fr": { "type": "object" },
+        "es": { "type": "object" },
+        "it": { "type": "object" },
+        "pt": { "type": "object" },
+        "ja": { "type": "object" }
+      }
+    },
+    "lifecycle_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from_state": { "type": "string" },
+          "to_state": { "type": "string" },
+          "timestamp": { "type": "string" },
+          "actor": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "marketplaces": { "type": "object" },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" }
+  }
+}
