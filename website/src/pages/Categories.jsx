@@ -104,40 +104,65 @@ export default function Categories() {
             </div>
 
             <div className="grid-3">
-              {CATEGORIES.filter(c => !c.visible).map((cat, i) => (
-                <div
-                  key={cat.slug}
-                  className="glass category-card-premium animate-fade-in-up"
-                  style={{
-                    animationDelay: `${i * 0.05}s`,
-                    opacity: 0.45,
-                    pointerEvents: 'none',
-                    cursor: 'default',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', width: '100%' }}>
-                    <div className="category-card-icon" style={{
-                      background: 'rgba(148,163,184,0.08)',
-                      border: '1px solid var(--border-glass)',
-                      color: 'var(--text-muted)',
-                      marginBottom: 0,
-                      filter: 'grayscale(1)',
-                    }}>
-                      {cat.icon}
+              {CATEGORIES.filter(c => !c.visible).map((cat, i) => {
+                // Badge style per variant
+                const badgeStyles = {
+                  amber: {
+                    color: 'var(--amber)',
+                    background: 'rgba(245,158,11,0.10)',
+                    border: '1px solid rgba(245,158,11,0.25)',
+                  },
+                  timed: {
+                    color: 'var(--cyan)',
+                    background: 'rgba(6,182,212,0.10)',
+                    border: '1px solid rgba(6,182,212,0.25)',
+                  },
+                  muted: {
+                    color: 'var(--text-muted)',
+                    background: 'rgba(148,163,184,0.06)',
+                    border: '1px solid var(--border-glass)',
+                  },
+                };
+                const badge = badgeStyles[cat.statusBadgeVariant] || badgeStyles.muted;
+
+                return (
+                  <div
+                    key={cat.slug}
+                    className="glass category-card-premium animate-fade-in-up"
+                    style={{
+                      animationDelay: `${i * 0.05}s`,
+                      opacity: 0.55,
+                      pointerEvents: 'none',
+                      cursor: 'default',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', width: '100%' }}>
+                      <div className="category-card-icon" style={{
+                        background: 'rgba(148,163,184,0.08)',
+                        border: '1px solid var(--border-glass)',
+                        color: 'var(--text-muted)',
+                        marginBottom: 0,
+                        filter: 'grayscale(0.7)',
+                      }}>
+                        {cat.icon}
+                      </div>
+                      {/* Dynamic status badge */}
+                      <span style={{
+                        fontSize: '10px', fontWeight: '800', textTransform: 'uppercase',
+                        letterSpacing: '0.08em', padding: '3px 8px', borderRadius: '12px',
+                        whiteSpace: 'nowrap',
+                        ...badge,
+                      }}>
+                        {cat.statusBadge || 'COMING SOON'}
+                      </span>
                     </div>
-                    <span style={{
-                      fontSize: '10px', fontWeight: '800', textTransform: 'uppercase',
-                      letterSpacing: '0.08em', color: 'var(--text-muted)',
-                      background: 'rgba(148,163,184,0.06)', border: '1px solid var(--border-glass)',
-                      padding: '3px 8px', borderRadius: '12px',
-                    }}>SOON</span>
+                    <h3 className="category-card-title" style={{ fontSize: '16px', color: 'var(--text-muted)' }}>{cat.name}</h3>
+                    <p style={{ fontSize: '13px', color: 'var(--text-sub)', lineHeight: '1.5', margin: 0, flex: 1 }}>{cat.description}</p>
                   </div>
-                  <h3 className="category-card-title" style={{ fontSize: '16px', color: 'var(--text-muted)' }}>{cat.name}</h3>
-                  <p style={{ fontSize: '13px', color: 'var(--text-sub)', lineHeight: '1.5', margin: 0, flex: 1 }}>{cat.description}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

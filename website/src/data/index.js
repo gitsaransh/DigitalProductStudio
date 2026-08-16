@@ -219,6 +219,8 @@ export const CATEGORIES = [
     description: "Complete Notion workspaces — creator OS, business dashboards, project management.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
   {
     slug: "canva",
@@ -230,6 +232,8 @@ export const CATEGORIES = [
     description: "Instagram carousels, brand kits, Pinterest graphics and social media templates.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "Q4 2026",
+    statusBadgeVariant: "timed",
   },
   {
     slug: "ai-prompts",
@@ -241,6 +245,8 @@ export const CATEGORIES = [
     description: "Curated prompt vaults for ChatGPT, Claude, Gemini and Midjourney.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
   {
     slug: "business",
@@ -252,6 +258,8 @@ export const CATEGORIES = [
     description: "SOPs, proposals, pitch decks, contracts and HR documents.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
   {
     slug: "productivity",
@@ -263,6 +271,8 @@ export const CATEGORIES = [
     description: "Daily planners, habit trackers, time-blocking systems and goal frameworks.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
   {
     slug: "marketing",
@@ -274,6 +284,8 @@ export const CATEGORIES = [
     description: "Email sequences, content calendars, ad copy frameworks and launch checklists.",
     visible: false,
     launchStatus: "coming-soon",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
 ];
 
