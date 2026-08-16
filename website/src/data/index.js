@@ -449,6 +449,27 @@ export const TESTIMONIALS = [
     avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=150&h=150", 
     text: "Stunning aesthetic consistency. My corporate clients are always impressed when I deliver project dashboards based on these kits.", 
     stars: 5 
+  },
+  { 
+    name: "Liam Carter", 
+    role: "Indie SaaS Builder", 
+    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=150&h=150", 
+    text: "As an indie developer, building landing pages and customer instruction guides from scratch is a massive time sink. The PDF builder templates are gold—no wonder they are close to hitting 1,000 downloads. Super clean structure!", 
+    stars: 5 
+  },
+  { 
+    name: "Sofia Rodriguez", 
+    role: "Notion Creator & Educator", 
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150", 
+    text: "I was skeptical about using pre-built templates, but the Aesthetic Canva pack is flawless. With nearly 1,000 other creators downloading this, the quality speaks for itself. It has saved me easily 40+ hours of design work.", 
+    stars: 5 
+  },
+  { 
+    name: "Devon Miller", 
+    role: "Excel Template Specialist", 
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150", 
+    text: "The monthly budget spreadsheet became our team's standard template. Over 950 downloads later, it’s still the most stable and well-crafted finance dashboard I’ve seen on the market.", 
+    stars: 5 
   }
 ];
 
