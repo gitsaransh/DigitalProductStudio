@@ -6,13 +6,11 @@ const NAV_LINKS = [
   { to: '/', label: 'Home', exact: true },
   { to: '/products', label: 'Products' },
   { to: '/categories', label: 'Categories' },
-  { to: '/bundles', label: 'Bundles & Packs' },
-  { to: '/membership', label: 'Membership' },
-  { to: '/free', label: 'Free Resources' },
+  { to: '/bundles', label: 'Bundles' },
+  { to: '/free', label: 'Free' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
-  { to: '/admin', label: 'Operator Admin' },
-  { to: '/coo', label: 'COO Dashboard' },
+  // /admin and /coo are intentionally omitted — operator-only routes accessed directly by URL
 ];
 
 export default function Navbar() {
