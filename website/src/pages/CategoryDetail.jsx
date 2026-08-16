@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ChevronRight, CheckCircle2, Star } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
 import { CATEGORIES, EXCEL_SUBCATEGORIES } from '../data/index.js';
 
@@ -85,6 +85,103 @@ export default function CategoryDetail() {
               Select a subcategory to explore focused templates built for that domain.
             </p>
           </div>
+
+
+          {/* ── Flagship Product Card ───────────────────────────────── */}
+          {category.flagship && (() => {
+            const f = category.flagship;
+            return (
+              <div style={{
+                position: 'relative',
+                borderRadius: '20px',
+                background: 'linear-gradient(135deg, rgba(10,20,50,0.95) 0%, rgba(15,30,60,0.90) 100%)',
+                border: '1px solid rgba(99,102,241,0.30)',
+                boxShadow: '0 0 0 1px rgba(99,102,241,0.10), 0 24px 64px rgba(0,0,0,0.5)',
+                padding: '36px 40px',
+                marginBottom: '52px',
+                overflow: 'hidden',
+              }}>
+                {/* Subtle gradient glow top-right */}
+                <div style={{
+                  position: 'absolute', top: '-60px', right: '-60px',
+                  width: '260px', height: '260px', borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(33,115,70,0.18) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                }} />
+
+                {/* Top badges */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px' }}>
+                  <span style={{
+                    fontSize: '11px', fontWeight: '800', textTransform: 'uppercase',
+                    letterSpacing: '0.08em', color: 'var(--emerald)',
+                    background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)',
+                    padding: '4px 10px', borderRadius: '20px',
+                  }}>Flagship Product</span>
+                  <span style={{
+                    fontSize: '11px', fontWeight: '800', textTransform: 'uppercase',
+                    letterSpacing: '0.08em', color: 'var(--cyan)',
+                    background: 'rgba(6,182,212,0.10)', border: '1px solid rgba(6,182,212,0.25)',
+                    padding: '4px 10px', borderRadius: '20px',
+                  }}>{f.badge}</span>
+                </div>
+
+                {/* Title */}
+                <h2 style={{
+                  color: 'white', fontSize: 'clamp(22px, 3vw, 30px)',
+                  fontWeight: '900', margin: '0 0 10px', lineHeight: '1.2',
+                }}>{f.title}</h2>
+
+                {/* Subtitle */}
+                <p style={{
+                  color: 'var(--text-sub)', fontSize: '15px',
+                  lineHeight: '1.6', margin: '0 0 20px', maxWidth: '560px',
+                }}>{f.subtitle}</p>
+
+                {/* Feature pills */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '28px' }}>
+                  {f.features.map(feat => (
+                    <span key={feat} style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '6px',
+                      fontSize: '13px', fontWeight: '700', color: 'white',
+                    }}>
+                      <CheckCircle2 size={15} color="var(--emerald)" fill="rgba(16,185,129,0.15)" />
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Bottom row: price + learn more */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                  <Link
+                    to={f.href}
+                    className="btn btn-sm"
+                    style={{
+                      background: 'rgba(245,158,11,0.15)',
+                      border: '1px solid rgba(245,158,11,0.4)',
+                      color: 'var(--amber)',
+                      fontWeight: '800',
+                      gap: '6px',
+                    }}
+                  >
+                    <Star size={13} fill="var(--amber)" color="var(--amber)" />
+                    {f.priceLabel}
+                  </Link>
+                  <Link
+                    to={f.href}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '4px',
+                      fontSize: '14px', fontWeight: '700', color: 'var(--text-sub)',
+                      textDecoration: 'none', transition: 'color 0.2s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'white'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-sub)'}
+                  >
+                    Learn more <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            );
+          })()}
 
           <div className="grid-3" style={{ marginBottom: '64px' }}>
             {subcategories.map((sub, i) => (

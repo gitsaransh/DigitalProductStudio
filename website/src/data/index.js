@@ -207,6 +207,15 @@ export const CATEGORIES = [
     description: "Power-user spreadsheets for finance, budgeting, project tracking and business ops.",
     visible: true,
     launchStatus: "LIVE",
+    flagship: {
+      title: "Ultimate Finance OS",
+      subtitle: "The complete Excel operating system for budgeting, expenses, savings, cash flow and net worth.",
+      features: ["20 dashboards", "Dark mode", "Lifetime updates"],
+      price: 19,
+      priceLabel: "Launch Price $19",
+      badge: "Launch Edition",
+      href: "/products?category=excel&sub=finance",
+    },
   },
   // ─── Hidden categories — preserved for future activation ───────────────────
   {
