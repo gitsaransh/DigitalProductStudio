@@ -1,7 +1,7 @@
-# Digital Products House Configuration
+# Digital Product Studio Configuration
 
 studio:
-  name: "Digital Products House"
+  name: "Digital Product Studio"
   version: "1.0.0"
   environment: "production"
   default_currency: "USD"
@@ -30,14 +30,14 @@ marketplaces:
     store_id: ""
   custom_web:
     enabled: true
-    base_url: "https://digitalproductshouse.com"
+    base_url: "https://digitalproductstudio.in"
 
 media:
   thumbnail_width: 2700
   thumbnail_height: 2025
   aspect_ratio: "4:3"
   dpi: 300
-  watermark_text: "DIGITAL PRODUCTS HOUSE - PREVIEW"
+  watermark_text: "DIGITAL PRODUCT STUDIO - PREVIEW"
   export_format: "PNG"
 
 approvals:

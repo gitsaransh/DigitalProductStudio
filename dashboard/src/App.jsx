@@ -31,7 +31,7 @@ import {
 const REAL_DATABASE_PRODUCTS = [
   {
     id: "a694cb6c-260a-402e-9389-d46906ed38e5",
-    sku: "DPH-A694CB6C",
+    sku: "DPS-A694CB6C",
     title: "Zenith Ultimate Life Planner 2026 | Planners & Organizers | Instant Download",
     category: "Planners & Organizers",
     lifecycle_state: "published",
@@ -46,7 +46,7 @@ const REAL_DATABASE_PRODUCTS = [
   },
   {
     id: "4ff56c54-b5f0-4500-860b-b895a4943ee8",
-    sku: "DPH-4FF56C54",
+    sku: "DPS-4FF56C54",
     title: "Aesthetic Instagram Canva Carousel Templates | Creator Kit | Instant Download",
     category: "Social Media & Canva Templates",
     lifecycle_state: "review",
@@ -60,7 +60,7 @@ const REAL_DATABASE_PRODUCTS = [
   },
   {
     id: "49162179-46bc-43f2-95af-ce2602801ff6",
-    sku: "DPH-49162179",
+    sku: "DPS-49162179",
     title: "Executive Small Business Finance Tracker | Business Spreadsheets | Instant Download",
     category: "Business & Finance Spreadsheets",
     lifecycle_state: "generating",
@@ -74,7 +74,7 @@ const REAL_DATABASE_PRODUCTS = [
   },
   {
     id: "8a6e90c9-3a47-489b-8e2d-93d8c5cec6d3",
-    sku: "DPH-8A6E90C9",
+    sku: "DPS-8A6E90C9",
     title: "10,000+ ChatGPT & Claude Prompt Vault | AI Prompts | Instant Download",
     category: "AI Prompts & Automation Kits",
     lifecycle_state: "scaling",
@@ -140,7 +140,7 @@ export default function App() {
               </svg>
             </div>
             <div>
-              <div style={{ fontWeight: '800', fontSize: '16px', letterSpacing: '0.5px' }}>DIGITAL PRODUCTS HOUSE</div>
+              <div style={{ fontWeight: '800', fontSize: '16px', letterSpacing: '0.5px' }}>DIGITAL PRODUCT STUDIO</div>
               <div style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: '700' }}>DIRECT CUSTOM WEB STOREFRONT</div>
             </div>
           </div>
@@ -273,7 +273,7 @@ export default function App() {
               </svg>
             </div>
             <div>
-              <div className="brand-title">DIGITAL PRODUCTS HOUSE</div>
+              <div className="brand-title">DIGITAL PRODUCT STUDIO</div>
               <div style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: '700' }}>ZERO-FABRICATION REALITY OS</div>
             </div>
           </div>

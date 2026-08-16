@@ -1,5 +1,5 @@
 """
-Shopify Digital Publishing Adapter for Digital Products House
+Shopify Digital Publishing Adapter for Digital Product Studio
 """
 
 import time

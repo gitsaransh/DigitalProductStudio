@@ -1,5 +1,5 @@
 """
-Go-Live Report Generator for Digital Products House
+Go-Live Report Generator for Digital Product Studio
 Generates docs/GO_LIVE_REPORT.md tracking completed onboarding steps, pending approval gates, risks, and recommendations.
 """
 

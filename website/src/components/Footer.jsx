@@ -48,7 +48,7 @@ export default function Footer() {
               </svg>
             </div>
             <div>
-              <div style={{ fontWeight: '800', fontSize: '15px' }}>Digital Products House</div>
+              <div style={{ fontWeight: '800', fontSize: '15px' }}>Digital Product Studio</div>
               <div style={{ fontSize: '11px', color: 'var(--text-sub)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Premium Digital Assets</div>
             </div>
           </Link>
@@ -161,7 +161,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
-        <span className="footer-copy">© {new Date().getFullYear()} Digital Products House. All rights reserved.</span>
+        <span className="footer-copy">© {new Date().getFullYear()} Digital Product Studio. All rights reserved.</span>
         <div style={{ display: 'flex', gap: '16px' }}>
           <Link to="/privacy" className="footer-link" style={{ fontSize: '12px' }}>Privacy</Link>
           <Link to="/terms" className="footer-link" style={{ fontSize: '12px' }}>Terms</Link>

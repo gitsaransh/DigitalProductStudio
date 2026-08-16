@@ -1,5 +1,5 @@
 """
-Product & Store Intelligence Scoring Engine for Digital Products House
+Product & Store Intelligence Scoring Engine for Digital Product Studio
 Computes multi-dimensional scores for every digital product and overall store health:
 - Quality Score (0-100)
 - SEO Score (0-100)

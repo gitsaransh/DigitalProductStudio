@@ -1,5 +1,5 @@
 """
-Utilities, Retry Decorators & Security Sanitization for Digital Products House
+Utilities, Retry Decorators & Security Sanitization for Digital Product Studio
 """
 
 import time
@@ -13,7 +13,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("DigitalProductsHouse")
+logger = logging.getLogger("DigitalProductStudio")
 
 def retry_with_backoff(retries: int = 3, backoff_in_seconds: float = 1.0) -> Callable:
     """

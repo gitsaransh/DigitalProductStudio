@@ -28,7 +28,7 @@ const Li = ({ children }) => <li style={{ fontSize: '14px', lineHeight: '1.8', m
 export function Privacy() {
   return (
     <LegalPage title="Privacy Policy" badgeColor="badge-primary">
-      <P>Digital Products House ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit <strong style={{ color: 'white' }}>digitalproductshouse.com</strong> or make a purchase.</P>
+      <P>Digital Product Studio ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you visit <strong style={{ color: 'white' }}>digitalproductstudio.in</strong> or make a purchase.</P>
       <H>1. Information We Collect</H>
       <P>We collect information you provide directly, including:</P>
       <ul style={{ paddingLeft: '20px', marginBottom: '16px' }}>
@@ -44,9 +44,9 @@ export function Privacy() {
       <H>4. Data Retention</H>
       <P>We retain your purchase records for up to 5 years for tax and legal compliance purposes. Support communication records are retained for 2 years. You may request deletion of your data at any time by contacting us.</P>
       <H>5. Your Rights</H>
-      <P>Depending on your jurisdiction, you may have the right to access, correct, or delete your personal data. To exercise these rights, contact us at <strong style={{ color: 'var(--primary-light)' }}>privacy@digitalproductshouse.com</strong>.</P>
+      <P>Depending on your jurisdiction, you may have the right to access, correct, or delete your personal data. To exercise these rights, contact us at <strong style={{ color: 'var(--primary-light)' }}>privacy@digitalproductstudio.in</strong>.</P>
       <H>6. Contact</H>
-      <P>For any privacy-related questions, contact: <strong style={{ color: 'var(--primary-light)' }}>privacy@digitalproductshouse.com</strong></P>
+      <P>For any privacy-related questions, contact: <strong style={{ color: 'var(--primary-light)' }}>privacy@digitalproductstudio.in</strong></P>
     </LegalPage>
   );
 }
@@ -54,7 +54,7 @@ export function Privacy() {
 export function Terms() {
   return (
     <LegalPage title="Terms of Service" badgeColor="badge-cyan">
-      <P>These Terms of Service govern your use of the Digital Products House website and your purchase of any digital products. By accessing the site or making a purchase, you agree to these terms.</P>
+      <P>These Terms of Service govern your use of the Digital Product Studio website and your purchase of any digital products. By accessing the site or making a purchase, you agree to these terms.</P>
       <H>1. Digital Product License</H>
       <P>Upon purchase, you receive a non-exclusive, non-transferable license to use the digital product according to the license tier selected. You may not resell, redistribute, or claim authorship of our products.</P>
       <H>2. Instant Downloads</H>
@@ -67,7 +67,7 @@ export function Terms() {
         <Li>Using our products in illegal, defamatory, or harmful contexts</Li>
       </ul>
       <H>4. Limitation of Liability</H>
-      <P>Digital Products House shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our products. Our total liability is limited to the amount you paid for the product in question.</P>
+      <P>Digital Product Studio shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our products. Our total liability is limited to the amount you paid for the product in question.</P>
       <H>5. Changes to Terms</H>
       <P>We reserve the right to update these Terms at any time. Continued use of the site after changes constitutes acceptance of the new Terms.</P>
       <H>6. Governing Law</H>
@@ -87,7 +87,7 @@ export function RefundPolicy() {
         <Li>One refund per customer per product (re-purchases after refund are not eligible)</Li>
       </ul>
       <H>How to Request a Refund</H>
-      <P>Submit a refund request via our <a href="/support" style={{ color: 'var(--primary-light)' }}>Support page</a> or email <strong style={{ color: 'var(--primary-light)' }}>support@digitalproductshouse.com</strong>. Include your order ID and the email address used at purchase. Refunds are processed within 3–5 business days and will appear on your original payment method.</P>
+      <P>Submit a refund request via our <a href="/support" style={{ color: 'var(--primary-light)' }}>Support page</a> or email <strong style={{ color: 'var(--primary-light)' }}>support@digitalproductstudio.in</strong>. Include your order ID and the email address used at purchase. Refunds are processed within 3–5 business days and will appear on your original payment method.</P>
       <H>Non-Refundable Circumstances</H>
       <ul style={{ paddingLeft: '20px', marginBottom: '16px' }}>
         <Li>Requests made more than 7 days after purchase</Li>
@@ -95,7 +95,7 @@ export function RefundPolicy() {
         <Li>Bundle refund requests where all items have been individually downloaded and used commercially</Li>
       </ul>
       <H>Questions?</H>
-      <P>Contact us at <strong style={{ color: 'var(--primary-light)' }}>support@digitalproductshouse.com</strong> — we're always happy to help.</P>
+      <P>Contact us at <strong style={{ color: 'var(--primary-light)' }}>support@digitalproductstudio.in</strong> — we're always happy to help.</P>
     </LegalPage>
   );
 }
@@ -103,7 +103,7 @@ export function RefundPolicy() {
 export function Licensing() {
   return (
     <LegalPage title="Licensing" badgeColor="badge-purple">
-      <P>All Digital Products House products are sold under one of three license tiers. Please review carefully to ensure you select the correct license for your use case.</P>
+      <P>All Digital Product Studio products are sold under one of three license tiers. Please review carefully to ensure you select the correct license for your use case.</P>
 
       {[
         {
@@ -145,7 +145,7 @@ export function Licensing() {
       ))}
 
       <H>Questions about Licensing?</H>
-      <P>Contact <strong style={{ color: 'var(--primary-light)' }}>licensing@digitalproductshouse.com</strong> for custom arrangements, PLR licensing, or enterprise agreements.</P>
+      <P>Contact <strong style={{ color: 'var(--primary-light)' }}>licensing@digitalproductstudio.in</strong> for custom arrangements, PLR licensing, or enterprise agreements.</P>
     </LegalPage>
   );
 }

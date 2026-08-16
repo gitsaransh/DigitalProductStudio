@@ -1,5 +1,5 @@
 """
-Automated Recommendation Engine for Digital Products House
+Automated Recommendation Engine for Digital Product Studio
 Generates actionable optimization recommendations per product:
 - IMPROVE_THUMBNAIL
 - IMPROVE_KEYWORDS

@@ -27,8 +27,8 @@ export default function Contact() {
             <div>
               <h2 style={{ color: 'white', marginBottom: '24px' }}>Let's Talk</h2>
               {[
-                { icon: <Mail size={18} color="var(--primary-light)" />, title: 'Email', value: 'hello@digitalproductshouse.com' },
-                { icon: <MessageCircle size={18} color="var(--emerald)" />, title: 'Support', value: 'support@digitalproductshouse.com' },
+                { icon: <Mail size={18} color="var(--primary-light)" />, title: 'Email', value: 'hello@digitalproductstudio.in' },
+                { icon: <MessageCircle size={18} color="var(--emerald)" />, title: 'Support', value: 'support@digitalproductstudio.in' },
                 { icon: <Clock size={18} color="var(--amber)" />, title: 'Response Time', value: 'Within 24 hours (Mon–Fri)' },
                 { icon: <MapPin size={18} color="var(--rose)" />, title: 'Timezone', value: 'CET / UTC+1' },
               ].map(({ icon, title, value }) => (

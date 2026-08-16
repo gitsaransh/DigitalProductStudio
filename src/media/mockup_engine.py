@@ -1,5 +1,5 @@
 """
-Automatic Multi-Device & Social Media Mockup Generator for Digital Products House
+Automatic Multi-Device & Social Media Mockup Generator for Digital Product Studio
 Generates device frames and social media promo graphics across 9 target dimensions:
 1. Laptop Mockup (1440 x 900 px)
 2. Desktop Display (1920 x 1080 px)

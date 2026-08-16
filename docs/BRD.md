@@ -1,7 +1,7 @@
-# Business Requirements Document (BRD) - Digital Products House (Phase 2 Enterprise)
+# Business Requirements Document (BRD) - Digital Product Studio (Phase 2 Enterprise)
 
 ## 1. Executive Summary
-Digital Products House is an AI-powered Digital Publishing Enterprise designed to operate, manage, market, publish, and scale 100,000+ digital assets across global digital marketplaces (Etsy, Gumroad, Lemon Squeezy, Creative Market, Shopify, WooCommerce, Ko-fi, Payhip, Amazon Digital, and direct web). The platform combines an AI Agent Swarm (8 specialized agents), a 9-state Product Lifecycle State Machine, a Product Intelligence & Recommendation Engine, and automated Financial P&L Reporting to operate as a high-margin digital publishing business.
+Digital Product Studio is an AI-powered Digital Publishing Enterprise designed to operate, manage, market, publish, and scale 100,000+ digital assets across global digital marketplaces (Etsy, Gumroad, Lemon Squeezy, Creative Market, Shopify, WooCommerce, Ko-fi, Payhip, Amazon Digital, and direct web). The platform combines an AI Agent Swarm (8 specialized agents), a 9-state Product Lifecycle State Machine, a Product Intelligence & Recommendation Engine, and automated Financial P&L Reporting to operate as a high-margin digital publishing business.
 
 ## 2. Business Objectives & Revenue Operations
 - **Scale**: Multi-tier WAL database architecture supporting 100,000+ active assets with FTS5 instant search.

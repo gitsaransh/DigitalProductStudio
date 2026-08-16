@@ -1,5 +1,5 @@
 """
-Central Configuration & Secrets Management for Digital Products House
+Central Configuration & Secrets Management for Digital Product Studio
 Loads settings from environment variables and config/settings.yaml with validation.
 """
 
@@ -14,7 +14,7 @@ class ConfigManager:
 
     def _load_settings(self) -> Dict[str, Any]:
         settings = {
-            "studio_name": os.getenv("STUDIO_NAME", "Digital Products House"),
+            "studio_name": os.getenv("STUDIO_NAME", "Digital Product Studio"),
             "environment": os.getenv("ENVIRONMENT", "production"),
             "db_path": os.getenv("DB_PATH", "./catalog/studio_catalog.db"),
             "etsy": {

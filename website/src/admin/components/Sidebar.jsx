@@ -45,7 +45,7 @@ export default function Sidebar({ onClose }) {
           </svg>
         </div>
         <div>
-          <div className="sidebar-brand-text">DPH Admin</div>
+          <div className="sidebar-brand-text">DPS Admin</div>
           <div className="sidebar-brand-sub">Internal Operations</div>
         </div>
       </div>

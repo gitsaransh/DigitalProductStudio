@@ -1,30 +1,57 @@
-"""
-High-Performance Catalog Database Engine for Digital Products House
-Handles CRUD, indexing, SHA-256 duplicate checking, full-text search, and analytics queries for 100,000+ products.
-Supports high-velocity batch transactions and sub-10ms FTS5 queries.
-"""
-
-import sqlite3
-import json
-import os
-import time
-from typing import List, Dict, Any, Optional
-
-class ProductDatabase:
-    def __init__(self, db_path: str = "./catalog/studio_catalog.db"):
-        self.db_path = db_path
-        os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
-        self._init_db()
-
-    def _get_connection(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        # Enable WAL mode for high concurrency read/write performance
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA synchronous=NORMAL;")
-        conn.execute("PRAGMA cache_size=-64000;") # 64MB memory cache
-        return conn
-
+"""
+
+High-Performance Catalog Database Engine for Digital Product Studio
+
+Handles CRUD, indexing, SHA-256 duplicate checking, full-text search, and analytics queries for 100,000+ products.
+
+Supports high-velocity batch transactions and sub-10ms FTS5 queries.
+
+"""
+
+
+
+import sqlite3
+
+import json
+
+import os
+
+import time
+
+from typing import List, Dict, Any, Optional
+
+
+
+class ProductDatabase:
+
+    def __init__(self, db_path: str = "./catalog/studio_catalog.db"):
+
+        self.db_path = db_path
+
+        os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
+
+        self._init_db()
+
+
+
+    def _get_connection(self) -> sqlite3.Connection:
+
+        conn = sqlite3.connect(self.db_path)
+
+        conn.row_factory = sqlite3.Row
+
+        # Enable WAL mode for high concurrency read/write performance
+
+        conn.execute("PRAGMA journal_mode=WAL;")
+
+        conn.execute("PRAGMA synchronous=NORMAL;")
+
+        conn.execute("PRAGMA cache_size=-64000;") # 64MB memory cache
+
+        return conn
+
+
+
     def _init_db(self):
         with self._get_connection() as conn:
             cursor = conn.cursor()
@@ -98,11 +125,16 @@ class ProductDatabase:
                     category
                 )
             """)
-            conn.commit()
-
-    def upsert_product(self, product_data: Dict[str, Any]) -> str:
-        return self.upsert_batch([product_data])[0]
-
+            conn.commit()
+
+
+
+    def upsert_product(self, product_data: Dict[str, Any]) -> str:
+
+        return self.upsert_batch([product_data])[0]
+
+
+
     def upsert_batch(self, products_list: List[Dict[str, Any]]) -> List[str]:
         """High-velocity bulk upsert executing all records in a single database transaction."""
         ids = []
@@ -111,7 +143,7 @@ class ProductDatabase:
             for product_data in products_list:
                 p_id = product_data["id"]
                 ids.append(p_id)
-                sku = product_data.get("sku", f"DPH-{p_id[:8].upper()}")
+                sku = product_data.get("sku", f"DPS-{p_id[:8].upper()}")
                 title = product_data["title"]
                 slug = product_data["slug"]
                 category = product_data["category"]
@@ -162,26 +194,46 @@ class ProductDatabase:
             # Compress FTS5 inverted index segments for ultra-fast query execution
             cursor.execute("INSERT INTO products_fts(products_fts) VALUES('optimize');")
             conn.commit()
-        return ids
-
-    def find_by_hash(self, file_hash: str) -> Optional[Dict[str, Any]]:
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT raw_data FROM products WHERE file_hash = ?", (file_hash,))
-            row = cursor.fetchone()
-            if row:
-                return json.loads(row["raw_data"])
-        return None
-
-    def get_product(self, product_id: str) -> Optional[Dict[str, Any]]:
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT raw_data FROM products WHERE id = ?", (product_id,))
-            row = cursor.fetchone()
-            if row:
-                return json.loads(row["raw_data"])
-        return None
-
+        return ids
+
+
+
+    def find_by_hash(self, file_hash: str) -> Optional[Dict[str, Any]]:
+
+        with self._get_connection() as conn:
+
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT raw_data FROM products WHERE file_hash = ?", (file_hash,))
+
+            row = cursor.fetchone()
+
+            if row:
+
+                return json.loads(row["raw_data"])
+
+        return None
+
+
+
+    def get_product(self, product_id: str) -> Optional[Dict[str, Any]]:
+
+        with self._get_connection() as conn:
+
+            cursor = conn.cursor()
+
+            cursor.execute("SELECT raw_data FROM products WHERE id = ?", (product_id,))
+
+            row = cursor.fetchone()
+
+            if row:
+
+                return json.loads(row["raw_data"])
+
+        return None
+
+
+
     def list_products(
         self,
         status: Optional[str] = None,
@@ -209,20 +261,34 @@ class ProductDatabase:
             cursor = conn.cursor()
             cursor.execute(query, params)
             rows = cursor.fetchall()
-            return [json.loads(row["raw_data"]) for row in rows]
-
-    def search_products(self, search_query: str, limit: int = 50) -> List[Dict[str, Any]]:
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT p.raw_data FROM products p
-                JOIN products_fts fts ON p.id = fts.id
-                WHERE products_fts MATCH ?
-                ORDER BY rank LIMIT ?
-            """, (search_query, limit))
-            rows = cursor.fetchall()
-            return [json.loads(row["raw_data"]) for row in rows]
-
+            return [json.loads(row["raw_data"]) for row in rows]
+
+
+
+    def search_products(self, search_query: str, limit: int = 50) -> List[Dict[str, Any]]:
+
+        with self._get_connection() as conn:
+
+            cursor = conn.cursor()
+
+            cursor.execute("""
+
+                SELECT p.raw_data FROM products p
+
+                JOIN products_fts fts ON p.id = fts.id
+
+                WHERE products_fts MATCH ?
+
+                ORDER BY rank LIMIT ?
+
+            """, (search_query, limit))
+
+            rows = cursor.fetchall()
+
+            return [json.loads(row["raw_data"]) for row in rows]
+
+
+
     def get_catalog_stats(self) -> Dict[str, Any]:
         with self._get_connection() as conn:
             cursor = conn.cursor()
@@ -244,4 +310,5 @@ class ProductDatabase:
                 "status_breakdown": by_status,
                 "lifecycle_state_breakdown": by_lifecycle,
                 "category_breakdown": by_category
-            }
+            }
+

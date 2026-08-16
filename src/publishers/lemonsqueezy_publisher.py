@@ -1,5 +1,5 @@
 """
-Lemon Squeezy Marketplace Publishing Adapter for Digital Products House
+Lemon Squeezy Marketplace Publishing Adapter for Digital Product Studio
 Implements Lemon Squeezy API v1 integration contract.
 """
 

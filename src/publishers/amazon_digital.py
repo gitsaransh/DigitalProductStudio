@@ -1,5 +1,5 @@
 """
-Amazon Digital / KDP Publisher Adapter for Digital Products House
+Amazon Digital / KDP Publisher Adapter for Digital Product Studio
 """
 
 import time

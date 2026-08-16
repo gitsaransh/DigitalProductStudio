@@ -1,5 +1,5 @@
 """
-Creative Market Publishing Adapter for Digital Products House
+Creative Market Publishing Adapter for Digital Product Studio
 """
 
 import time

@@ -1,5 +1,5 @@
 """
-Etsy API v3 OAuth2 Authorization & Credential Handler for Digital Products House
+Etsy API v3 OAuth2 Authorization & Credential Handler for Digital Product Studio
 Manages OAuth PKCE flow, state validation, and token exchanges securely.
 """
 

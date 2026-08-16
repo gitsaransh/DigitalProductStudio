@@ -14,7 +14,7 @@ export default function TopBar({ page, subtitle }) {
         >
           <Menu size={16} />
         </button>
-        <span className="topbar-breadcrumb-home">DPH Admin</span>
+        <span className="topbar-breadcrumb-home">DPS Admin</span>
         <span className="topbar-breadcrumb-sep">/</span>
         <span className="topbar-breadcrumb-current">{page}</span>
         {subtitle && <>

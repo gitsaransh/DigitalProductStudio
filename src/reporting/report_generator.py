@@ -1,5 +1,5 @@
 """
-Executive Report Generator for Digital Products House
+Executive Report Generator for Digital Product Studio
 Generates automated reports in HTML and PDF formats:
 - CEO Executive Summary
 - Financial P&L Statement
@@ -23,7 +23,7 @@ class ExecutiveReportGenerator:
         html_content = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Financial P&L Report - Digital Products House</title>
+    <title>Financial P&L Report - Digital Product Studio</title>
     <style>
         body {{ font-family: 'Helvetica', sans-serif; background: #0b0f19; color: #fff; padding: 40px; }}
         h1 {{ color: #6366f1; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }}
@@ -35,7 +35,7 @@ class ExecutiveReportGenerator:
     </style>
 </head>
 <body>
-    <h1>Digital Products House - Executive P&L Statement</h1>
+    <h1>Digital Product Studio - Executive P&L Statement</h1>
     <p>Generated on {date_str} | Environment: Production Enterprise</p>
     
     <div class="metric-card">
@@ -70,7 +70,7 @@ class ExecutiveReportGenerator:
 
         # PDF creation fallback
         with open(pdf_path, "w", encoding="utf-8") as f:
-            f.write(f"Digital Products House Financial P&L Report\nGenerated: {date_str}\nNet Operating Profit: $13,317.85 (89.68% Margin)")
+            f.write(f"Digital Product Studio Financial P&L Report\nGenerated: {date_str}\nNet Operating Profit: $13,317.85 (89.68% Margin)")
 
         print(f"[ReportGenerator] Financial P&L generated: {html_path} and {pdf_path}")
         return {"html_path": html_path, "pdf_path": pdf_path}

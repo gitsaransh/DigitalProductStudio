@@ -1,5 +1,5 @@
 """
-Zero-Fabrication Daily Executive COO Briefing Generator for Digital Products House
+Zero-Fabrication Daily Executive COO Briefing Generator for Digital Product Studio
 Every metric includes explicit Data Source provenance tagging:
 - Live API (Connected platform API data)
 - Internal Database (Computed directly from local SQLite WAL database)

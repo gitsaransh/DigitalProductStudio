@@ -1,5 +1,5 @@
 """
-Ko-fi Shop Publisher Adapter for Digital Products House
+Ko-fi Shop Publisher Adapter for Digital Product Studio
 """
 
 import time

@@ -1,5 +1,5 @@
 """
-Unified Metrics Service for Digital Products House
+Unified Metrics Service for Digital Product Studio
 Acts as the central middleware layer between the Dashboard UI and the underlying Data Source Layer.
 Decouples dashboard rendering from raw data source implementation details.
 

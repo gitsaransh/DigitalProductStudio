@@ -37,7 +37,7 @@ export default function Navbar() {
             </svg>
           </div>
           <div className="nav-logo-text-wrapper">
-            <div className="nav-logo-text">Digital Products House</div>
+            <div className="nav-logo-text">Digital Product Studio</div>
             <div className="nav-logo-sub">Premium Digital Assets</div>
           </div>
         </Link>

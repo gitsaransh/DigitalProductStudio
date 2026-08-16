@@ -1,4 +1,4 @@
-# Deployment & Operations Manual - Digital Products House
+# Deployment & Operations Manual - Digital Product Studio
 
 ## 1. Environment Setup & Requirements
 - **Python**: 3.10+

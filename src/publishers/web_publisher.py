@@ -1,5 +1,5 @@
 """
-Custom Web Storefront JSON API Publisher for Digital Products House
+Custom Web Storefront JSON API Publisher for Digital Product Studio
 Publishes products directly to Studio's custom website catalog API.
 """
 
@@ -8,13 +8,13 @@ from typing import Dict, Any
 from src.publishers.base_publisher import BaseMarketplacePublisher
 
 class WebPublisher(BaseMarketplacePublisher):
-    def __init__(self, api_endpoint: str = "https://digitalproductshouse.com/api/products"):
+    def __init__(self, api_endpoint: str = "https://digitalproductstudio.in/api/products"):
         self.api_endpoint = api_endpoint
 
     def publish(self, product_data: Dict[str, Any]) -> Dict[str, Any]:
         p_id = product_data["id"]
         slug = product_data["slug"]
-        web_url = f"https://digitalproductshouse.com/products/{slug}"
+        web_url = f"https://digitalproductstudio.in/products/{slug}"
 
         print(f"[Custom Web Publisher] Published to storefront -> {web_url}")
         return {

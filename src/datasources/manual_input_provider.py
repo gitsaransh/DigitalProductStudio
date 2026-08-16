@@ -19,6 +19,6 @@ class ManualInputProvider(BaseDataSourceProvider):
             return format_metric_with_source("20,000.00", self.source_type, unit="$")
 
         if metric_key == "brand_name":
-            return format_metric_with_source("Digital Products House", self.source_type)
+            return format_metric_with_source("Digital Product Studio", self.source_type)
 
         return format_metric_with_source("Not Configured", self.source_type)

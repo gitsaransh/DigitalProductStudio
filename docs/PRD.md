@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD) - Digital Products House (Phase 2 Enterprise)
+# Product Requirements Document (PRD) - Digital Product Studio (Phase 2 Enterprise)
 
 ## 1. Product Requirements Summary
 

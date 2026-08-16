@@ -1,4 +1,4 @@
-# DPH Business Strategy & Positioning
+# DPS Business Strategy & Positioning
 
 ## 1. Brand Positioning
 

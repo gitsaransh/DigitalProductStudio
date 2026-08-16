@@ -1,5 +1,5 @@
 """
-SEO & Listing Generator Engine for Digital Products House
+SEO & Listing Generator Engine for Digital Product Studio
 Produces marketplace-optimized listing metadata:
 - Etsy 140-char title (Primary keywords placed at the front for maximum search ranking)
 - Exactly 13 Etsy Search Tags (Max 20 chars per tag, no punctuation)
@@ -94,7 +94,7 @@ class ListingGenerator:
         # Markdown Description Copy
         description = f"""# {base_name} - Instant Digital Download
 
-Elevate your workflow with **{base_name}**, professionally crafted by Digital Products House. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.
+Elevate your workflow with **{base_name}**, professionally crafted by Digital Product Studio. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.
 
 ---
 
@@ -122,7 +122,7 @@ A: Once payment is processed, Etsy / the sales platform will provide an instant 
 A: Yes! Files are fully unlocked for customization based on your personal license.
 
 ---
-*© Digital Products House. All rights reserved.*
+*© Digital Product Studio. All rights reserved.*
 """
 
         raw_data["title"] = etsy_title

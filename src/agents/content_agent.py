@@ -13,7 +13,7 @@ class ContentAgent(BaseAIAgent):
         title = payload.get("title", "Digital Asset")
         category = payload.get("category", "Templates")
 
-        copy = f"#{title}\n\nPremium digital resource designed by Digital Products House."
+        copy = f"#{title}\n\nPremium digital resource designed by Digital Product Studio."
         payload["description"] = copy
         payload["content_status"] = "generated"
         return payload

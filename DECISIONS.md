@@ -62,7 +62,7 @@
 
 **Tradeoffs accepted**:
 - `EtsyPublisher` and `GumroadPublisher` have a branch for "when key is present" that returns a fake generated ID — no actual API call is made even with a real key. This is incomplete.
-- `WebPublisher` always returns `active` with a hardcoded URL (`https://digitalproductshouse.com`) regardless of credentials. This will silently lie about publish status.
+- `WebPublisher` always returns `active` with a hardcoded URL (`https://digitalproductstudio.in`) regardless of credentials. This will silently lie about publish status.
 - 6 of 10 adapters (Shopify, WooCommerce, Ko-fi, Payhip, Amazon Digital, Creative Market) appear to be scaffold files with no meaningful implementation beyond class definition.
 
 ---

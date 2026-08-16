@@ -1,4 +1,4 @@
-# Operations Runbook - Digital Products House (Phase 2 Enterprise)
+# Operations Runbook - Digital Product Studio (Phase 2 Enterprise)
 
 ## 1. Daily Operating Rhythm
 1. **Payload Ingestion**: Verify creator agents place raw payload folders into `catalog/raw_ingest/`.

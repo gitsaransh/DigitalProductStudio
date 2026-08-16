@@ -1,5 +1,5 @@
 """
-Multi-Card High-Res Preview & Thumbnail Generator for Digital Products House
+Multi-Card High-Res Preview & Thumbnail Generator for Digital Product Studio
 Creates 2700x2025 (4:3 aspect ratio @ 300 DPI) Etsy marketplace graphics:
 1. Cover Card (Hero Product Display with title and badge)
 2. Feature Card (Key Benefits & Highlights)
@@ -85,7 +85,7 @@ class ThumbnailGenerator:
             font_watermark = ImageFont.load_default()
 
         # Draw Header
-        draw.text((100, 100), f"DIGITAL PRODUCTS HOUSE  •  {category_text.upper()}", fill=(165, 180, 252), font=font_label)
+        draw.text((100, 100), f"DIGITAL PRODUCT STUDIO  •  {category_text.upper()}", fill=(165, 180, 252), font=font_label)
 
         # Main Title Box
         draw.text((100, 400), title_text[:50] + ("..." if len(title_text) > 50 else ""), fill=(255, 255, 255), font=font_title)
@@ -108,7 +108,7 @@ class ThumbnailGenerator:
 
         elif slide_type == "mockup":
             # Watermark Overlay
-            draw.text((self.width // 2 - 400, self.height // 2), "DIGITAL PRODUCTS HOUSE - PREVIEW", fill=(255, 255, 255, 60), font=font_watermark)
+            draw.text((self.width // 2 - 400, self.height // 2), "DIGITAL PRODUCT STUDIO - PREVIEW", fill=(255, 255, 255, 60), font=font_watermark)
 
         # Footer Accent Bar
         draw.rectangle([0, self.height - 60, self.width, self.height], fill=(79, 70, 229))

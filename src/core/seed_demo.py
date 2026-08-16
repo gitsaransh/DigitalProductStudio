@@ -1,5 +1,5 @@
 """
-Phase 2 Enterprise Verification Script for Digital Products House
+Phase 2 Enterprise Verification Script for Digital Product Studio
 Tests:
 1. Product Lifecycle State Machine (9 States)
 2. AI Agent Swarm Execution (8 Agents)

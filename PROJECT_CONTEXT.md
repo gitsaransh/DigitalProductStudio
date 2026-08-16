@@ -1,4 +1,4 @@
-# PROJECT_CONTEXT.md — Digital Products House
+# PROJECT_CONTEXT.md — Digital Product Studio
 
 **Last audited**: 2026-08-11  
 **Audit basis**: Direct inspection of all source files. Documentation does not replace code.
@@ -7,7 +7,7 @@
 
 ## 1. What the Product Does
 
-Digital Products House is a **semi-automated digital product publishing studio**. It lets a solo operator (or small team) create, enrich, QA, and publish downloadable digital products (PDF planners, Canva templates, Excel spreadsheets, AI prompt kits) to multiple e-commerce marketplaces simultaneously — Etsy, Gumroad, Lemon Squeezy, Shopify, Ko-fi, Payhip, Creative Market, Amazon Digital, WooCommerce, and a custom web storefront.
+Digital Product Studio is a **semi-automated digital product publishing studio**. It lets a solo operator (or small team) create, enrich, QA, and publish downloadable digital products (PDF planners, Canva templates, Excel spreadsheets, AI prompt kits) to multiple e-commerce marketplaces simultaneously — Etsy, Gumroad, Lemon Squeezy, Shopify, Ko-fi, Payhip, Creative Market, Amazon Digital, WooCommerce, and a custom web storefront.
 
 The system is designed to scale to 100,000+ products with near-zero manual effort per product, using:
 - An AI agent swarm to generate SEO copy, thumbnails, and customer guides
@@ -47,7 +47,7 @@ Currently fully implemented with live-API-or-stub logic:
 - **EtsyPublisher**: Checks `ETSY_API_KEY` env var; returns `not_connected` if missing. No actual Etsy API call is made yet when key is present — returns a generated fake ID.
 - **GumroadPublisher**: Checks `GUMROAD_ACCESS_TOKEN`; same stub pattern.
 - **LemonSqueezyPublisher**: Same stub.
-- **WebPublisher**: Always returns `active` with hardcoded `digitalproductshouse.com` URL and hardcoded analytics figures. **This URL is not live.**
+- **WebPublisher**: Always returns `active` with hardcoded `digitalproductstudio.in` URL and hardcoded analytics figures. **This URL is not live.**
 - **ShopifyPublisher, WooCommercePublisher, KofiPublisher, PayhipPublisher, AmazonDigitalPublisher, CreativeMarketPublisher**: Stub implementations only (see file sizes ~800-850 bytes each).
 
 ### Front-End (React + Vite)
@@ -170,7 +170,7 @@ ApprovalManager.approve_and_publish(product_id)
 ## 9. Important Constraints
 
 1. The `.env` file currently contains only empty values for all API keys.
-2. `WebPublisher` hardcodes `https://digitalproductshouse.com` — a domain that may not be registered or live.
+2. `WebPublisher` hardcodes `https://digitalproductstudio.in` — a domain that may not be registered or live.
 3. `ETSY_SHOP_ID` is set to `ZenithPlannersCo` as a placeholder.
 4. The `dashboard/` and `admin/` directories at the root are the original standalone React apps — they still exist but their dev servers have been shut down. Canonical source is now `website/src/admin/` and `website/src/coo/`.
 5. `LifecycleManager` uses `lifecycle_state` as the primary field, but the DB schema stores `status`. A compatibility shim exists in `lifecycle_manager.py` line 66, but both fields co-exist in `raw_data` JSON — this is a latent inconsistency.

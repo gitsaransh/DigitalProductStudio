@@ -1,5 +1,5 @@
 """
-Gumroad Marketplace Publishing Adapter for Digital Products House
+Gumroad Marketplace Publishing Adapter for Digital Product Studio
 """
 
 import os

@@ -1,5 +1,5 @@
 """
-Payhip Store Publisher Adapter for Digital Products House
+Payhip Store Publisher Adapter for Digital Product Studio
 """
 
 import time

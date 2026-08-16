@@ -22,7 +22,7 @@ class TestProductDatabase(unittest.TestCase):
         p_id = str(uuid.uuid4())
         product_data = {
             "id": p_id,
-            "sku": "DPH-TEST-001",
+            "sku": "DPS-TEST-001",
             "title": "Test Product Title",
             "slug": "test-product-title",
             "category": "Planners & Organizers",

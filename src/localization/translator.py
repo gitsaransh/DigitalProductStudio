@@ -1,5 +1,5 @@
 """
-Multi-Language Translation Engine for Digital Products House
+Multi-Language Translation Engine for Digital Product Studio
 Supports 7 Languages: English (EN), German (DE), French (FR), Spanish (ES), Italian (IT), Portuguese (PT), Japanese (JA).
 Stores translated assets separately to preserve core payload integrity.
 """

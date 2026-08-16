@@ -1,4 +1,4 @@
-# Disaster Recovery & Backup Plan - Digital Products House
+# Disaster Recovery & Backup Plan - Digital Product Studio
 
 ## 1. Database Backup & WAL Snapshots
 - The primary catalog database is located at `catalog/studio_catalog.db`.

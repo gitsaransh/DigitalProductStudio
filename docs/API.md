@@ -1,4 +1,4 @@
-# API & Adapter Specification - Digital Products House
+# API & Adapter Specification - Digital Product Studio
 
 ## 1. Internal Engine API Interface
 

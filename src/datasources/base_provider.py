@@ -1,5 +1,5 @@
 """
-Abstract Base Data Source Provider for Digital Products House
+Abstract Base Data Source Provider for Digital Product Studio
 Defines uniform contract for all underlying metric data providers.
 """
 

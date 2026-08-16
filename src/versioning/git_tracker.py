@@ -1,5 +1,5 @@
 """
-Git Versioning & Changelog Tracker for Digital Products House
+Git Versioning & Changelog Tracker for Digital Product Studio
 Tracks asset revisions, version bumps, and historical changes per product.
 """
 

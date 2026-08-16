@@ -1,5 +1,5 @@
 """
-Live Pre-Flight Launch Validation Script for Digital Products House
+Live Pre-Flight Launch Validation Script for Digital Product Studio
 Executes live system diagnostics across 13 critical launch requirements.
 Outputs Launch Readiness Checklist with PASS / WARNING / FAIL status.
 """
@@ -85,7 +85,7 @@ class PreflightValidator:
         else:
             # Create template .env if missing
             with open(env_path, "w", encoding="utf-8") as f:
-                f.write("# Digital Products House Credentials Template\nETSY_API_KEY=\nETSY_SHOP_ID=ZenithPlannersCo\nETSY_OAUTH_REDIRECT_URI=http://localhost:5174/oauth/callback\nGUMROAD_ACCESS_TOKEN=\nLEMONSQUEEZY_API_KEY=\nSHOPIFY_ACCESS_TOKEN=\n")
+                f.write("# Digital Product Studio Credentials Template\nETSY_API_KEY=\nETSY_SHOP_ID=ZenithPlannersCo\nETSY_OAUTH_REDIRECT_URI=http://localhost:5174/oauth/callback\nGUMROAD_ACCESS_TOKEN=\nLEMONSQUEEZY_API_KEY=\nSHOPIFY_ACCESS_TOKEN=\n")
             self.log_result(".env Structure", "WARNING", ".env template created (awaiting credentials)", requires_credentials=True)
 
         # 7. Required API credentials
@@ -153,7 +153,7 @@ class PreflightValidator:
 
         md = f"""# Launch Readiness Pre-Flight Checklist
 
-**Digital Products House System Pre-Flight Diagnostics**  
+**Digital Product Studio System Pre-Flight Diagnostics**  
 **Generated Date**: August 2026  
 
 ---

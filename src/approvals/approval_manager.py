@@ -1,5 +1,5 @@
 """
-Human-in-the-Loop Manual Approval Manager for Digital Products House
+Human-in-the-Loop Manual Approval Manager for Digital Product Studio
 Enforces quality control before products are published to live marketplaces.
 """
 

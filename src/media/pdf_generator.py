@@ -1,5 +1,5 @@
 """
-Customer Instructions PDF Generator for Digital Products House
+Customer Instructions PDF Generator for Digital Product Studio
 Generates professional PDF guides delivered alongside instant digital downloads.
 """
 

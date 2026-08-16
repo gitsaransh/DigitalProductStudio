@@ -1,5 +1,5 @@
 """
-Base AI Agent Class for Digital Products House Agent Swarm Architecture
+Base AI Agent Class for Digital Product Studio Agent Swarm Architecture
 """
 
 from abc import ABC, abstractmethod

@@ -1,212 +1,424 @@
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "DigitalProduct",
-  "description": "Standardized schema for 100,000+ digital products managed by Digital Products House across multiple marketplaces",
-  "type": "object",
-  "required": [
-    "id",
-    "title",
-    "slug",
-    "category",
-    "version",
-    "status",
-    "file_hash",
-    "created_at",
-    "updated_at",
-    "pricing",
-    "marketplaces",
-    "license"
-  ],
-  "properties": {
-    "id": {
-      "type": "string",
-      "format": "uuid",
-      "description": "Unique UUID v4 product identifier"
-    },
-    "sku": {
-      "type": "string",
-      "description": "Internal Stock Keeping Unit (e.g. DPH-PLN-2026-001)"
-    },
-    "title": {
-      "type": "string",
-      "maxLength": 140,
-      "description": "Primary SEO optimized product title (Etsy compatible <= 140 chars)"
-    },
-    "slug": {
-      "type": "string",
-      "description": "URL-friendly string identifier"
-    },
-    "subtitle": {
-      "type": "string",
-      "description": "Secondary catchy tagline or highlight line"
-    },
-    "description": {
-      "type": "string",
-      "description": "Comprehensive HTML/Markdown formatted product listing description"
-    },
-    "category": {
-      "type": "string",
-      "enum": [
-        "Planners & Organizers",
-        "Notion & Productivity Systems",
-        "Social Media & Canva Templates",
-        "Business & Finance Spreadsheets",
-        "Digital Printables & Wall Art",
-        "AI Prompts & Automation Kits",
-        "Developer & Tech Resources",
-        "Graphics & Vector Assets"
-      ]
-    },
-    "sub_category": {
-      "type": "string"
-    },
-    "tags": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "maxLength": 20
-      },
-      "maxItems": 13,
-      "description": "Etsy search keywords (max 13 tags, max 20 chars per tag)"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "default": "1.0.0"
-    },
-    "status": {
-      "type": "string",
-      "enum": [
-        "draft",
-        "pending_approval",
-        "approved",
-        "published",
-        "rejected",
-        "archived"
-      ],
-      "default": "draft"
-    },
-    "file_hash": {
-      "type": "string",
-      "pattern": "^[a-f0-9]{64}$",
-      "description": "SHA-256 hash of primary product file payload for duplicate detection"
-    },
-    "pricing": {
-      "type": "object",
-      "required": ["base_price", "currency"],
-      "properties": {
-        "base_price": {
-          "type": "number",
-          "minimum": 0
-        },
-        "sale_price": {
-          "type": ["number", "null"]
-        },
-        "currency": {
-          "type": "string",
-          "default": "USD"
-        },
-        "discount_percent": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100,
-          "default": 0
-        }
-      }
-    },
-    "license": {
-      "type": "string",
-      "enum": [
-        "Personal Use Only",
-        "Commercial Use Included",
-        "Extended Commercial License",
-        "PLR (Private Label Rights)"
-      ],
-      "default": "Personal Use Only"
-    },
-    "files": {
-      "type": "object",
-      "properties": {
-        "primary_asset": { "type": "string" },
-        "bonus_assets": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "customer_instructions_pdf": { "type": "string" }
-      }
-    },
-    "previews": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "type": { "type": "string", "enum": ["cover", "feature", "usage", "palette", "mockup"] },
-          "file_path": { "type": "string" },
-          "width": { "type": "integer", "default": 2700 },
-          "height": { "type": "integer", "default": 2025 }
-        }
-      }
-    },
-    "marketplaces": {
-      "type": "object",
-      "properties": {
-        "etsy": {
-          "type": "object",
-          "properties": {
-            "listing_id": { "type": ["string", "null"] },
-            "status": { "type": "string", "enum": ["draft", "active", "inactive", "error"] },
-            "published_at": { "type": ["string", "null"] },
-            "listing_url": { "type": ["string", "null"] }
-          }
-        },
-        "gumroad": {
-          "type": "object",
-          "properties": {
-            "product_id": { "type": ["string", "null"] },
-            "status": { "type": "string" },
-            "product_url": { "type": ["string", "null"] }
-          }
-        },
-        "lemonsqueezy": {
-          "type": "object",
-          "properties": {
-            "variant_id": { "type": ["string", "null"] },
-            "status": { "type": "string" },
-            "buy_url": { "type": ["string", "null"] }
-          }
-        },
-        "custom_web": {
-          "type": "object",
-          "properties": {
-            "slug": { "type": "string" },
-            "status": { "type": "string" }
-          }
-        }
-      }
-    },
-    "analytics_summary": {
-      "type": "object",
-      "properties": {
-        "total_views": { "type": "integer", "default": 0 },
-        "total_downloads": { "type": "integer", "default": 0 },
-        "total_revenue": { "type": "number", "default": 0.0 },
-        "conversion_rate": { "type": "number", "default": 0.0 },
-        "refund_count": { "type": "integer", "default": 0 }
-      }
-    },
-    "changelog": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "version": { "type": "string" },
-          "date": { "type": "string" },
-          "changes": { "type": "string" },
-          "author": { "type": "string" }
-        }
-      }
-    },
-    "created_at": { "type": "string" },
-    "updated_at": { "type": "string" }
-  }
-}
+{
+
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "title": "DigitalProduct",
+
+  "description": "Standardized schema for 100,000+ digital products managed by Digital Product Studio across multiple marketplaces",
+
+  "type": "object",
+
+  "required": [
+
+    "id",
+
+    "title",
+
+    "slug",
+
+    "category",
+
+    "version",
+
+    "status",
+
+    "file_hash",
+
+    "created_at",
+
+    "updated_at",
+
+    "pricing",
+
+    "marketplaces",
+
+    "license"
+
+  ],
+
+  "properties": {
+
+    "id": {
+
+      "type": "string",
+
+      "format": "uuid",
+
+      "description": "Unique UUID v4 product identifier"
+
+    },
+
+    "sku": {
+
+      "type": "string",
+
+      "description": "Internal Stock Keeping Unit (e.g. DPS-PLN-2026-001)"
+
+    },
+
+    "title": {
+
+      "type": "string",
+
+      "maxLength": 140,
+
+      "description": "Primary SEO optimized product title (Etsy compatible <= 140 chars)"
+
+    },
+
+    "slug": {
+
+      "type": "string",
+
+      "description": "URL-friendly string identifier"
+
+    },
+
+    "subtitle": {
+
+      "type": "string",
+
+      "description": "Secondary catchy tagline or highlight line"
+
+    },
+
+    "description": {
+
+      "type": "string",
+
+      "description": "Comprehensive HTML/Markdown formatted product listing description"
+
+    },
+
+    "category": {
+
+      "type": "string",
+
+      "enum": [
+
+        "Planners & Organizers",
+
+        "Notion & Productivity Systems",
+
+        "Social Media & Canva Templates",
+
+        "Business & Finance Spreadsheets",
+
+        "Digital Printables & Wall Art",
+
+        "AI Prompts & Automation Kits",
+
+        "Developer & Tech Resources",
+
+        "Graphics & Vector Assets"
+
+      ]
+
+    },
+
+    "sub_category": {
+
+      "type": "string"
+
+    },
+
+    "tags": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "string",
+
+        "maxLength": 20
+
+      },
+
+      "maxItems": 13,
+
+      "description": "Etsy search keywords (max 13 tags, max 20 chars per tag)"
+
+    },
+
+    "version": {
+
+      "type": "string",
+
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+
+      "default": "1.0.0"
+
+    },
+
+    "status": {
+
+      "type": "string",
+
+      "enum": [
+
+        "draft",
+
+        "pending_approval",
+
+        "approved",
+
+        "published",
+
+        "rejected",
+
+        "archived"
+
+      ],
+
+      "default": "draft"
+
+    },
+
+    "file_hash": {
+
+      "type": "string",
+
+      "pattern": "^[a-f0-9]{64}$",
+
+      "description": "SHA-256 hash of primary product file payload for duplicate detection"
+
+    },
+
+    "pricing": {
+
+      "type": "object",
+
+      "required": ["base_price", "currency"],
+
+      "properties": {
+
+        "base_price": {
+
+          "type": "number",
+
+          "minimum": 0
+
+        },
+
+        "sale_price": {
+
+          "type": ["number", "null"]
+
+        },
+
+        "currency": {
+
+          "type": "string",
+
+          "default": "USD"
+
+        },
+
+        "discount_percent": {
+
+          "type": "number",
+
+          "minimum": 0,
+
+          "maximum": 100,
+
+          "default": 0
+
+        }
+
+      }
+
+    },
+
+    "license": {
+
+      "type": "string",
+
+      "enum": [
+
+        "Personal Use Only",
+
+        "Commercial Use Included",
+
+        "Extended Commercial License",
+
+        "PLR (Private Label Rights)"
+
+      ],
+
+      "default": "Personal Use Only"
+
+    },
+
+    "files": {
+
+      "type": "object",
+
+      "properties": {
+
+        "primary_asset": { "type": "string" },
+
+        "bonus_assets": {
+
+          "type": "array",
+
+          "items": { "type": "string" }
+
+        },
+
+        "customer_instructions_pdf": { "type": "string" }
+
+      }
+
+    },
+
+    "previews": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "object",
+
+        "properties": {
+
+          "type": { "type": "string", "enum": ["cover", "feature", "usage", "palette", "mockup"] },
+
+          "file_path": { "type": "string" },
+
+          "width": { "type": "integer", "default": 2700 },
+
+          "height": { "type": "integer", "default": 2025 }
+
+        }
+
+      }
+
+    },
+
+    "marketplaces": {
+
+      "type": "object",
+
+      "properties": {
+
+        "etsy": {
+
+          "type": "object",
+
+          "properties": {
+
+            "listing_id": { "type": ["string", "null"] },
+
+            "status": { "type": "string", "enum": ["draft", "active", "inactive", "error"] },
+
+            "published_at": { "type": ["string", "null"] },
+
+            "listing_url": { "type": ["string", "null"] }
+
+          }
+
+        },
+
+        "gumroad": {
+
+          "type": "object",
+
+          "properties": {
+
+            "product_id": { "type": ["string", "null"] },
+
+            "status": { "type": "string" },
+
+            "product_url": { "type": ["string", "null"] }
+
+          }
+
+        },
+
+        "lemonsqueezy": {
+
+          "type": "object",
+
+          "properties": {
+
+            "variant_id": { "type": ["string", "null"] },
+
+            "status": { "type": "string" },
+
+            "buy_url": { "type": ["string", "null"] }
+
+          }
+
+        },
+
+        "custom_web": {
+
+          "type": "object",
+
+          "properties": {
+
+            "slug": { "type": "string" },
+
+            "status": { "type": "string" }
+
+          }
+
+        }
+
+      }
+
+    },
+
+    "analytics_summary": {
+
+      "type": "object",
+
+      "properties": {
+
+        "total_views": { "type": "integer", "default": 0 },
+
+        "total_downloads": { "type": "integer", "default": 0 },
+
+        "total_revenue": { "type": "number", "default": 0.0 },
+
+        "conversion_rate": { "type": "number", "default": 0.0 },
+
+        "refund_count": { "type": "integer", "default": 0 }
+
+      }
+
+    },
+
+    "changelog": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "object",
+
+        "properties": {
+
+          "version": { "type": "string" },
+
+          "date": { "type": "string" },
+
+          "changes": { "type": "string" },
+
+          "author": { "type": "string" }
+
+        }
+
+      }
+
+    },
+
+    "created_at": { "type": "string" },
+
+    "updated_at": { "type": "string" }
+
+  }
+
+}
+

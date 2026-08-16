@@ -14,7 +14,7 @@ const AGENTS = [
 ];
 
 const MILESTONES = [
-  { year: '2026', label: 'Studio Founded', desc: 'Digital Products House launched as an AI-native publishing operation.' },
+  { year: '2026', label: 'Studio Founded', desc: 'Digital Product Studio launched as an AI-native publishing operation.' },
   { year: 'Q2 2026', label: 'First 100 Products', desc: 'First 100 digital assets published across Etsy, Gumroad, and direct web.' },
   { year: 'Q3 2026', label: '8-Agent Swarm', desc: 'Full AI agent swarm operational — content, SEO, QA, publishing all automated.' },
   { year: 'Q4 2026', label: '10 Marketplace Adapters', desc: 'Publishing pipeline connected across all 10 major digital marketplaces.' },
@@ -27,7 +27,7 @@ export default function About() {
         <div className="container page-header-content">
           <span className="badge badge-primary" style={{ marginBottom: '12px' }}>About Us</span>
           <h1>Built on AI. Crafted for Creators.</h1>
-          <p>Digital Products House is an enterprise-grade digital publishing operation, combining AI automation with human creative excellence.</p>
+          <p>Digital Product Studio is an enterprise-grade digital publishing operation, combining AI automation with human creative excellence.</p>
         </div>
       </div>
 

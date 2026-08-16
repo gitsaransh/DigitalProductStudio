@@ -1,5 +1,5 @@
 """
-Etsy Operations & Store Management Engine for Digital Products House
+Etsy Operations & Store Management Engine for Digital Product Studio
 Manages Etsy Seller Operations:
 - Orders & Automated Fulfillment
 - Buyer Reviews & Automated Thank-You Messages

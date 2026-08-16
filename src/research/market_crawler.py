@@ -1,5 +1,5 @@
 """
-Compliant Market Research & Opportunity Gap Scanner for Digital Products House
+Compliant Market Research & Opportunity Gap Scanner for Digital Product Studio
 Tracks:
 - Top Selling Categories & Trending Keywords
 - Seasonal Demand Signals

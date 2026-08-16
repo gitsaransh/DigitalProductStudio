@@ -1,5 +1,5 @@
 """
-Digital Products House — FastAPI Bridge Server (D-008)
+Digital Product Studio — FastAPI Bridge Server (D-008)
 Exposes the Python back-end catalog, approval pipeline, and system stats
 over HTTP so the React front-end can fetch live data.
 
@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.api.routes import health, products, approvals, stats
 
 app = FastAPI(
-    title="Digital Products House API",
+    title="Digital Product Studio API",
     description="Internal catalog and approval bridge between Python back-end and React front-end.",
     version="1.0.0",
 )

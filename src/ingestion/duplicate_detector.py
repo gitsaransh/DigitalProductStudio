@@ -1,5 +1,5 @@
 """
-SHA-256 Duplicate Detection Engine for Digital Products House
+SHA-256 Duplicate Detection Engine for Digital Product Studio
 Computes binary hash of product payloads and checks against database index to prevent duplicate listings.
 """
 

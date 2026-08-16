@@ -1,5 +1,5 @@
 """
-Etsy Marketplace Publishing Adapter for Digital Products House
+Etsy Marketplace Publishing Adapter for Digital Product Studio
 Implements Etsy Open API v3 integration with strict zero-fabrication status rules.
 """
 

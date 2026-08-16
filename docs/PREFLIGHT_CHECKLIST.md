@@ -1,6 +1,6 @@
 # Launch Readiness Pre-Flight Checklist
 
-**Digital Products House System Pre-Flight Diagnostics**  
+**Digital Product Studio System Pre-Flight Diagnostics**  
 **Generated Date**: August 2026  
 
 ---

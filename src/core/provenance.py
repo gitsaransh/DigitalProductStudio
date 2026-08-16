@@ -1,5 +1,5 @@
 """
-Data Provenance & Source Attribution Standard for Digital Products House
+Data Provenance & Source Attribution Standard for Digital Product Studio
 Enforces strict zero-fabrication real-world data rules across all metrics, reports, and UI widgets.
 """
 

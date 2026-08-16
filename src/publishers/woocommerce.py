@@ -1,5 +1,5 @@
 """
-WooCommerce Digital Publishing Adapter for Digital Products House
+WooCommerce Digital Publishing Adapter for Digital Product Studio
 """
 
 import time

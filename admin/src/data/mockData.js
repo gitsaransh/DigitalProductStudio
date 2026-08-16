@@ -1,4 +1,4 @@
-// ─── DPH Admin Mock Data ───────────────────────────────────
+// ─── DPS Admin Mock Data ───────────────────────────────────
 
 export const PRODUCTS = [
   { id: 'a694', title: 'Zenith Ultimate Life Planner 2026', category: 'Productivity', price: 14.99, status: 'published', rating: 5.0, reviews: 312, downloads: 2840, score: 94, langs: ['EN','DE','FR','ES','JA'] },
@@ -48,7 +48,7 @@ export const BLOG_POSTS = [
 
 export const EMAIL_TEMPLATES = [
   { id: 'em-1', name: 'Purchase Confirmation & Download', trigger: 'On Purchase', status: 'active', opens: '94.2%', clicks: '81.3%', lastSent: '2026-08-09' },
-  { id: 'em-2', name: 'Welcome to DPH Newsletter', trigger: 'On Subscribe', status: 'active', opens: '62.4%', clicks: '28.7%', lastSent: '2026-08-07' },
+  { id: 'em-2', name: 'Welcome to DPS Newsletter', trigger: 'On Subscribe', status: 'active', opens: '62.4%', clicks: '28.7%', lastSent: '2026-08-07' },
   { id: 'em-3', name: 'Refund Processed', trigger: 'On Refund', status: 'active', opens: '88.9%', clicks: '12.1%', lastSent: '2026-08-07' },
   { id: 'em-4', name: 'Weekly New Products Digest', trigger: 'Weekly — Sunday 9am', status: 'active', opens: '41.2%', clicks: '18.6%', lastSent: '2026-08-03' },
   { id: 'em-5', name: 'Abandoned Cart Recovery', trigger: 'After 2h no checkout', status: 'paused', opens: '29.8%', clicks: '9.2%', lastSent: '2026-07-30' },

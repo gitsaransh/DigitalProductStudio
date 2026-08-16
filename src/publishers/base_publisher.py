@@ -1,5 +1,5 @@
 """
-Abstract Base Publisher Interface for Digital Products House
+Abstract Base Publisher Interface for Digital Product Studio
 Defines uniform contract for all marketplace publishing adapters.
 """
 

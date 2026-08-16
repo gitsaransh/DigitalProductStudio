@@ -1,107 +1,319 @@
-{
-  "id": "49162179-46bc-43f2-95af-ce2602801ff6",
-  "sku": "DPH-49162179",
-  "title": "Executive Small Business Finance Tracker | Business & Finance Spreadsheets | Instant Download",
-  "slug": "executive-small-business-finance-tracker",
-  "category": "Business & Finance Spreadsheets",
-  "sub_category": "Templates",
-  "status": "pending_approval",
-  "version": "1.0.0",
-  "file_hash": "2af3691fa2770f92d103b1f70175d766c467d33e08b82bfe8344a8676af151e0",
-  "pricing": {
-    "base_price": 24.99,
-    "currency": "USD",
-    "discount_percent": 0
-  },
-  "license": "Commercial Use Included",
-  "marketplaces": {
-    "etsy": {
-      "status": "draft",
-      "listing_id": null
-    },
-    "gumroad": {
-      "status": "draft",
-      "product_id": null
-    },
-    "lemonsqueezy": {
-      "status": "draft",
-      "variant_id": null
-    },
-    "custom_web": {
-      "status": "draft",
-      "slug": "executive-small-business-finance-tracker"
-    }
-  },
-  "created_at": "2026-08-08T23:49:44Z",
-  "updated_at": "2026-08-08T23:49:44Z",
-  "changelog": [
-    {
-      "version": "1.0.0",
-      "date": "2026-08-08T23:49:44Z",
-      "changes": "Initial payload ingestion & SEO generation",
-      "author": "AI COO"
-    }
-  ],
-  "tags": [
-    "business finance spr",
-    "executive small busi",
-    "digital download",
-    "instant download",
-    "printable template",
-    "aesthetic planner",
-    "minimalist design",
-    "custom template",
-    "productivity os",
-    "commercial license",
-    "creator assets",
-    "digital os",
-    "pro bundle"
-  ],
-  "description": "# Executive Small Business Finance Tracker - Instant Digital Download\n\nElevate your workflow with **Executive Small Business Finance Tracker**, professionally crafted by Digital Products House. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.\n\n---\n\n### \ud83c\udf1f WHAT IS INCLUDED\n- **1x Primary Digital Payload Asset** (High-Resolution / Source Format)\n- **1x PDF Instant Customer Guide** (Step-by-step setup instructions)\n- **Bonus Creator Resources & Licensing Document**\n\n---\n\n### \ud83c\udfaf KEY HIGHLIGHTS\n- **Instant Access**: Download immediately upon purchase confirmation.\n- **Fully Customizable**: Personalize colors, layouts, and data fields effortlessly.\n- **Cross-Platform Compatibility**: Works flawlessly on Desktop, Laptop, and Tablet devices.\n- **Commercial Use Option**: Suitable for personal and client projects.\n\n---\n\n### \u2753 FREQUENTLY ASKED QUESTIONS (FAQ)\n\n**Q: How do I receive my download?**\nA: Once payment is processed, Etsy / the sales platform will provide an instant link to download your PDF guide and zip archive.\n\n**Q: Can I edit these files?**\nA: Yes! Files are fully unlocked for customization based on your personal license.\n\n---\n*\u00a9 Digital Products House. All rights reserved.*\n",
-  "faqs": [
-    {
-      "question": "How do I download my file?",
-      "answer": "Instant download available via order confirmation page."
-    },
-    {
-      "question": "Is commercial use allowed?",
-      "answer": "Included under Commercial Use Included."
-    }
-  ],
-  "previews": [
-    {
-      "type": "cover",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_1_cover.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "feature",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_2_feature.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "usage",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_3_usage.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "palette",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_4_palette.png",
-      "width": 2700,
-      "height": 2025
-    },
-    {
-      "type": "mockup",
-      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_5_mockup.png",
-      "width": 2700,
-      "height": 2025
-    }
-  ],
-  "files": {
-    "primary_asset": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\payload.zip",
-    "customer_instructions_pdf": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductsHouse\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\Customer_Instructions.pdf"
-  }
+{
+
+
+  "id": "49162179-46bc-43f2-95af-ce2602801ff6",
+
+
+  "sku": "DPS-49162179",
+
+
+  "title": "Executive Small Business Finance Tracker | Business & Finance Spreadsheets | Instant Download",
+
+
+  "slug": "executive-small-business-finance-tracker",
+
+
+  "category": "Business & Finance Spreadsheets",
+
+
+  "sub_category": "Templates",
+
+
+  "status": "pending_approval",
+
+
+  "version": "1.0.0",
+
+
+  "file_hash": "2af3691fa2770f92d103b1f70175d766c467d33e08b82bfe8344a8676af151e0",
+
+
+  "pricing": {
+
+
+    "base_price": 24.99,
+
+
+    "currency": "USD",
+
+
+    "discount_percent": 0
+
+
+  },
+
+
+  "license": "Commercial Use Included",
+
+
+  "marketplaces": {
+
+
+    "etsy": {
+
+
+      "status": "draft",
+
+
+      "listing_id": null
+
+
+    },
+
+
+    "gumroad": {
+
+
+      "status": "draft",
+
+
+      "product_id": null
+
+
+    },
+
+
+    "lemonsqueezy": {
+
+
+      "status": "draft",
+
+
+      "variant_id": null
+
+
+    },
+
+
+    "custom_web": {
+
+
+      "status": "draft",
+
+
+      "slug": "executive-small-business-finance-tracker"
+
+
+    }
+
+
+  },
+
+
+  "created_at": "2026-08-08T23:49:44Z",
+
+
+  "updated_at": "2026-08-08T23:49:44Z",
+
+
+  "changelog": [
+
+
+    {
+
+
+      "version": "1.0.0",
+
+
+      "date": "2026-08-08T23:49:44Z",
+
+
+      "changes": "Initial payload ingestion & SEO generation",
+
+
+      "author": "AI COO"
+
+
+    }
+
+
+  ],
+
+
+  "tags": [
+
+
+    "business finance spr",
+
+
+    "executive small busi",
+
+
+    "digital download",
+
+
+    "instant download",
+
+
+    "printable template",
+
+
+    "aesthetic planner",
+
+
+    "minimalist design",
+
+
+    "custom template",
+
+
+    "productivity os",
+
+
+    "commercial license",
+
+
+    "creator assets",
+
+
+    "digital os",
+
+
+    "pro bundle"
+
+
+  ],
+
+
+  "description": "# Executive Small Business Finance Tracker - Instant Digital Download\n\nElevate your workflow with **Executive Small Business Finance Tracker**, professionally crafted by Digital Product Studio. Designed for maximum functionality, seamless integration, and premium aesthetic appeal.\n\n---\n\n### \ud83c\udf1f WHAT IS INCLUDED\n- **1x Primary Digital Payload Asset** (High-Resolution / Source Format)\n- **1x PDF Instant Customer Guide** (Step-by-step setup instructions)\n- **Bonus Creator Resources & Licensing Document**\n\n---\n\n### \ud83c\udfaf KEY HIGHLIGHTS\n- **Instant Access**: Download immediately upon purchase confirmation.\n- **Fully Customizable**: Personalize colors, layouts, and data fields effortlessly.\n- **Cross-Platform Compatibility**: Works flawlessly on Desktop, Laptop, and Tablet devices.\n- **Commercial Use Option**: Suitable for personal and client projects.\n\n---\n\n### \u2753 FREQUENTLY ASKED QUESTIONS (FAQ)\n\n**Q: How do I receive my download?**\nA: Once payment is processed, Etsy / the sales platform will provide an instant link to download your PDF guide and zip archive.\n\n**Q: Can I edit these files?**\nA: Yes! Files are fully unlocked for customization based on your personal license.\n\n---\n*\u00a9 Digital Product Studio. All rights reserved.*\n",
+
+
+  "faqs": [
+
+
+    {
+
+
+      "question": "How do I download my file?",
+
+
+      "answer": "Instant download available via order confirmation page."
+
+
+    },
+
+
+    {
+
+
+      "question": "Is commercial use allowed?",
+
+
+      "answer": "Included under Commercial Use Included."
+
+
+    }
+
+
+  ],
+
+
+  "previews": [
+
+
+    {
+
+
+      "type": "cover",
+
+
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_1_cover.png",
+
+
+      "width": 2700,
+
+
+      "height": 2025
+
+
+    },
+
+
+    {
+
+
+      "type": "feature",
+
+
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_2_feature.png",
+
+
+      "width": 2700,
+
+
+      "height": 2025
+
+
+    },
+
+
+    {
+
+
+      "type": "usage",
+
+
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_3_usage.png",
+
+
+      "width": 2700,
+
+
+      "height": 2025
+
+
+    },
+
+
+    {
+
+
+      "type": "palette",
+
+
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_4_palette.png",
+
+
+      "width": 2700,
+
+
+      "height": 2025
+
+
+    },
+
+
+    {
+
+
+      "type": "mockup",
+
+
+      "file_path": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\previews\\preview_5_mockup.png",
+
+
+      "width": 2700,
+
+
+      "height": 2025
+
+
+    }
+
+
+  ],
+
+
+  "files": {
+
+
+    "primary_asset": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\payload.zip",
+
+
+    "customer_instructions_pdf": "C:\\Users\\Saransh\\OneDrive\\Documents\\DigitalProductStudio\\catalog\\active\\49162179-46bc-43f2-95af-ce2602801ff6\\Customer_Instructions.pdf"
+
+
+  }
+
+
 }

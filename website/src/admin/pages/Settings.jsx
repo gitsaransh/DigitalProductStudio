@@ -4,8 +4,8 @@ import TopBar from '../components/TopBar.jsx';
 
 export default function Settings() {
   const [config, setConfig] = useState({
-    storeName: 'Digital Products House',
-    supportEmail: 'support@digitalproductshouse.com',
+    storeName: 'Digital Product Studio',
+    supportEmail: 'support@digitalproductstudio.in',
     currency: 'USD',
     taxRate: '0',
     etsyKey: '••••••••••••••••••••••••••••••••',

@@ -108,7 +108,7 @@ process_product_folder(folder_path):
 
     3. Build product_record dict:
            id: uuid4()
-           sku: DPH-{uuid[:8].upper()}
+           sku: DPS-{uuid[:8].upper()}
            title: raw_info.get("title") or folder_name
            status: "pending_approval"   ← always starts here
            file_hash: computed above
@@ -188,7 +188,7 @@ ApprovalManager.approve_and_publish(product_id, target_marketplaces=None)
                same stub pattern
            
            WebPublisher.publish():
-               always returns {status: "active", listing_url: "https://digitalproductshouse.com/..."}
+               always returns {status: "active", listing_url: "https://digitalproductstudio.in/..."}
                ← hardcoded domain, no HTTP call
 
     4. product["status"] = "published"
