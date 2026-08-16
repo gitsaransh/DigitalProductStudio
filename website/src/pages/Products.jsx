@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Search, ChevronRight, PackageOpen } from 'lucide-react';
+import { Search, PackageOpen, FileSearch } from 'lucide-react';
 import ProductCard from '../components/ProductCard.jsx';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 import { PRODUCTS, CATEGORIES, EXCEL_SUBCATEGORIES } from '../data/index.js';
 
 // Only show visible categories in the filter bar
@@ -68,22 +69,13 @@ export default function Products() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
-          {/* Breadcrumb */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px', fontSize: '13px', color: 'var(--text-sub)' }}>
-            <Link to="/" style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>Home</Link>
-            <ChevronRight size={13} />
-            <Link to="/categories" style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>Categories</Link>
-            {activeCategory !== 'all' && (
-              <>
-                <ChevronRight size={13} />
-                <Link to={`/categories/${activeCategory}`} style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>
-                  {activeName}
-                </Link>
-              </>
-            )}
-            <ChevronRight size={13} />
-            <span style={{ color: 'white' }}>Products</span>
-          </nav>
+          {/* Breadcrumb — built dynamically from URL params */}
+          {(() => {
+            const crumbs = [{ label: 'Home', to: '/' }, { label: 'Categories', to: '/categories' }];
+            if (activeCat) crumbs.push({ label: activeCat.name, to: `/categories/${activeCat.slug}` });
+            crumbs.push({ label: 'Products' });
+            return <Breadcrumb crumbs={crumbs} />;
+          })()}
 
           <span className="badge badge-primary" style={{ marginBottom: '12px' }}>Catalog</span>
           <h1>{activeCat ? `${activeCat.icon} ${activeCat.name}` : 'All Digital Products'}</h1>
@@ -177,7 +169,7 @@ export default function Products() {
               {filtered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           ) : (
-            /* Premium Empty State */
+            /* Premium Empty State matching Mockup */
             <div style={{
               textAlign: 'center',
               padding: '80px 24px',
@@ -185,28 +177,41 @@ export default function Products() {
               flexDirection: 'column',
               alignItems: 'center',
               gap: '16px',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid var(--border-glass)',
+              borderRadius: '20px',
+              maxWidth: '800px',
+              margin: '0 auto 32px',
             }}>
               <div style={{
-                width: '80px', height: '80px', borderRadius: '20px',
-                background: 'rgba(33,115,70,0.10)',
-                border: '1px solid rgba(33,115,70,0.20)',
+                width: '64px', height: '64px', borderRadius: '16px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid var(--border-glass)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '36px', marginBottom: '8px',
+                color: 'var(--text-sub)',
+                marginBottom: '8px',
               }}>
-                📊
+                <FileSearch size={32} />
               </div>
               <h3 style={{ color: 'white', fontSize: '22px', fontWeight: '800', margin: 0 }}>
-                No products available yet
+                No templates published yet
               </h3>
               <p style={{ color: 'var(--text-sub)', fontSize: '15px', maxWidth: '440px', margin: 0, lineHeight: '1.6' }}>
-                We're preparing premium Excel templates for launch. Join the waitlist or check back soon.
+                We're preparing the first premium Excel collection for launch.
               </p>
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                <Link to="/categories" className="btn btn-secondary">
-                  ← Back to Categories
+                <Link to="/categories" className="btn btn-secondary" style={{
+                  background: 'transparent',
+                  border: '1px solid var(--border-glass)',
+                  color: 'white',
+                }}>
+                  Back to Categories
                 </Link>
-                <Link to="/free" className="btn btn-primary">
-                  Free Resources
+                <Link to="/contact?purpose=waitlist" className="btn btn-primary" style={{
+                  background: '#2563eb',
+                  borderColor: '#2563eb',
+                }}>
+                  Join Waitlist
                 </Link>
               </div>
             </div>
