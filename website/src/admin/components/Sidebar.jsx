@@ -7,21 +7,21 @@ import {
 
 const NAV = [
   { label: 'Core', items: [
-    { to: '/', icon: LayoutDashboard, label: 'Dashboard', end: true },
-    { to: '/products', icon: Package, label: 'Products' },
-    { to: '/orders', icon: ShoppingCart, label: 'Orders', badge: 2 },
-    { to: '/analytics', icon: BarChart3, label: 'Analytics' },
-    { to: '/customers', icon: Users, label: 'Customers' },
+    { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
+    { to: '/admin/products', icon: Package, label: 'Products' },
+    { to: '/admin/orders', icon: ShoppingCart, label: 'Orders', badge: 2 },
+    { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
+    { to: '/admin/customers', icon: Users, label: 'Customers' },
   ]},
   { label: 'Content & Growth', items: [
-    { to: '/marketing', icon: Megaphone, label: 'Marketing' },
-    { to: '/blog', icon: FileText, label: 'Blog' },
-    { to: '/seo', icon: Search, label: 'SEO' },
-    { to: '/emails', icon: Mail, label: 'Emails' },
+    { to: '/admin/marketing', icon: Megaphone, label: 'Marketing' },
+    { to: '/admin/blog', icon: FileText, label: 'Blog' },
+    { to: '/admin/seo', icon: Search, label: 'SEO' },
+    { to: '/admin/emails', icon: Mail, label: 'Emails' },
   ]},
   { label: 'Operations', items: [
-    { to: '/downloads', icon: Download, label: 'Downloads' },
-    { to: '/settings', icon: Settings, label: 'Settings' },
+    { to: '/admin/downloads', icon: Download, label: 'Downloads' },
+    { to: '/admin/settings', icon: Settings, label: 'Settings' },
   ]},
 ];
 

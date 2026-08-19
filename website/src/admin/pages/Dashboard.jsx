@@ -27,7 +27,7 @@ export default function Dashboard() {
             <div className="page-title">Good morning, Studio 👋</div>
             <div className="page-subtitle">Here's your operation status for today — Aug 9, 2026.</div>
           </div>
-          <Link to="/products" className="btn btn-primary btn-sm"><Package size={14} /> New Product</Link>
+          <Link to="/admin/products" className="btn btn-primary btn-sm"><Package size={14} /> New Product</Link>
         </div>
 
         {/* KPI Cards */}
@@ -143,7 +143,7 @@ export default function Dashboard() {
           <div className="panel">
             <div className="panel-header">
               <span className="panel-title">Recent Orders</span>
-              <Link to="/orders" className="btn btn-ghost btn-xs">View All <ArrowRight size={11} /></Link>
+              <Link to="/admin/orders" className="btn btn-ghost btn-xs">View All <ArrowRight size={11} /></Link>
             </div>
             <table className="data-table">
               <thead>
@@ -165,7 +165,7 @@ export default function Dashboard() {
           <div className="panel">
             <div className="panel-header">
               <span className="panel-title">Top Products by Downloads</span>
-              <Link to="/products" className="btn btn-ghost btn-xs">View All <ArrowRight size={11} /></Link>
+              <Link to="/admin/products" className="btn btn-ghost btn-xs">View All <ArrowRight size={11} /></Link>
             </div>
             <table className="data-table">
               <thead>
@@ -189,12 +189,12 @@ export default function Dashboard() {
           <div className="panel-header"><span className="panel-title">Quick Actions</span></div>
           <div className="panel-body" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {[
-              { label: 'New Product', to: '/products', icon: <Package size={13} /> },
-              { label: 'View Orders', to: '/orders', icon: <ShoppingCart size={13} /> },
-              { label: 'Blog Manager', to: '/blog', icon: null },
-              { label: 'SEO Audit', to: '/seo', icon: null },
-              { label: 'Email Campaigns', to: '/emails', icon: null },
-              { label: 'Settings', to: '/settings', icon: null },
+              { label: 'New Product', to: '/admin/products', icon: <Package size={13} /> },
+              { label: 'View Orders', to: '/admin/orders', icon: <ShoppingCart size={13} /> },
+              { label: 'Blog Manager', to: '/admin/blog', icon: null },
+              { label: 'SEO Audit', to: '/admin/seo', icon: null },
+              { label: 'Email Campaigns', to: '/admin/emails', icon: null },
+              { label: 'Settings', to: '/admin/settings', icon: null },
             ].map(({ label, to, icon }) => (
               <Link key={label} to={to} className="btn btn-ghost btn-sm" style={{ gap: '6px' }}>
                 {icon} {label}
