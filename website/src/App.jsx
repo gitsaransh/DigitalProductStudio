@@ -23,6 +23,7 @@ import Contact from './pages/Contact.jsx';
 import { Privacy, Terms, RefundPolicy, Licensing } from './pages/Legal.jsx';
 import { Affiliate, Account } from './pages/Future.jsx';
 import Membership from './pages/Membership.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
 
 // Scoped Admin Panel Pages & Components
 import Sidebar from './admin/components/Sidebar.jsx';
@@ -104,6 +105,7 @@ export default function App() {
         <Route element={<StorefrontLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:slug" element={<ProductDetail />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/:slug" element={<CategoryDetail />} />
           <Route path="/bundles" element={<Bundles />} />

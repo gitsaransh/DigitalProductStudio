@@ -194,10 +194,10 @@ export default function Products() {
                 <FileSearch size={32} />
               </div>
               <h3 style={{ color: 'white', fontSize: '22px', fontWeight: '800', margin: 0 }}>
-                No templates published yet
+                No products available yet
               </h3>
               <p style={{ color: 'var(--text-sub)', fontSize: '15px', maxWidth: '440px', margin: 0, lineHeight: '1.6' }}>
-                We're preparing the first premium Excel collection for launch.
+                We're preparing the first premium collections for launch. Explore categories or check out our free samples.
               </p>
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 <Link to="/categories" className="btn btn-secondary" style={{
@@ -207,11 +207,8 @@ export default function Products() {
                 }}>
                   Back to Categories
                 </Link>
-                <Link to="/contact?purpose=waitlist" className="btn btn-primary" style={{
-                  background: '#2563eb',
-                  borderColor: '#2563eb',
-                }}>
-                  Join Waitlist
+                <Link to="/free" className="btn btn-primary">
+                  Free Resources
                 </Link>
               </div>
             </div>

@@ -70,66 +70,94 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════
           HERO
       ═══════════════════════════════════════════════ */}
-      <section className="hero">
+      <section className="hero" style={{ padding: '80px 0 100px' }}>
         {/* Animated background blobs */}
         <div className="hero-blob hero-blob-1" />
         <div className="hero-blob hero-blob-2" />
         <div className="hero-blob hero-blob-3" />
 
-        <div className="hero-content">
-          {/* Eyebrow pill */}
-          <div className="hero-eyebrow animate-fade-in">
-            <Zap size={12} /> Trusted by 14,000+ professionals worldwide
-          </div>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '48px',
+            alignItems: 'center'
+          }}>
+            <div>
+              {/* Eyebrow pill */}
+              <div className="hero-eyebrow animate-fade-in" style={{ display: 'inline-flex', marginBottom: '20px' }}>
+                <Zap size={12} style={{ marginRight: '6px' }} /> FLAGSHIP RELEASE — VERSION 1.0
+              </div>
 
-          {/* Headline */}
-          <h1 className="hero-title animate-fade-in-up delay-1">
-            Premium Digital Products<br />
-            <span className="gradient-text-primary">Built for Professionals</span>.
-          </h1>
+              {/* Headline */}
+              <h1 className="hero-title animate-fade-in-up delay-1" style={{ fontSize: 'clamp(32px, 5vw, 54px)', lineHeight: '1.1', marginBottom: '20px', textAlign: 'left' }}>
+                Ultimate Finance OS
+              </h1>
+              
+              <p className="animate-fade-in-up delay-2" style={{
+                fontSize: '17px',
+                color: 'var(--text-muted)',
+                lineHeight: '1.6',
+                marginBottom: '32px',
+                maxWidth: '580px',
+                textAlign: 'left'
+              }}>
+                The complete Excel operating system to track expenses, manage budgets, analyze cash flow, and grow your net worth. Engineered for high-performance creators and business owners.
+              </p>
 
-          {/* Category strip */}
-          <div className="animate-fade-in-up delay-2" style={{ marginBottom: '32px' }}>
-            <p style={{
-              fontSize: 'clamp(14px, 2vw, 18px)',
-              color: 'var(--text-sub)',
-              fontWeight: '600',
-              letterSpacing: '0.02em',
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: '10px',
-              alignItems: 'center',
-            }}>
-              {['Excel Templates', 'Notion', 'Canva', 'AI', 'Business Templates'].map((cat, i) => (
-                <React.Fragment key={cat}>
-                  <span style={{ color: cat === 'Excel Templates' ? 'var(--emerald)' : 'var(--text-muted)' }}>{cat}</span>
-                  {i < 4 && <span style={{ color: 'var(--border-accent)', fontSize: '18px', lineHeight: 1 }}>•</span>}
-                </React.Fragment>
-              ))}
-            </p>
-          </div>
+              {/* CTA */}
+              <div className="hero-actions animate-fade-in-up delay-3" style={{ justifyContent: 'flex-start' }}>
+                <Link to="/products" className="btn btn-primary btn-lg">
+                  Explore Templates <ArrowRight size={17} style={{ marginLeft: '6px' }} />
+                </Link>
+                <Link to="/free" className="btn btn-secondary btn-lg">
+                  <Download size={16} style={{ marginRight: '6px' }} /> Free Samples
+                </Link>
+              </div>
 
-          {/* CTA */}
-          <div className="hero-actions animate-fade-in-up delay-3">
-            <Link to="/products" className="btn btn-primary btn-lg">
-              Explore Products <ArrowRight size={17} />
-            </Link>
-            <Link to="/free" className="btn btn-secondary btn-lg">
-              <Download size={16} /> Free Samples
-            </Link>
-          </div>
+              {/* Trust strip */}
+              <div className="hero-trust animate-fade-in-up delay-4" style={{ justifyContent: 'flex-start', marginTop: '40px', gap: '24px' }}>
+                {[
+                  { icon: <CheckCircle2 size={16} color="var(--emerald)" />, text: 'Instant Download' },
+                  { icon: <CheckCircle2 size={16} color="var(--emerald)" />, text: 'Lifetime Updates' },
+                  { icon: <CheckCircle2 size={16} color="var(--emerald)" />, text: 'Excel Compatible' },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="hero-trust-item" style={{ fontSize: '14px', fontWeight: '600', color: 'var(--text-sub)' }}>{icon} {text}</div>
+                ))}
+              </div>
+            </div>
 
-          {/* Trust strip */}
-          <div className="hero-trust animate-fade-in-up delay-4">
-            {[
-              { icon: <CheckCircle2 size={14} color="var(--emerald)" />, text: 'Instant delivery' },
-              { icon: <CheckCircle2 size={14} color="var(--emerald)" />, text: 'Commercial license available' },
-              { icon: <CheckCircle2 size={14} color="var(--emerald)" />, text: '7-day money-back guarantee' },
-              { icon: <CheckCircle2 size={14} color="var(--emerald)" />, text: 'Human reviewed' },
-            ].map(({ icon, text }) => (
-              <div key={text} className="hero-trust-item">{icon} {text}</div>
-            ))}
+            {/* Visual card representation */}
+            <div className="animate-fade-in delay-2" style={{ display: 'flex', justifyContent: 'center' }}>
+              <div className="glass" style={{
+                padding: '36px',
+                borderRadius: '24px',
+                border: '1px solid rgba(16,185,129,0.3)',
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(0,0,0,0.6) 100%)',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
+                width: '100%',
+                maxWidth: '420px',
+                position: 'relative'
+              }}>
+                <span className="badge badge-emerald" style={{ marginBottom: '16px' }}>Excel Template</span>
+                <h3 style={{ color: 'white', fontSize: '26px', fontWeight: '900', margin: '0 0 8px', letterSpacing: '-0.5px' }}>DPS-XLS-001</h3>
+                <p style={{ color: 'var(--text-sub)', fontSize: '14px', margin: '0 0 24px', fontWeight: '600' }}>Comprehensive Finance Tracker Dashboard</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '32px' }}>
+                  {['20+ interactive charts', 'Automated P&L builder', 'Light/Dark visual modes'].map(feat => (
+                    <div key={feat} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: 'var(--text-muted)' }}>
+                      <CheckCircle2 size={14} color="var(--emerald)" /> {feat}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <div>
+                    <span style={{ fontSize: '30px', color: 'white', fontWeight: '900' }}>$19.00</span>
+                    <span style={{ fontSize: '14px', color: 'var(--text-sub)', textDecoration: 'line-through', marginLeft: '8px' }}>$39.00</span>
+                  </div>
+                  <Link to="/products/ultimate-finance-os" className="btn btn-primary btn-sm">Get It Now →</Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

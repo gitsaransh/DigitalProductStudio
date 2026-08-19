@@ -7,7 +7,7 @@ const NAV_LINKS = [
   { to: '/products', label: 'Products' },
   { to: '/categories', label: 'Categories' },
   { to: '/bundles', label: 'Bundles' },
-  { to: '/free', label: 'Free' },
+  { to: '/free', label: 'Free Resources' },
   { to: '/about', label: 'About' },
   { to: '/blog', label: 'Blog' },
   // /admin and /coo are intentionally omitted — operator-only routes accessed directly by URL

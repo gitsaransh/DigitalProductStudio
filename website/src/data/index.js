@@ -241,8 +241,8 @@ export const CATEGORIES = [
     description: "Instagram carousels, brand kits, Pinterest graphics and social media templates.",
     visible: false,
     launchStatus: "coming-soon",
-    statusBadge: "Q4 2026",
-    statusBadgeVariant: "timed",
+    statusBadge: "COMING SOON",
+    statusBadgeVariant: "amber",
   },
   {
     slug: "ai-prompts",
