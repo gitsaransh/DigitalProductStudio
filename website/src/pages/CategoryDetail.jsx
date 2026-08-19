@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, ChevronRight, CheckCircle2, Star } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle2, Star } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 import { CATEGORIES, EXCEL_SUBCATEGORIES } from '../data/index.js';
 
 export default function CategoryDetail() {
@@ -19,14 +20,11 @@ export default function CategoryDetail() {
       {/* Page Header */}
       <div className="page-header">
         <div className="container page-header-content">
-          {/* Breadcrumb */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px', fontSize: '13px', color: 'var(--text-sub)' }}>
-            <Link to="/" style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>Home</Link>
-            <ChevronRight size={13} />
-            <Link to="/categories" style={{ color: 'var(--text-sub)', textDecoration: 'none' }}>Categories</Link>
-            <ChevronRight size={13} />
-            <span style={{ color: 'white' }}>{category.name}</span>
-          </nav>
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Categories', to: '/categories' },
+            { label: category.name },
+          ]} />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
             <span className="badge badge-purple">Category</span>

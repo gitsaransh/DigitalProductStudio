@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Lock } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 import { CATEGORIES } from '../data/index.js';
 
 const LIVE_CATEGORIES = CATEGORIES.filter(c => c.visible);
@@ -11,6 +12,10 @@ export default function Categories() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Categories' },
+          ]} />
           <span className="badge badge-purple" style={{ marginBottom: '12px' }}>Browse</span>
           <h1>Product Categories</h1>
           <p>Explore our library organized by type — built for professionals who mean business.</p>

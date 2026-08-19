@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bot, Zap, Globe, ShieldCheck, BarChart3, Layers } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 const AGENTS = [
   { name: 'Content Agent', role: 'Copywriting & PDF Guide Generation', icon: '✍️', color: 'var(--primary)' },
@@ -25,6 +26,10 @@ export default function About() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'About Us' },
+          ]} />
           <span className="badge badge-primary" style={{ marginBottom: '12px' }}>About Us</span>
           <h1>Built on AI. Crafted for Creators.</h1>
           <p>Digital Product Studio is an enterprise-grade digital publishing operation, combining AI automation with human creative excellence.</p>

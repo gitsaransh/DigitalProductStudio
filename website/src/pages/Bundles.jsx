@@ -2,6 +2,7 @@ import React from 'react';
 import BundleCard from '../components/BundleCard.jsx';
 import TestimonialCard from '../components/TestimonialCard.jsx';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 import { BUNDLES, TESTIMONIALS } from '../data/index.js';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
@@ -10,6 +11,10 @@ export default function Bundles() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Bundles & Packs' },
+          ]} />
           <span className="badge badge-amber" style={{ marginBottom: '12px' }}>Best Value</span>
           <h1>Product Bundles</h1>
           <p>Save up to 50% by grabbing curated product packs designed to work together.</p>

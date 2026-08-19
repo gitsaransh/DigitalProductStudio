@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Download, Gift } from 'lucide-react';
 import { FREE_RESOURCES } from '../data/index.js';
 import CTABanner from '../components/CTABanner.jsx';
+import Breadcrumb from '../components/Breadcrumb.jsx';
 
 export default function FreeResources() {
   const [claimed, setClaimed] = useState({});
@@ -10,6 +11,10 @@ export default function FreeResources() {
     <>
       <div className="page-header">
         <div className="container page-header-content">
+          <Breadcrumb crumbs={[
+            { label: 'Home', to: '/' },
+            { label: 'Free Resources' },
+          ]} />
           <span className="badge badge-emerald" style={{ marginBottom: '12px' }}>100% Free</span>
           <h1>Free Resources</h1>
           <p>High-quality digital tools and templates — absolutely free, no catch.</p>
