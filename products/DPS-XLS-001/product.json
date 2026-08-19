@@ -1,0 +1,29 @@
+{
+  "sku": "DPS-XLS-001",
+  "name": "Ultimate Finance OS",
+  "slug": "ultimate-finance-os",
+  "version": "1.0",
+  "price": 19.00,
+  "compare_at_price": 39.00,
+  "category": "Excel Templates",
+  "tags": [
+    "Finance",
+    "Budget",
+    "Excel",
+    "Spreadsheet",
+    "Tracker",
+    "Monthly Budget",
+    "Expense Tracker",
+    "Net Worth",
+    "Cash Flow",
+    "Personal Finance",
+    "Business Finance",
+    "SaaS Dashboard",
+    "Income Planner"
+  ],
+  "short_description": "The complete Excel operating system to track expenses, manage budgets, analyze cash flow, and grow your net worth.",
+  "long_description": "Take control of your personal and business finances with the Ultimate Finance OS. A premium, dual-mode (light/dark) spreadsheet engineered for high-performance financial tracking. Designed for individuals, creators, and business owners looking to consolidate their income streams, expense allocations, OKRs, and net worth progress in a single unified dashboard view.",
+  "file_placeholder": "Ultimate_Finance_OS_v1.0.xlsx",
+  "readme_placeholder": "README.md",
+  "status": "Draft"
+}
