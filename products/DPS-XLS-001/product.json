@@ -25,5 +25,12 @@
   "long_description": "Take control of your personal and business finances with the Ultimate Finance OS. A premium, dual-mode (light/dark) spreadsheet engineered for high-performance financial tracking. Designed for individuals, creators, and business owners looking to consolidate their income streams, expense allocations, OKRs, and net worth progress in a single unified dashboard view.",
   "file_placeholder": "Ultimate_Finance_OS_v1.0.xlsx",
   "readme_placeholder": "README.md",
+  "release_checklist": {
+    "design_approved": false,
+    "qa_passed": false,
+    "mockups_completed": false,
+    "website_published": false,
+    "etsy_published": false
+  },
   "status": "Draft"
 }
