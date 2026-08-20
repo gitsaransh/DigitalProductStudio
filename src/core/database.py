@@ -125,6 +125,26 @@ class ProductDatabase:
                     category
                 )
             """)
+            
+            # Prompts Table for prompt assets
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS prompts (
+                    prompt_id TEXT PRIMARY KEY,
+                    product_id TEXT NOT NULL,
+                    category TEXT NOT NULL,
+                    subcategory TEXT,
+                    use_case TEXT,
+                    title TEXT NOT NULL,
+                    prompt_text TEXT NOT NULL,
+                    variables TEXT,
+                    compatible_ai TEXT,
+                    difficulty TEXT,
+                    expected_output TEXT,
+                    pro_tip TEXT,
+                    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+                )
+            """)
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_prompt_product ON prompts(product_id);")
             conn.commit()
 
 
@@ -311,4 +331,39 @@ class ProductDatabase:
                 "lifecycle_state_breakdown": by_lifecycle,
                 "category_breakdown": by_category
             }
+
+    def upsert_prompts(self, product_id: str, prompts_list: List[Dict[str, Any]]):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            for p in prompts_list:
+                cursor.execute("""
+                    INSERT INTO prompts (
+                        prompt_id, product_id, category, subcategory, use_case, title,
+                        prompt_text, variables, compatible_ai, difficulty, expected_output, pro_tip
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(prompt_id) DO UPDATE SET
+                        product_id=excluded.product_id,
+                        category=excluded.category,
+                        subcategory=excluded.subcategory,
+                        use_case=excluded.use_case,
+                        title=excluded.title,
+                        prompt_text=excluded.prompt_text,
+                        variables=excluded.variables,
+                        compatible_ai=excluded.compatible_ai,
+                        difficulty=excluded.difficulty,
+                        expected_output=excluded.expected_output,
+                        pro_tip=excluded.pro_tip
+                """, (
+                    p["prompt_id"], product_id, p["category"], p.get("subcategory"), p.get("use_case"),
+                    p["title"], p["prompt_text"], p.get("variables"), p.get("compatible_ai"),
+                    p.get("difficulty"), p.get("expected_output"), p.get("pro_tip")
+                ))
+            conn.commit()
+
+    def get_prompts(self, product_id: str) -> List[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM prompts WHERE product_id = ?", (product_id,))
+            rows = cursor.fetchall()
+            return [dict(row) for row in rows]
 

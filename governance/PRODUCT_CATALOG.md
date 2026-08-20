@@ -9,7 +9,7 @@ This document is the **single source of truth** for all core flagship digital pr
 Every item in the catalog is audited against the actual product asset directories in the repository workspace. 
 
 *   **Live customer-ready products**: `0`
-*   **Product currently in production**: `1` ([`DPS-XLS-001`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/products/DPS-XLS-001))
+*   **Product currently in production**: `2` ([`DPS-XLS-001`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/products/DPS-XLS-001), [`DPS-PRM-001`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/products/DPS-PRM-001))
 *   **Planned products**: `6`
 *   **Demo/seed records**: `5`
 
@@ -25,6 +25,7 @@ Every item in the catalog is audited against the actual product asset directorie
 | `DPS-8A6E90C9` | 10,000+ ChatGPT & Claude Prompt Vault | AI Prompts & Automation Kits | Pending Approval | $29.99 | Demo/Seed Record | Dummy payload in DB ingestion test |
 | `DPS-8942C021` | Ultimate Excel Monthly Budget Tracker 2026 | Business & Finance Spreadsheets | Pending Approval | $12.99 | Demo/Seed Record | Dummy payload in DB ingestion test |
 | `DPS-XLS-001` | Ultimate Finance OS | Excel Templates | Draft | $19.00 | Product Metadata Exists Only | Under active preparation in [`products/DPS-XLS-001`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/products/DPS-XLS-001) |
+| `DPS-PRM-001` | 10,000+ ChatGPT & Claude Prompt Vault | AI Prompts & Automation Kits | Draft | $29.99 | Product Metadata Exists Only | Under active preparation in [`products/DPS-PRM-001`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/products/DPS-PRM-001) |
 | `DPS-XLS-002` | Personal Budget Dashboard | Excel Templates | Planned | $14.99 | Planned Product | Roadmap idea |
 | `DPS-XLS-003` | Expense & Bill Tracker | Excel Templates | Planned | $12.99 | Planned Product | Roadmap idea |
 | `DPS-NOT-001` | Notion Content Creator Hub | Notion Systems | Planned | $17.99 | Planned Product | Roadmap idea |
