@@ -9,7 +9,7 @@ Run: uvicorn src.api.main:app --reload --port 8000
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.routes import health, products, approvals, stats
+from src.api.routes import health, products, approvals, stats, auth
 
 app = FastAPI(
     title="Digital Product Studio API",
@@ -27,7 +27,7 @@ app.add_middleware(
         "https://digitalproductstudio.in"
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -35,3 +35,4 @@ app.include_router(health.router, prefix="/api")
 app.include_router(products.router, prefix="/api")
 app.include_router(approvals.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")

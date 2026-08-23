@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Globe, Zap } from 'lucide-react';
+import { Menu, X, ShoppingBag, Globe, Zap, LogOut, LogIn } from 'lucide-react';
+import { useAuth } from './AuthContext.jsx';
 
 const NAV_LINKS = [
   { to: '/', label: 'Home', exact: true },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { isAuthenticated, isAdmin, logout } = useAuth();
 
   return (
     <>
@@ -51,12 +53,57 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
+          {isAuthenticated && (
+            <NavLink
+              to="/account"
+              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+            >
+              Account
+            </NavLink>
+          )}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+            >
+              Admin Dashboard
+            </NavLink>
+          )}
         </div>
 
         <div className="nav-actions">
           <Link to="/products" className="btn btn-primary btn-sm" style={{ gap: '6px' }}>
             <ShoppingBag size={14} /> Shop Now
           </Link>
+          
+          {isAuthenticated ? (
+            <button
+              onClick={logout}
+              className="btn btn-sm"
+              style={{
+                gap: '6px',
+                background: 'rgba(239, 68, 68, 0.05)',
+                border: '1px solid rgba(239, 68, 68, 0.15)',
+                color: 'var(--rose)',
+              }}
+            >
+              <LogOut size={14} /> Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="btn btn-sm"
+              style={{
+                gap: '6px',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--border-glass)',
+                color: 'var(--text)',
+              }}
+            >
+              <LogIn size={14} /> Login
+            </Link>
+          )}
+          
           <button
             className="nav-hamburger"
             onClick={() => setOpen(!open)}
@@ -79,10 +126,38 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
+          {isAuthenticated && (
+            <NavLink to="/account" className="nav-mobile-link" onClick={() => setOpen(false)}>Account</NavLink>
+          )}
+          {isAdmin && (
+            <NavLink to="/admin" className="nav-mobile-link" onClick={() => setOpen(false)}>Admin Dashboard</NavLink>
+          )}
           <hr style={{ border: 'none', borderTop: '1px solid var(--border-glass)', margin: '8px 0' }} />
           <NavLink to="/faq" className="nav-mobile-link" onClick={() => setOpen(false)}>FAQ</NavLink>
           <NavLink to="/support" className="nav-mobile-link" onClick={() => setOpen(false)}>Support</NavLink>
           <NavLink to="/contact" className="nav-mobile-link" onClick={() => setOpen(false)}>Contact</NavLink>
+          <hr style={{ border: 'none', borderTop: '1px solid var(--border-glass)', margin: '8px 0' }} />
+          {isAuthenticated ? (
+            <button
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="nav-mobile-link"
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                background: 'none',
+                border: 'none',
+                color: 'var(--rose)',
+                fontWeight: '600',
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <NavLink to="/login" className="nav-mobile-link" style={{ fontWeight: '600', color: 'var(--primary-light)' }} onClick={() => setOpen(false)}>Login</NavLink>
+          )}
         </div>
       )}
     </>

@@ -145,9 +145,105 @@ class ProductDatabase:
                 )
             """)
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_prompt_product ON prompts(product_id);")
+
+            # Users Table
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id TEXT PRIMARY KEY,
+                    google_id TEXT UNIQUE,
+                    email TEXT UNIQUE NOT NULL,
+                    name TEXT,
+                    avatar_url TEXT,
+                    role TEXT NOT NULL DEFAULT 'customer',
+                    created_at TEXT NOT NULL,
+                    last_login TEXT NOT NULL
+                )
+            """)
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);")
+
+            # Seed one admin account using ADMIN_GOOGLE_EMAIL if configured and not already present
+            admin_email = os.getenv("ADMIN_GOOGLE_EMAIL")
+            if admin_email:
+                admin_email = admin_email.strip().lower()
+                cursor.execute("SELECT id FROM users WHERE LOWER(email) = ?", (admin_email,))
+                if not cursor.fetchone():
+                    import uuid
+                    admin_id = str(uuid.uuid4())
+                    now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                    cursor.execute("""
+                        INSERT INTO users (id, google_id, email, name, avatar_url, role, created_at, last_login)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (admin_id, None, admin_email, "Admin User", "", "admin", now, now))
+                    print(f"[Database] Seeded admin account: {admin_email}")
+
             conn.commit()
 
+    def get_user(self, user_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
 
+    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE LOWER(email) = ?", (email.strip().lower(),))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def create_user(
+        self,
+        id: str,
+        google_id: Optional[str],
+        email: str,
+        name: Optional[str],
+        avatar_url: Optional[str],
+        role: str,
+        created_at: str,
+        last_login: str
+    ):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO users (id, google_id, email, name, avatar_url, role, created_at, last_login)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (id, google_id, email.strip().lower(), name, avatar_url, role, created_at, last_login))
+            conn.commit()
+
+    def update_user(
+        self,
+        id: str,
+        google_id: Optional[str] = None,
+        name: Optional[str] = None,
+        avatar_url: Optional[str] = None,
+        last_login: Optional[str] = None,
+        role: Optional[str] = None
+    ):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            fields = []
+            params = []
+            if google_id is not None:
+                fields.append("google_id = ?")
+                params.append(google_id)
+            if name is not None:
+                fields.append("name = ?")
+                params.append(name)
+            if avatar_url is not None:
+                fields.append("avatar_url = ?")
+                params.append(avatar_url)
+            if last_login is not None:
+                fields.append("last_login = ?")
+                params.append(last_login)
+            if role is not None:
+                fields.append("role = ?")
+                params.append(role)
+            if fields:
+                params.append(id)
+                cursor.execute(f"UPDATE users SET {', '.join(fields)} WHERE id = ?", params)
+                conn.commit()
 
     def upsert_product(self, product_data: Dict[str, Any]) -> str:
 

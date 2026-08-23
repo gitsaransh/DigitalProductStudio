@@ -5,11 +5,12 @@ POST /api/approvals/{id}/reject  — reject a product with a reason
 """
 
 from typing import Optional
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from src.approvals.approval_manager import ApprovalManager
+from src.core.auth import require_admin
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 _approval_mgr = ApprovalManager()
 
 

@@ -3,10 +3,11 @@ GET /api/stats
 Returns aggregate catalog statistics: counts by lifecycle_state and category.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from src.core.database import ProductDatabase
+from src.core.auth import require_admin
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(require_admin)])
 _db = ProductDatabase()
 
 
