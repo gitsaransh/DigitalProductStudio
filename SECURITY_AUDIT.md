@@ -6,9 +6,10 @@ This document logs the security review, role-based access control (RBAC) policy,
 
 ## 1. Authentication Strategy
 
-* **Primary Provider**: Google OAuth 2.0.
+* **Primary Provider**: Google Identity Services (GSI) SDK.
+* **Implementation Details**: Integrates the native Google Sign-In button on the frontend (`Login.jsx`) using the `gsi/client` library. Authenticated payloads (ID Tokens) are sent to the backend (`POST /api/auth/google/verify`) and securely verified via Google's tokeninfo API (`https://oauth2.googleapis.com/tokeninfo`).
 * **Fallback Provider**: None. Traditional email/password authentication is **explicitly disabled** to comply with modern identity governance practices.
-* **Testing Harness**: A dedicated Developer Mock Login is available in local development. It uses the exact same session signature algorithms and backend database routines to simulate Google OAuth identity payloads.
+* **Testing Harness**: A dedicated Developer Mock Login is available in local development. It bypasses external API requirements and generates standard session tokens for any mock identity, facilitating RBAC testing.
 
 ---
 

@@ -7,6 +7,8 @@ import os
 import shutil
 import tempfile
 import time
+import json
+from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
 
 # Create temp database path
@@ -141,6 +143,26 @@ class TestAuthAndRbac(unittest.TestCase):
         # With admin auth (200 OK)
         resp = self.client.get("/api/stats", headers={"Authorization": f"Bearer {token_adm}"})
         self.assertEqual(resp.status_code, 200)
+
+    @patch("urllib.request.urlopen")
+    def test_google_verify_endpoint(self, mock_urlopen):
+        # Mock Google tokeninfo response
+        mock_response = MagicMock()
+        mock_response.read.return_value = json.dumps({
+            "sub": "google_11223344",
+            "email": "verified@gmail.com",
+            "name": "Verified User",
+            "picture": "http://avatar.url/verified",
+            "aud": "mock-client-id"
+        }).encode("utf-8")
+        mock_urlopen.return_value.__enter__.return_value = mock_response
+
+        response = self.client.post("/api/auth/google/verify", json={"id_token": "mock-id-token"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("token", data)
+        self.assertEqual(data["user"]["email"], "verified@gmail.com")
+        self.assertEqual(data["user"]["role"], "customer") # Default unknown user role is customer
 
 if __name__ == "__main__":
     unittest.main()

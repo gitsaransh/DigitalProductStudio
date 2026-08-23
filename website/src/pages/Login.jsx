@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext.jsx';
-import { HelpCircle, Shield, Sparkles, User, Mail, LogIn, Chrome } from 'lucide-react';
+import { HelpCircle, Shield, Sparkles, User, Mail, LogIn } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -16,8 +16,9 @@ export default function Login() {
   const [mockAvatar, setMockAvatar] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [gsiLoaded, setGsiLoaded] = useState(false);
 
-  // Handle incoming token from OAuth callback redirect
+  // Handle incoming token from custom URL parameters if redirected
   useEffect(() => {
     const token = searchParams.get('token');
     const oauthError = searchParams.get('error');
@@ -37,6 +38,84 @@ export default function Login() {
     }
   }, [searchParams, login]);
 
+  // Load Google Identity Services SDK dynamically
+  useEffect(() => {
+    let script = document.getElementById('google-gsi-client-script');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'google-gsi-client-script';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setGsiLoaded(true);
+      script.onerror = () => setError('Failed to load Google Identity Services SDK. Check your network.');
+      document.body.appendChild(script);
+    } else {
+      setGsiLoaded(true);
+    }
+  }, []);
+
+  // Initialize GSI Sign-In Button
+  useEffect(() => {
+    if (gsiLoaded && window.google && !showMockForm) {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        console.warn('VITE_GOOGLE_CLIENT_ID is not configured in .env. Falling back to Developer Mock Login.');
+        setShowMockForm(true);
+        return;
+      }
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleCredentialResponse,
+          auto_select: false,
+        });
+
+        window.google.accounts.id.renderButton(
+          document.getElementById('google-signin-btn-div'),
+          {
+            theme: 'outline',
+            size: 'large',
+            width: '360',
+            text: 'signin_with',
+            shape: 'rectangular',
+          }
+        );
+      } catch (err) {
+        console.error('Error initializing Google Sign-In button:', err);
+      }
+    }
+  }, [gsiLoaded, showMockForm]);
+
+  const handleCredentialResponse = async (response) => {
+    setLoading(true);
+    setError('');
+    const idToken = response.credential;
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/google/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id_token: idToken }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        login(data.token, data.user);
+      } else {
+        const errData = await res.json();
+        setError(errData.detail || 'Google authentication failed.');
+      }
+    } catch (err) {
+      setError('Could not connect to the backend server to verify credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
@@ -47,12 +126,6 @@ export default function Login() {
       }
     }
   }, [isAuthenticated, user, navigate]);
-
-  const handleGoogleLogin = () => {
-    setLoading(true);
-    setError('');
-    window.location.href = `${API_URL}/api/auth/google/login`;
-  };
 
   const handleMockLogin = async (e) => {
     e.preventDefault();
@@ -100,16 +173,6 @@ export default function Login() {
         }
         .login-card {
           animation: loginFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .login-btn-google {
-          transition: all 0.25s var(--ease);
-          background: #ffffff;
-          color: #1f2937;
-        }
-        .login-btn-google:hover {
-          background: #f3f4f6;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
         }
         .login-input {
           width: 100%;
@@ -162,15 +225,15 @@ export default function Login() {
 
         {!showMockForm ? (
           <div style={styles.btnGroup}>
-            <button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="login-btn-google"
-              style={styles.googleBtn}
-            >
-              <Chrome size={18} style={{ marginRight: '10px' }} />
-              {loading ? 'Connecting...' : 'Continue with Google'}
-            </button>
+            <div style={styles.googleBtnContainer}>
+              {loading ? (
+                <div style={{ color: 'var(--text-muted)', fontSize: '14px', padding: '12px' }}>
+                  Authenticating...
+                </div>
+              ) : (
+                <div id="google-signin-btn-div" style={{ width: '100%', minHeight: '44px' }}></div>
+              )}
+            </div>
 
             <button
               onClick={() => setShowMockForm(true)}
@@ -228,7 +291,7 @@ export default function Login() {
               }}
               style={styles.backBtn}
             >
-              Back to Google OAuth
+              Back to Google Sign-In
             </button>
           </form>
         )}
@@ -303,17 +366,13 @@ const styles = {
     flexDirection: 'column',
     gap: '16px',
   },
-  googleBtn: {
+  googleBtnContainer: {
     width: '100%',
-    padding: '14px',
-    borderRadius: 'var(--radius)',
-    border: 'none',
-    fontWeight: '700',
-    fontSize: '15px',
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'pointer',
+    alignItems: 'center',
+    minHeight: '44px',
+    marginBottom: '8px',
   },
   devToggleBtn: {
     background: 'none',

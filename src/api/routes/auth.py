@@ -203,3 +203,89 @@ def get_me(current_user: dict = Depends(get_current_user)):
     Returns the currently authenticated user's profile details.
     """
     return current_user
+
+class GoogleVerifyRequest(BaseModel):
+    id_token: str
+
+@router.post("/auth/google/verify")
+def google_verify(body: GoogleVerifyRequest):
+    """
+    Verifies the Google ID Token sent by the frontend GSI library,
+    registers or updates the user in the database, and returns a session token.
+    """
+    client_id = os.getenv("GOOGLE_CLIENT_ID") or os.getenv("VITE_GOOGLE_CLIENT_ID")
+    if not client_id:
+        raise HTTPException(status_code=500, detail="GOOGLE_CLIENT_ID is not configured on the server")
+        
+    id_token = body.id_token
+    
+    # Call Google's tokeninfo endpoint to verify the ID token
+    tokeninfo_url = f"https://oauth2.googleapis.com/tokeninfo?id_token={id_token}"
+    
+    import urllib.request
+    import json
+    
+    try:
+        req = urllib.request.Request(tokeninfo_url)
+        with urllib.request.urlopen(req) as response:
+            token_info = json.loads(response.read().decode())
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid Google ID Token: {str(e)}")
+        
+    # Verify the audience (must match our client_id)
+    aud = token_info.get("aud")
+    if aud != client_id:
+        raise HTTPException(status_code=400, detail="Google ID Token audience mismatch")
+        
+    google_id = token_info.get("sub")
+    email = token_info.get("email", "").strip().lower()
+    name = token_info.get("name", "")
+    avatar_url = token_info.get("picture", "")
+    
+    if not email:
+        raise HTTPException(status_code=400, detail="Google ID Token is missing email address")
+        
+    db = ProductDatabase()
+    user = db.get_user_by_email(email)
+    
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    admin_email = os.getenv("ADMIN_GOOGLE_EMAIL")
+    is_admin = admin_email and email == admin_email.strip().lower()
+    
+    if user:
+        role = user.get("role", "customer")
+        db.update_user(
+            user["id"],
+            google_id=google_id,
+            name=name,
+            avatar_url=avatar_url,
+            last_login=now
+        )
+        user_id = user["id"]
+    else:
+        role = "admin" if is_admin else "customer"
+        user_id = str(uuid.uuid4())
+        db.create_user(
+            id=user_id,
+            google_id=google_id,
+            email=email,
+            name=name,
+            avatar_url=avatar_url,
+            role=role,
+            created_at=now,
+            last_login=now
+        )
+        
+    token = create_access_token({"sub": user_id, "email": email, "role": role})
+    return {
+        "token": token,
+        "user": {
+            "id": user_id,
+            "email": email,
+            "name": name,
+            "avatar_url": avatar_url,
+            "role": role,
+            "created_at": user.get("created_at", now) if user else now,
+            "last_login": now
+        }
+    }
