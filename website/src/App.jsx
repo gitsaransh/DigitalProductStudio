@@ -132,6 +132,7 @@ export default function App() {
           {/* Admin Operations Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="analytics" element={<AdminAnalytics />} />

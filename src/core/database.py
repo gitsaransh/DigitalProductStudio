@@ -11,16 +11,22 @@ Supports high-velocity batch transactions and sub-10ms FTS5 queries.
 
 
 import sqlite3
-
 import json
-
 import os
-
 import time
-
 from typing import List, Dict, Any, Optional
 
-
+# Load .env file variables into environment
+env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env")
+if os.path.exists(env_path):
+    with open(env_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                key, val = line.split("=", 1)
+                os.environ[key.strip()] = val.strip().strip("'\"")
 
 class ProductDatabase:
 

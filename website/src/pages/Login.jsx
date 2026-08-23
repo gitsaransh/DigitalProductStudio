@@ -41,7 +41,7 @@ export default function Login() {
   useEffect(() => {
     if (isAuthenticated) {
       if (user?.role === 'admin') {
-        navigate('/admin');
+        navigate('/admin/dashboard');
       } else {
         navigate('/account');
       }
