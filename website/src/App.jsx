@@ -26,6 +26,7 @@ import Membership from './pages/Membership.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import Login from './pages/Login.jsx';
 import Account from './pages/Account.jsx';
+import MyOrders from './pages/MyOrders.jsx';
 import { AuthProvider } from './components/AuthContext.jsx';
 
 // Scoped Admin Panel Pages & Components
@@ -64,10 +65,17 @@ function StorefrontLayout() {
   );
 }
 
+// Sidebar width — single source of truth used by AdminLayout inline styles.
+// Matches --sidebar-width in admin.css. Inline styles bypass shared #root flex cascade.
+const ADMIN_SIDEBAR_W = 240;
+
 // Layout for Operator Admin Panel (Left dark sidebar layout)
 // D-010: Wrapped in AdminAuthGate — requires password before rendering.
 function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== 'undefined' && window.innerWidth <= 850
+  );
 
   React.useEffect(() => {
     const handleToggle = () => setSidebarOpen(prev => !prev);
@@ -75,14 +83,34 @@ function AdminLayout() {
     return () => window.removeEventListener('toggle-sidebar', handleToggle);
   }, []);
 
+  React.useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 850);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <AdminAuthGate>
-      <div className={`admin-layout${sidebarOpen ? ' sidebar-open' : ''}`}>
+      <div
+        className={`admin-layout${sidebarOpen ? ' sidebar-open' : ''}`}
+        style={{ display: 'block', width: '100%', minHeight: '100vh' }}
+      >
         {sidebarOpen && <div onClick={closeSidebar} className="sidebar-backdrop" />}
         <Sidebar onClose={closeSidebar} />
-        <main className="admin-main">
+        {/* Inline marginLeft is the single authoritative offset — immune to CSS cascade */}
+        <main
+          className="admin-main"
+          style={{
+            marginLeft: isMobile ? 0 : `${ADMIN_SIDEBAR_W}px`,
+            width: isMobile ? '100%' : `calc(100% - ${ADMIN_SIDEBAR_W}px)`,
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            overflowX: 'hidden',
+          }}
+        >
           <Outlet />
         </main>
       </div>
@@ -127,6 +155,7 @@ export default function App() {
             <Route path="/affiliate" element={<Affiliate />} />
             <Route path="/login" element={<Login />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/orders" element={<MyOrders />} />
           </Route>
 
           {/* Admin Operations Routes */}
