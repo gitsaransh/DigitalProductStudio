@@ -252,10 +252,17 @@ export const CATEGORIES = [
     color: "var(--cyan)",
     gradient: "linear-gradient(135deg, rgba(6,182,212,0.18), rgba(6,182,212,0.05))",
     description: "Curated prompt vaults for ChatGPT, Claude, Gemini and Midjourney.",
-    visible: false,
-    launchStatus: "coming-soon",
-    statusBadge: "COMING SOON",
-    statusBadgeVariant: "amber",
+    visible: true,
+    launchStatus: "LIVE",
+    flagship: {
+      title: "DPS-PRM-001 — Ultimate AI Prompt Vault",
+      subtitle: "The complete ChatGPT, Claude and Gemini operating system containing 10,000+ copy-paste prompts.",
+      features: ["10k+ prompts", "Claude & GPT-4 optimized", "Lifetime updates"],
+      price: 29.99,
+      priceLabel: "Launch Price $29.99",
+      badge: "Flagship Edition",
+      href: "/products/chatgpt-claude-prompt-vault",
+    }
   },
   {
     slug: "business",

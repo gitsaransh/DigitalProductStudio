@@ -103,7 +103,7 @@ export default function CategoryDetail() {
                 <div style={{
                   position: 'absolute', top: '-60px', right: '-60px',
                   width: '260px', height: '260px', borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(33,115,70,0.18) 0%, transparent 70%)',
+                  background: `radial-gradient(circle, ${category.slug === 'excel' ? 'rgba(33,115,70,0.18)' : 'rgba(6,182,212,0.18)'} 0%, transparent 70%)`,
                   pointerEvents: 'none',
                 }} />
 
@@ -235,19 +235,19 @@ export default function CategoryDetail() {
           {/* Browse all CTA */}
           <div style={{
             padding: '40px',
-            background: 'rgba(33,115,70,0.06)',
-            border: '1px solid rgba(33,115,70,0.2)',
+            background: category.slug === 'excel' ? 'rgba(33,115,70,0.06)' : 'rgba(6,182,212,0.06)',
+            border: category.slug === 'excel' ? '1px solid rgba(33,115,70,0.2)' : '1px solid rgba(6,182,212,0.2)',
             borderRadius: '20px',
             textAlign: 'center',
             marginBottom: '64px',
           }}>
-            <div style={{ fontSize: '28px', marginBottom: '12px' }}>📊</div>
-            <h3 style={{ color: 'white', marginBottom: '8px' }}>Browse All Excel Templates</h3>
+            <div style={{ fontSize: '28px', marginBottom: '12px' }}>{category.icon || '📊'}</div>
+            <h3 style={{ color: 'white', marginBottom: '8px' }}>Browse All {category.name}</h3>
             <p style={{ color: 'var(--text-sub)', fontSize: '14px', maxWidth: '420px', margin: '0 auto 24px' }}>
-              View the full catalog across all subcategories in one place.
+              View the full catalog for {category.name} in one place.
             </p>
             <Link to={`/products?category=${category.slug}`} className="btn btn-primary">
-              View All Templates <ArrowRight size={15} />
+              View All Products <ArrowRight size={15} />
             </Link>
           </div>
 
