@@ -69,13 +69,11 @@ input, select, textarea { font-family: var(--font); }
 img { max-width: 100%; }
 
 /* ── Admin Shell ── */
-/* The sidebar is position:fixed. We push ALL content right using padding-left
-   on the layout wrapper. This works whether #root is flex or block. */
+/* Offset is applied via inline styles in App.jsx AdminLayout.
+   No padding/margin here to avoid double-stacking with JS values. */
 .admin-layout {
-  padding-left: var(--sidebar-width);
   width: 100%;
   min-height: 100vh;
-  box-sizing: border-box;
 }
 
 /* ── Sidebar ── */
@@ -163,14 +161,13 @@ img { max-width: 100%; }
 .sidebar-user-role { font-size: 10px; color: var(--text-sub); }
 
 /* ── Main Area ── */
-/* No margin-left needed — .admin-layout padding-left already clears the sidebar */
+/* margin-left / width are set via inline styles in AdminLayout (App.jsx).
+   These CSS rules provide baseline structural properties only. */
 .admin-main {
-  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
-  width: 100%;
 }
 
 /* ── Top Bar ── */
@@ -438,8 +435,7 @@ img { max-width: 100%; }
 @media (max-width: 850px) {
   .menu-toggle { display: flex !important; }
   .sidebar { transform: translateX(-100%); }
-  .admin-layout { padding-left: 0; }
-  .admin-main { margin-left: 0; width: 100%; }
+  /* margin-left / width reset handled by isMobile inline styles in App.jsx */
   
   .sidebar-open .sidebar {
     transform: translateX(0);
