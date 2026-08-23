@@ -63,7 +63,62 @@ The system governs catalog access and operator commands via two distinct roles:
 
 ---
 
-## 4. Database Records Audit
+## 4. Razorpay Key Management (Sprint 05A)
+
+### 4.1 Key Segregation Policy
+
+| Variable | Scope | Purpose |
+|---|---|---|
+| `RAZORPAY_KEY_ID` | Backend `.env` only | Order creation auth (public half of credential pair) |
+| `RAZORPAY_KEY_SECRET` | Backend `.env` only | HMAC-SHA256 signature verification — **never exposed** |
+| `VITE_RAZORPAY_KEY_ID` | Frontend `.env` (Vite-exposed) | Passed to Razorpay checkout widget; must equal `RAZORPAY_KEY_ID` |
+
+**Rule**: `RAZORPAY_KEY_SECRET` is loaded exclusively via `os.getenv()` inside `payments.py`. It is never:
+- Returned in any API response payload
+- Logged to stdout or stderr
+- Passed to the frontend via any route
+
+### 4.2 Test-Mode Enforcement
+
+A dedicated `_is_live_mode()` guard in [`payments.py`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/src/api/routes/payments.py) rejects any `RAZORPAY_KEY_ID` that starts with `rzp_live_`:
+
+```python
+if _is_live_mode(key_id):
+    raise HTTPException(status_code=500,
+        detail="Live Razorpay keys are not permitted. Configure TEST keys (rzp_test_*) only.")
+```
+
+This is enforced at the route handler level on every order creation attempt.
+
+### 4.3 Startup Validation
+
+[`main.py`](file:///c:/Users/Saransh/OneDrive/Documents/DigitalProductStudio/src/api/main.py) includes an `@app.on_event("startup")` hook that runs at server boot:
+
+| Check | Action |
+|---|---|
+| `RAZORPAY_KEY_ID` missing | Warning → server starts in mock mode |
+| `RAZORPAY_KEY_ID` is `rzp_live_*` | **Fatal** → `RuntimeError` raised, server aborted |
+| `RAZORPAY_KEY_SECRET` missing | Warning → signature verification uses mock mode |
+| `VITE_RAZORPAY_KEY_ID` ≠ `RAZORPAY_KEY_ID` | Warning → frontend/backend key mismatch flagged |
+| `ADMIN_GOOGLE_EMAIL` missing | Warning → no admin seed |
+| All checks pass | `✓` Logged, server continues |
+
+### 4.4 Mock Mode Policy
+
+Mock mode is activated automatically when:
+- Keys are absent from `.env`, **or**
+- Keys use the placeholder prefix `rzp_test_placeholder`
+
+In mock mode:
+- `order_mock_*` IDs are generated locally without calling the Razorpay API
+- Signature verification is auto-approved
+- The stored signature is set to `MOCK_VERIFIED` (not the client-supplied string, preventing signature injection)
+
+Mock mode is strictly for local development. It is **not** a security bypass for production.
+
+---
+
+## 5. Database Records Audit
 
 A direct query to the SQLite virtual table reveals the seeded admin user configuration:
 ```json
