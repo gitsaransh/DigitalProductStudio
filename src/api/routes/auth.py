@@ -12,6 +12,10 @@ from pydantic import BaseModel
 from src.core.database import ProductDatabase
 from src.core.auth import create_access_token, get_current_user
 
+# Production frontend URL — set via FRONTEND_URL env var.
+# Falls back to the local Vite dev server for development.
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5174")
+
 router = APIRouter()
 
 class MockLoginRequest(BaseModel):
@@ -31,7 +35,7 @@ def google_login(state: str = "dps_state"):
     
     if not client_id:
         # Fallback to dev mock mode
-        return RedirectResponse(url="http://localhost:5174/login?mock=true")
+        return RedirectResponse(url=f"{FRONTEND_URL}/login?mock=true")
         
     google_url = (
         "https://accounts.google.com/o/oauth2/v2/auth"
@@ -57,7 +61,7 @@ def google_callback(code: str, state: str = None):
     redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/api/auth/google/callback")
     
     if not client_id or not client_secret:
-        return RedirectResponse(url="http://localhost:5174/login?error=credentials_missing")
+        return RedirectResponse(url=f"{FRONTEND_URL}/login?error=credentials_missing")
         
     # Exchange authorization code for token
     token_url = "https://oauth2.googleapis.com/token"
@@ -77,7 +81,7 @@ def google_callback(code: str, state: str = None):
             res_data = json.loads(response.read().decode())
             access_token = res_data.get("access_token")
     except Exception as e:
-        return RedirectResponse(url=f"http://localhost:5174/login?error=token_exchange_failed&detail={urllib.parse.quote(str(e))}")
+        return RedirectResponse(url=f"{FRONTEND_URL}/login?error=token_exchange_failed&detail={urllib.parse.quote(str(e))}")
         
     # Request user profile details
     userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -87,7 +91,7 @@ def google_callback(code: str, state: str = None):
         with urllib.request.urlopen(req_user) as response:
             user_info = json.loads(response.read().decode())
     except Exception as e:
-        return RedirectResponse(url=f"http://localhost:5174/login?error=userinfo_failed&detail={urllib.parse.quote(str(e))}")
+        return RedirectResponse(url=f"{FRONTEND_URL}/login?error=userinfo_failed&detail={urllib.parse.quote(str(e))}")
         
     google_id = user_info.get("sub")
     email = user_info.get("email", "").strip().lower()
@@ -95,7 +99,7 @@ def google_callback(code: str, state: str = None):
     avatar_url = user_info.get("picture", "")
     
     if not email:
-        return RedirectResponse(url="http://localhost:5174/login?error=email_missing")
+        return RedirectResponse(url=f"{FRONTEND_URL}/login?error=email_missing")
         
     # Process user in the local database
     db = ProductDatabase()
@@ -135,7 +139,7 @@ def google_callback(code: str, state: str = None):
     token = create_access_token({"sub": user_id, "email": email, "role": role})
     
     # Redirect to frontend login page which will parse the token
-    return RedirectResponse(url=f"http://localhost:5174/login?token={token}")
+    return RedirectResponse(url=f"{FRONTEND_URL}/login?token={token}")
 
 @router.post("/auth/mock/login")
 def mock_login(body: MockLoginRequest):

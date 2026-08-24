@@ -1,0 +1,36 @@
+# Render.com deployment configuration for Digital Product Studio FastAPI backend.
+# https://render.com/docs/render-yaml
+
+services:
+  - type: web
+    name: dps-api
+    runtime: python
+    region: singapore   # Closest region to India
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+
+    # Persistent disk — keeps SQLite database alive across redeployments.
+    # Mounted at /app/catalog so ./catalog/studio_catalog.db is preserved.
+    disk:
+      name: dps-catalog-db
+      mountPath: /app/catalog
+      sizeGB: 1
+
+    # Environment variables — set values via Render Dashboard (never hardcode secrets here).
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: FRONTEND_URL
+        value: https://digitalproductstudio.in
+      - key: GOOGLE_REDIRECT_URI
+        value: https://dps-api.onrender.com/api/auth/google/callback
+      # The following must be set manually in the Render dashboard:
+      # GOOGLE_CLIENT_ID
+      # GOOGLE_CLIENT_SECRET
+      # ADMIN_GOOGLE_EMAIL
+      # JWT_SECRET           (generate with: openssl rand -hex 32)
+      # RAZORPAY_KEY_ID      (rzp_test_xxxxx)
+      # RAZORPAY_KEY_SECRET
+      # VITE_RAZORPAY_KEY_ID (same as RAZORPAY_KEY_ID)
