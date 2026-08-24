@@ -54,12 +54,20 @@ export default function Navbar() {
             </NavLink>
           ))}
           {isAuthenticated && (
-            <NavLink
-              to="/account"
-              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
-            >
-              Account
-            </NavLink>
+            <>
+              <NavLink
+                to="/account"
+                className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              >
+                Account
+              </NavLink>
+              <NavLink
+                to="/orders"
+                className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              >
+                My Orders
+              </NavLink>
+            </>
           )}
           {isAdmin && (
             <NavLink
@@ -127,7 +135,10 @@ export default function Navbar() {
             </NavLink>
           ))}
           {isAuthenticated && (
-            <NavLink to="/account" className="nav-mobile-link" onClick={() => setOpen(false)}>Account</NavLink>
+            <>
+              <NavLink to="/account" className="nav-mobile-link" onClick={() => setOpen(false)}>Account</NavLink>
+              <NavLink to="/orders" className="nav-mobile-link" onClick={() => setOpen(false)}>My Orders</NavLink>
+            </>
           )}
           {isAdmin && (
             <NavLink to="/admin" className="nav-mobile-link" onClick={() => setOpen(false)}>Admin Dashboard</NavLink>

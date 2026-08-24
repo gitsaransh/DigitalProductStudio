@@ -65,17 +65,14 @@ function StorefrontLayout() {
   );
 }
 
-// Sidebar width — single source of truth used by AdminLayout inline styles.
-// Matches --sidebar-width in admin.css. Inline styles bypass shared #root flex cascade.
+// Sidebar width — single source of truth.
+// Must match --sidebar-width in admin.css.
 const ADMIN_SIDEBAR_W = 240;
 
 // Layout for Operator Admin Panel (Left dark sidebar layout)
 // D-010: Wrapped in AdminAuthGate — requires password before rendering.
 function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
-  const [isMobile, setIsMobile] = React.useState(
-    typeof window !== 'undefined' && window.innerWidth <= 850
-  );
 
   React.useEffect(() => {
     const handleToggle = () => setSidebarOpen(prev => !prev);
@@ -83,32 +80,40 @@ function AdminLayout() {
     return () => window.removeEventListener('toggle-sidebar', handleToggle);
   }, []);
 
-  React.useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 850);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <AdminAuthGate>
+      {/*
+        CSS Grid layout:
+        - Column 1 (ADMIN_SIDEBAR_W px): reserved for the fixed sidebar — no content renders here,
+          but this grid track pushes column 2 to start at exactly the right x position.
+        - Column 2 (1fr): the main admin shell — fills all remaining viewport width.
+        This pattern works regardless of whether #root is flex, block, or grid.
+      */}
       <div
         className={`admin-layout${sidebarOpen ? ' sidebar-open' : ''}`}
-        style={{ display: 'block', width: '100%', minHeight: '100vh' }}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `${ADMIN_SIDEBAR_W}px 1fr`,
+          minHeight: '100vh',
+          width: '100%',
+        }}
       >
         {sidebarOpen && <div onClick={closeSidebar} className="sidebar-backdrop" />}
+
+        {/* Sidebar: position:fixed — overlays the reserved grid column visually */}
         <Sidebar onClose={closeSidebar} />
-        {/* Inline marginLeft is the single authoritative offset — immune to CSS cascade */}
+
+        {/* Main shell: naturally occupies column 2 (starts at x = ADMIN_SIDEBAR_W) */}
         <main
           className="admin-main"
           style={{
-            marginLeft: isMobile ? 0 : `${ADMIN_SIDEBAR_W}px`,
-            width: isMobile ? '100%' : `calc(100% - ${ADMIN_SIDEBAR_W}px)`,
-            minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
+            minHeight: '100vh',
             overflowX: 'hidden',
+            // grid places this in column 2 automatically — no margin-left needed
           }}
         >
           <Outlet />

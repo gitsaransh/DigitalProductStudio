@@ -143,6 +143,18 @@ export default function Account() {
           </div>
         </div>
 
+        <div style={{ marginBottom: '24px' }}>
+          <Link to="/orders" className="account-link-card" style={styles.adminLinkCard}>
+            <div>
+              <h4 style={{ color: '#ffffff', marginBottom: '4px', fontSize: '15px' }}>My Purchased Orders</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '13px', margin: 0 }}>
+                View your receipts and download purchased products.
+              </p>
+            </div>
+            <ArrowRight size={18} color="var(--primary)" style={{ flexShrink: 0 }} />
+          </Link>
+        </div>
+
         {user.role === 'admin' && (
           <div style={styles.adminActions}>
             <Link to="/admin" className="account-link-card" style={styles.adminLinkCard}>

@@ -168,6 +168,26 @@ class ProductDatabase:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id);")
 
+            # Orders Table (Sprint 05)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS orders (
+                    id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    sku TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    currency TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'created',
+                    razorpay_order_id TEXT UNIQUE NOT NULL,
+                    razorpay_payment_id TEXT,
+                    razorpay_signature TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                )
+            """)
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);")
+            cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_rzp ON orders(razorpay_order_id);")
+
             # Seed one admin account using ADMIN_GOOGLE_EMAIL if configured and not already present
             admin_email = os.getenv("ADMIN_GOOGLE_EMAIL")
             if admin_email:
@@ -468,4 +488,60 @@ class ProductDatabase:
             cursor.execute("SELECT * FROM prompts WHERE product_id = ?", (product_id,))
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
+
+    def create_order(self, order_id: str, user_id: str, sku: str, amount: float, currency: str, rzp_order_id: str, status: str = 'created') -> Dict[str, Any]:
+        now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO orders (id, user_id, sku, amount, currency, status, razorpay_order_id, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (order_id, user_id, sku, amount, currency, status, rzp_order_id, now, now))
+            conn.commit()
+        return {
+            "id": order_id,
+            "user_id": user_id,
+            "sku": sku,
+            "amount": amount,
+            "currency": currency,
+            "status": status,
+            "razorpay_order_id": rzp_order_id,
+            "created_at": now,
+            "updated_at": now
+        }
+
+    def update_order_payment(self, rzp_order_id: str, payment_id: str, signature: str, status: str) -> bool:
+        now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE orders
+                SET razorpay_payment_id = ?, razorpay_signature = ?, status = ?, updated_at = ?
+                WHERE razorpay_order_id = ?
+            """, (payment_id, signature, status, now, rzp_order_id))
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def get_order_by_rzp_id(self, rzp_order_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM orders WHERE razorpay_order_id = ?", (rzp_order_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def get_user_orders(self, user_id: str) -> List[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", (user_id,))
+            rows = cursor.fetchall()
+            return [dict(row) for row in rows]
+
+    def has_user_purchased(self, user_id: str, sku: str) -> bool:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT COUNT(*) as count FROM orders 
+                WHERE user_id = ? AND sku = ? AND status = 'paid'
+            """, (user_id, sku))
+            return cursor.fetchone()["count"] > 0
 

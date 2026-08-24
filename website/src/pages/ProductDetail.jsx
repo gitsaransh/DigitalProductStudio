@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { useParams, Link, Navigate } from 'react-router-dom';
-import { Star, Download, Globe, CheckCircle2, ArrowLeft, ShieldCheck, RefreshCw } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
+import { Star, Download, Globe, CheckCircle2, ArrowLeft, ShieldCheck, RefreshCw, Loader2, ShieldAlert } from 'lucide-react';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import CTABanner from '../components/CTABanner.jsx';
 import { PRODUCTS } from '../data/index.js';
+import { useAuth } from '../components/AuthContext.jsx';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function ProductDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth();
+  
   const [claimed, setClaimed] = useState(false);
+  const [purchased, setPurchased] = useState(false);
+  const [checkingPurchase, setCheckingPurchase] = useState(false);
+  const [buying, setBuying] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   // Look up product in static database
   let product = PRODUCTS.find(p => p.slug === slug);
@@ -48,13 +58,208 @@ export default function ProductDetail() {
     return <Navigate to="/products" replace />;
   }
 
+  useEffect(() => {
+    if (isAuthenticated && product && product.sku === 'DPS-PRM-001') {
+      checkPurchaseStatus();
+    }
+  }, [isAuthenticated, product]);
+
+  const checkPurchaseStatus = async () => {
+    setCheckingPurchase(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/payments/check-purchase?sku=${product.sku}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setPurchased(data.purchased);
+      }
+    } catch (err) {
+      console.error('Error checking purchase status:', err);
+    } finally {
+      setCheckingPurchase(false);
+    }
+  };
+
   const handleClaim = () => {
     setClaimed(true);
   };
 
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/payments/download/${product.sku}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${product.sku}_prompt_vault_master.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else {
+        const errData = await response.json();
+        alert(errData.detail || 'Failed to download the product file.');
+      }
+    } catch (err) {
+      console.error('Download error:', err);
+      alert('An error occurred while downloading the product file.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!isAuthenticated) {
+      navigate(`/login?redirect=/products/${slug}`);
+      return;
+    }
+
+    setBuying(true);
+
+    try {
+      const token = localStorage.getItem('token');
+      
+      // 1. Create order on backend
+      const res = await fetch(`${API_URL}/api/payments/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ sku: product.sku })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        alert(errData.detail || 'Failed to create payment order.');
+        setBuying(false);
+        return;
+      }
+
+      const orderData = await res.json();
+      
+      // 2. Check if mock checkout
+      if (orderData.mock) {
+        const mockPaymentId = `pay_mock_${Math.random().toString(36).substring(2, 12)}`;
+        
+        // Call backend to verify mock payment
+        const verifyRes = await fetch(`${API_URL}/api/payments/verify-payment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            razorpay_order_id: orderData.order_id,
+            razorpay_payment_id: mockPaymentId,
+            razorpay_signature: 'mock_signature_approved'
+          })
+        });
+
+        if (verifyRes.ok) {
+          setPurchased(true);
+          alert('Test payment completed successfully! Product file has been unlocked.');
+        } else {
+          alert('Mock payment verification failed.');
+        }
+        setBuying(false);
+        return;
+      }
+
+      // 3. Load Razorpay script dynamically
+      const loadScript = () => {
+        return new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.async = true;
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      };
+
+      const scriptLoaded = await loadScript();
+      if (!scriptLoaded) {
+        alert('Failed to load Razorpay Checkout SDK. Verify your network connection.');
+        setBuying(false);
+        return;
+      }
+
+      // 4. Open Razorpay Widget
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Digital Product Studio',
+        description: `Purchase of ${product.title}`,
+        order_id: orderData.order_id,
+        handler: async function (response) {
+          setBuying(true);
+          const verifyRes = await fetch(`${API_URL}/api/payments/verify-payment`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            })
+          });
+
+          if (verifyRes.ok) {
+            setPurchased(true);
+            alert('Payment completed successfully! Product file has been unlocked.');
+          } else {
+            alert('Payment verification failed.');
+          }
+          setBuying(false);
+        },
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || ''
+        },
+        theme: {
+          color: '#6366F1'
+        }
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('An error occurred during the checkout process.');
+    } finally {
+      setBuying(false);
+    }
+  };
+
+  const isRazorpayProduct = product.sku === 'DPS-PRM-001';
+
   return (
     <>
       <div className="container" style={{ marginTop: '24px' }}>
+        <style>{`
+          .spinner {
+            animation: spin 1.2s linear infinite;
+          }
+          @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        `}</style>
+        
         <Breadcrumb crumbs={[
           { label: 'Home', to: '/' },
           { label: 'Products', to: '/products' },
@@ -97,7 +302,7 @@ export default function ProductDetail() {
               }} />
 
               {/* Mockup Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 1 }}>
+              <div style={{ display: 'flex', zIndex: 1, justifyContent: 'space-between', alignItems: 'center' }}>
                 <span className="badge badge-primary" style={{ background: 'var(--primary-subtle)', color: 'var(--primary-light)' }}>
                   {product.category}
                 </span>
@@ -130,11 +335,11 @@ export default function ProductDetail() {
                 </h4>
 
                 {/* Progress bars representing dashboard charts */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={{ display: 'flex', zIndex: 1, flexDirection: 'column', gap: '10px' }}>
                   {[
-                    { label: 'Budget Allocations', val: 78, col: 'var(--emerald)' },
-                    { label: 'Savings Target Progress', val: 92, col: 'var(--cyan)' },
-                    { label: 'Net Profit Margin MTD', val: 64, col: 'var(--primary)' }
+                    { label: 'System Accuracy Index', val: 98, col: 'var(--emerald)' },
+                    { label: 'Curation Completeness', val: 100, col: 'var(--cyan)' },
+                    { label: 'Prompt Deduplication Score', val: 95, col: 'var(--primary)' }
                   ].map(pBar => (
                     <div key={pBar.label}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', marginBottom: '3px', fontWeight: '600' }}>
@@ -169,7 +374,7 @@ export default function ProductDetail() {
               {product.isBestseller && (
                 <span className="badge badge-amber">🏆 Bestseller</span>
               )}
-              <span className="badge badge-primary">Excel Compatible</span>
+              <span className="badge badge-primary">{isRazorpayProduct ? 'INR Checkout' : 'Excel Compatible'}</span>
             </div>
 
             <h1 style={{ color: 'white', fontSize: 'clamp(26px, 4vw, 38px)', fontWeight: '900', margin: '0 0 12px' }}>
@@ -185,46 +390,93 @@ export default function ProductDetail() {
             {/* Price display */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '28px' }}>
               <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
-                ${product.price.toFixed(2)}
+                {isRazorpayProduct ? '₹499' : `$${product.price.toFixed(2)}`}
               </span>
-              {product.originalPrice && (
+              {!isRazorpayProduct && product.originalPrice && (
                 <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
                   ${product.originalPrice.toFixed(2)}
                 </span>
               )}
-              {product.originalPrice && (
-                <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
-                  -{Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+              {isRazorpayProduct && (
+                <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
+                  ₹999
                 </span>
               )}
+              <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
+                -50% OFF
+              </span>
             </div>
 
-            {/* Add to Cart/Claim CTA */}
+            {/* Checkout / Download CTA */}
             <div style={{ marginBottom: '32px' }}>
-              {claimed ? (
-                <div className="glass" style={{
-                  padding: '16px 20px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(16,185,129,0.3)',
-                  background: 'rgba(16,185,129,0.06)',
-                  color: 'white',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px'
-                }}>
-                  <CheckCircle2 size={18} color="var(--emerald)" /> 
-                  Claimed successfully! Your download will begin shortly.
-                </div>
+              {isRazorpayProduct ? (
+                // Razorpay checkout product
+                checkingPurchase ? (
+                  <button className="btn btn-secondary btn-lg" disabled style={{ width: '100%', justifyContent: 'center' }}>
+                    <Loader2 className="spinner" size={18} /> Validating status...
+                  </button>
+                ) : purchased ? (
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleDownload}
+                    disabled={downloading}
+                    style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
+                  >
+                    {downloading ? (
+                      <>
+                        <Loader2 className="spinner" size={18} /> Downloading...
+                      </>
+                    ) : (
+                      <>
+                        <Download size={18} /> Download CSV File
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleCheckout}
+                    disabled={buying}
+                    style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
+                  >
+                    {buying ? (
+                      <>
+                        <Loader2 className="spinner" size={18} /> Initiating Checkout...
+                      </>
+                    ) : (
+                      <>
+                        <Download size={18} /> Pay ₹499 (Test Mode)
+                      </>
+                    )}
+                  </button>
+                )
               ) : (
-                <button
-                  className="btn btn-primary btn-lg"
-                  onClick={handleClaim}
-                  style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px' }}
-                >
-                  <Download size={18} /> Instant Download
-                </button>
+                // Free / Other standard instant download product
+                claimed ? (
+                  <div className="glass" style={{
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(16,185,129,0.3)',
+                    background: 'rgba(16,185,129,0.06)',
+                    color: 'white',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <CheckCircle2 size={18} color="var(--emerald)" /> 
+                    Claimed successfully! Your download will begin shortly.
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-primary btn-lg"
+                    onClick={handleClaim}
+                    style={{ width: '100%', zIndex: 1, justifyContent: 'center', padding: '16px', fontSize: '16px' }}
+                  >
+                    <Download size={18} /> Instant Download
+                  </button>
+                )
               )}
             </div>
 
@@ -235,7 +487,7 @@ export default function ProductDetail() {
                 { icon: <ShieldCheck size={16} color="var(--emerald)" />, text: 'Commercial Use: Full rights for client and personal projects included' },
                 { icon: <RefreshCw size={16} color="var(--cyan)" />, text: 'Lifetime Updates: Free future updates to this template' }
               ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <div key={i} style={{ display: 'flex', gap: '12px', zIndex: 1, alignItems: 'flex-start' }}>
                   <div style={{ flexShrink: 0, marginTop: '2px' }}>{item.icon}</div>
                   <p style={{ fontSize: '13px', margin: 0, color: 'var(--text-sub)', lineHeight: '1.5' }}>{item.text}</p>
                 </div>
@@ -247,7 +499,7 @@ export default function ProductDetail() {
         {/* Detailed Tabs / Product Info */}
         <div style={{ textAlign: 'left', marginBottom: '80px' }}>
           <div className="glass" style={{ padding: '36px 40px', border: '1px solid var(--border-glass)' }}>
-            <h3 style={{ color: 'white', fontSize: '20px', fontWeight: '800', marginBottom: '16px' }}>
+            <h3 style={{ color: 'white', zIndex: 1, fontSize: '20px', fontWeight: '800', marginBottom: '16px' }}>
               Product Specifications & Details
             </h3>
             <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'var(--text-muted)', marginBottom: '32px' }}>
@@ -259,7 +511,7 @@ export default function ProductDetail() {
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '16px' }}>
               {product.includes.map(inc => (
-                <div key={inc} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: 'var(--text)' }}>
+                <div key={inc} style={{ display: 'flex', zIndex: 1, alignItems: 'center', gap: '10px', fontSize: '14px', color: 'var(--text)' }}>
                   <CheckCircle2 size={14} color="var(--emerald)" /> {inc}
                 </div>
               ))}
@@ -280,7 +532,7 @@ export default function ProductDetail() {
               { q: 'Will these work on Google Sheets?', a: 'Absolutely. While optimized for Microsoft Excel, a dedicated pre-configured Google Sheets version link is included in the instructions guide.' },
               { q: 'Is support included?', a: 'Yes! We stand behind our systems. Contact our support center anytime, and our team will get back to you with walkthrough assistance within 24 hours.' }
             ].map(faq => (
-              <div key={faq.q} className="glass" style={{ padding: '24px', border: '1px solid var(--border-glass)' }}>
+              <div key={faq.q} className="glass" style={{ padding: '24px', zIndex: 1, border: '1px solid var(--border-glass)' }}>
                 <h4 style={{ color: 'white', fontSize: '15px', fontWeight: '700', marginBottom: '8px' }}>{faq.q}</h4>
                 <p style={{ fontSize: '13px', lineHeight: '1.6', margin: 0 }}>{faq.a}</p>
               </div>
