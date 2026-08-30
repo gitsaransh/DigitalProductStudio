@@ -1,7 +1,9 @@
 """
-GET /api/products        — paginated list with optional filters
-GET /api/products/{id}   — single product by ID or slug
-GET /api/products/search — full-text search via FTS5
+GET /api/products              — paginated list with optional filters
+GET /api/products/by-slug/{slug}  — lookup by URL slug (e.g. 'ultimate-finance-os')
+GET /api/products/by-sku/{sku}    — lookup by SKU (e.g. 'DPS-XLS-001')
+GET /api/products/{id}         — single product by UUID
+GET /api/products/search       — full-text search via FTS5
 """
 
 from typing import Optional
@@ -41,10 +43,31 @@ def search_products(
     return {"products": results, "count": len(results), "query": q}
 
 
+@router.get("/products/by-slug/{slug}")
+def get_product_by_slug(slug: str):
+    """Returns a single product by its URL slug (e.g. 'ultimate-finance-os')."""
+    product = _db.get_product_by_slug(slug)
+    if not product:
+        raise HTTPException(status_code=404, detail=f"Product with slug '{slug}' not found")
+    return product
+
+
+@router.get("/products/by-sku/{sku}")
+def get_product_by_sku(sku: str):
+    """Returns a single product by its SKU (e.g. 'DPS-XLS-001')."""
+    product = _db.get_product_by_sku(sku)
+    if not product:
+        raise HTTPException(status_code=404, detail=f"Product with SKU '{sku}' not found")
+    return product
+
+
 @router.get("/products/{product_id}")
 def get_product(product_id: str):
-    """Returns a single product by ID."""
+    """Returns a single product by UUID. Also tries SKU lookup as a fallback."""
     product = _db.get_product(product_id)
+    if not product:
+        # Fallback: treat product_id as a SKU (e.g. 'DPS-XLS-001')
+        product = _db.get_product_by_sku(product_id)
     if not product:
         raise HTTPException(status_code=404, detail=f"Product '{product_id}' not found")
     return product

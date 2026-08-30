@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.routes import health, products, approvals, stats, auth, payments
+from src.core.database import ProductDatabase
 
 app = FastAPI(
     title="Digital Product Studio API",
@@ -103,4 +104,16 @@ async def validate_environment():
         )
 
     if not warnings_list and not errors:
-        print("[Startup] ✓ All environment checks passed. Running in Razorpay TEST mode.")
+        print("[Startup] [OK] All environment checks passed. Running in Razorpay TEST mode.")
+
+    # ── Seed products from filesystem ─────────────────────────────────────────
+    # Idempotent: only inserts SKUs not already in the DB.
+    # Runs from the working directory (repo root in both local and Render envs).
+    try:
+        db = ProductDatabase()
+        n = db.seed_products_from_filesystem(products_root="products")
+        if n == 0:
+            print("[Startup] Product catalog: all filesystem products already seeded.")
+    except Exception as seed_err:
+        print(f"[Startup WARNING] Filesystem seed failed: {seed_err}")
+

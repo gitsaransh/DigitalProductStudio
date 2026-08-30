@@ -28,8 +28,10 @@ router = APIRouter()
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 # Pricing catalog — only sandbox amounts in INR
+# amount is in INR (NOT paise); conversion to paise happens in create_order
 PRICE_MAP = {
-    "DPS-PRM-001": {"amount": 499, "currency": "INR"}
+    "DPS-PRM-001": {"amount": 499, "currency": "INR"},
+    "DPS-XLS-001": {"amount": 1500, "currency": "INR"},
 }
 
 # Sentinel prefix used to detect placeholder / unconfigured keys
@@ -207,10 +209,54 @@ def check_purchase(sku: str, current_user: dict = Depends(get_current_user)):
     return {"purchased": db.has_user_purchased(current_user["id"], sku)}
 
 
+# MIME-type map keyed by lowercase file extension
+_MIME_MAP: dict[str, str] = {
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "xls": "application/vnd.ms-excel",
+    "zip": "application/zip",
+    "pdf": "application/pdf",
+    "csv": "text/csv",
+    "txt": "text/plain",
+}
+
+
+def _resolve_product_file(sku: str) -> tuple[str, str]:
+    """
+    Reads products/{sku}/product.json to discover the downloadable filename.
+    Returns (absolute_file_path, mime_type).
+    Raises HTTPException(404) if product.json or the asset file is missing.
+    """
+    meta_path = os.path.join("products", sku, "product.json")
+    if not os.path.exists(meta_path):
+        raise HTTPException(status_code=404, detail=f"Product metadata not found for SKU '{sku}'")
+
+    with open(meta_path, "r", encoding="utf-8") as fh:
+        meta = json.load(fh)
+
+    file_placeholder = meta.get("file_placeholder")
+    if not file_placeholder:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Product '{sku}' is not yet available for download (no file configured)"
+        )
+
+    file_path = os.path.join("products", sku, file_placeholder)
+    if not os.path.exists(file_path):
+        raise HTTPException(
+            status_code=503,
+            detail=f"Product file '{file_placeholder}' is not yet available for download"
+        )
+
+    ext = file_placeholder.rsplit(".", 1)[-1].lower() if "." in file_placeholder else ""
+    mime_type = _MIME_MAP.get(ext, "application/octet-stream")
+    return file_path, mime_type
+
+
 @router.get("/payments/download/{sku}")
 def download_product(sku: str, current_user: dict = Depends(get_current_user)):
     """
     Streams the purchased digital product file.
+    Filename and MIME type are resolved dynamically from products/{sku}/product.json.
     Access requires a 'paid' order for the SKU, or admin role.
     """
     db = ProductDatabase()
@@ -223,12 +269,12 @@ def download_product(sku: str, current_user: dict = Depends(get_current_user)):
             detail="Access Denied: Product purchase required to unlock download"
         )
 
-    file_path = os.path.join("products", sku, "prompt_vault_master.csv")
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Requested file not found on server")
+    file_path, mime_type = _resolve_product_file(sku)
+    filename = os.path.basename(file_path)
 
     return FileResponse(
         path=file_path,
-        media_type="text/csv",
-        filename=f"{sku}_prompt_vault_master.csv"
+        media_type=mime_type,
+        filename=filename,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )

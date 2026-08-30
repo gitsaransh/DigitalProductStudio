@@ -29,10 +29,23 @@ os.environ["ADMIN_GOOGLE_EMAIL"] = "admin@digitalproductstudio.in"
 os.environ["RAZORPAY_KEY_ID"] = "rzp_test_placeholder_id"
 os.environ["RAZORPAY_KEY_SECRET"] = "rzp_test_placeholder_secret"
 
-# Create product folders in the temp directory to test file downloads
+# Create product folders in the temp directory to test file downloads.
+# Guards prevent overwriting real committed product assets if they already exist.
 os.makedirs("products/DPS-PRM-001", exist_ok=True)
-with open("products/DPS-PRM-001/prompt_vault_master.csv", "w", encoding="utf-8") as f:
-    f.write("id,prompt_text,category\n1,Write a marketing SOP,Marketing")
+if not os.path.exists("products/DPS-PRM-001/prompt_vault_master.csv"):
+    with open("products/DPS-PRM-001/prompt_vault_master.csv", "w", encoding="utf-8") as f:
+        f.write("id,prompt_text,category\n1,Write a marketing SOP,Marketing")
+# product.json is required by the dynamic download endpoint (_resolve_product_file)
+if not os.path.exists("products/DPS-PRM-001/product.json"):
+    with open("products/DPS-PRM-001/product.json", "w", encoding="utf-8") as f:
+        import json as _json
+        _json.dump({
+            "sku": "DPS-PRM-001",
+            "name": "ChatGPT & Claude Prompt Vault (Test)",
+            "slug": "chatgpt-claude-prompt-vault",
+            "file_placeholder": "prompt_vault_master.csv",
+            "status": "published"
+        }, f)
 
 from src.api.main import app
 
@@ -44,9 +57,7 @@ class TestPaymentsAndGating(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        # Clean up temporary database files and directories
-        if os.path.exists("products/DPS-PRM-001"):
-            shutil.rmtree("products/DPS-PRM-001")
+        # Only remove the temp database directory — do NOT delete real product directories.
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
 
@@ -158,7 +169,7 @@ class TestPaymentsAndGating(unittest.TestCase):
         )
         self.assertEqual(response2.status_code, 200)
         self.assertEqual(response2.headers["content-type"], "text/csv; charset=utf-8")
-        self.assertIn("Write a marketing SOP", response2.text)
+        self.assertIn("Prompt ID", response2.text)  # Validates the real CSV header is present
 
     def test_orders_history_endpoint(self):
         # Create order

@@ -376,6 +376,28 @@ class ProductDatabase:
 
 
 
+    def get_product_by_sku(self, sku: str) -> Optional[Dict[str, Any]]:
+        """Looks up a product by its SKU (e.g. 'DPS-PRM-001')."""
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT raw_data FROM products WHERE sku = ?", (sku,))
+            row = cursor.fetchone()
+            if row:
+                return json.loads(row["raw_data"])
+        return None
+
+
+    def get_product_by_slug(self, slug: str) -> Optional[Dict[str, Any]]:
+        """Looks up a product by its URL slug (e.g. 'ultimate-finance-os')."""
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT raw_data FROM products WHERE slug = ?", (slug,))
+            row = cursor.fetchone()
+            if row:
+                return json.loads(row["raw_data"])
+        return None
+
+
     def list_products(
         self,
         status: Optional[str] = None,
@@ -545,3 +567,97 @@ class ProductDatabase:
             """, (user_id, sku))
             return cursor.fetchone()["count"] > 0
 
+
+    def seed_products_from_filesystem(self, products_root: str = "products") -> int:
+        """
+        Scans products/{SKU}/product.json for every directory under `products_root`
+        and inserts any SKU that is not yet in the database.
+        This is idempotent — existing records are NOT overwritten.
+        Returns the number of products newly inserted.
+        """
+        import hashlib
+        import uuid as _uuid
+
+        if not os.path.isdir(products_root):
+            print(f"[Database] Seed skipped: products root '{products_root}' not found")
+            return 0
+
+        inserted = 0
+        for entry in os.scandir(products_root):
+            if not entry.is_dir():
+                continue
+            meta_path = os.path.join(entry.path, "product.json")
+            if not os.path.exists(meta_path):
+                continue
+
+            try:
+                with open(meta_path, "r", encoding="utf-8") as fh:
+                    meta = json.load(fh)
+
+                sku = meta.get("sku")
+                if not sku:
+                    print(f"[Database] Seed skipped {entry.name}: missing 'sku' field")
+                    continue
+
+                # Check if already seeded by SKU
+                existing = self.get_product_by_sku(sku)
+                if existing:
+                    continue  # Already in DB — skip
+
+                # Build a canonical record compatible with upsert_batch schema
+                product_id = str(_uuid.uuid4())
+                slug = meta.get("slug") or sku.lower().replace("-", "-")
+                title = meta.get("name") or meta.get("title") or sku
+                category = meta.get("category", "Uncategorized")
+                short_desc = meta.get("short_description", "")
+                long_desc = meta.get("long_description", "")
+                price = meta.get("price", 0.0)
+                compare_price = meta.get("compare_at_price", None)
+                tags = meta.get("tags", [])
+                status = meta.get("status", "draft")
+                version = meta.get("version", "1.0")
+
+                # Derive lifecycle_state from status field
+                lifecycle_state_map = {
+                    "published": "published", "draft": "draft",
+                    "Draft": "draft", "Published": "published"
+                }
+                lifecycle_state = lifecycle_state_map.get(status, "draft")
+
+                # Stable file_hash based on SKU so re-seeding is idempotent
+                file_hash = hashlib.sha256(sku.encode()).hexdigest()
+                now = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+                # Full product record stored in raw_data for API responses
+                raw_record = {
+                    "id": product_id,
+                    "sku": sku,
+                    "slug": slug,
+                    "title": title,
+                    "category": category,
+                    "description": f"{short_desc} {long_desc}".strip(),
+                    "short_description": short_desc,
+                    "long_description": long_desc,
+                    "tags": tags,
+                    "pricing": {"base_price": price, "compare_at_price": compare_price, "currency": "INR"},
+                    "price": price,
+                    "compare_at_price": compare_price,
+                    "file_placeholder": meta.get("file_placeholder"),
+                    "status": status,
+                    "lifecycle_state": lifecycle_state,
+                    "version": version,
+                    "file_hash": file_hash,
+                    "created_at": now,
+                    "updated_at": now,
+                }
+
+                self.upsert_batch([raw_record])
+                inserted += 1
+                print(f"[Database] Seeded product: {sku} ({title})")
+
+            except Exception as exc:
+                print(f"[Database] Seed error for {entry.name}: {exc}")
+
+        if inserted:
+            print(f"[Database] Filesystem seed complete: {inserted} new product(s) inserted")
+        return inserted

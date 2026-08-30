@@ -30,7 +30,7 @@ export default function MyOrders() {
     setLoading(true);
     setError('');
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('dps_auth_token');
       const response = await fetch(`${API_URL}/api/payments/orders`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -53,7 +53,7 @@ export default function MyOrders() {
   const handleDownload = async (sku) => {
     setDownloading(prev => ({ ...prev, [sku]: true }));
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('dps_auth_token');
       const response = await fetch(`${API_URL}/api/payments/download/${sku}`, {
         headers: {
           'Authorization': `Bearer ${token}`,

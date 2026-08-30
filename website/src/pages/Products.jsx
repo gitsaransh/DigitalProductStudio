@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, PackageOpen, FileSearch } from 'lucide-react';
 import ProductCard from '../components/ProductCard.jsx';
@@ -6,13 +6,90 @@ import CTABanner from '../components/CTABanner.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import { PRODUCTS, CATEGORIES, EXCEL_SUBCATEGORIES } from '../data/index.js';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 // Only show visible categories in the filter bar
 const VISIBLE_CATEGORIES = CATEGORIES.filter(c => c.visible);
+
+/**
+ * Maps a free-text product category (e.g. "AI Prompts & Automation Kits")
+ * to one of the fixed CATEGORIES slugs (e.g. "ai-prompts") used for filtering.
+ * Falls back to keyword matching, then a naive slugify, so unknown categories
+ * still render instead of silently disappearing from the catalog.
+ */
+function deriveCategorySlug(categoryName) {
+  if (!categoryName) return '';
+  const norm = categoryName.toLowerCase();
+
+  const exact = CATEGORIES.find(c => c.name.toLowerCase() === norm);
+  if (exact) return exact.slug;
+
+  const byKeyword = CATEGORIES.find(c => norm.includes(c.slug.replace(/-/g, ' ')));
+  if (byKeyword) return byKeyword.slug;
+
+  if (norm.includes('excel') || norm.includes('spreadsheet')) return 'excel';
+  if (norm.includes('ai') || norm.includes('prompt')) return 'ai-prompts';
+  if (norm.includes('notion')) return 'notion';
+  if (norm.includes('canva')) return 'canva';
+
+  return norm.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+/**
+ * Normalises an API product record to the shape expected by ProductCard.
+ * Falls back to sensible defaults so missing fields don't break the UI.
+ */
+function normaliseApiProduct(p) {
+  return {
+    id: p.id || p.sku,
+    sku: p.sku,
+    slug: p.slug,
+    title: p.title,
+    subtitle: p.short_description || p.subtitle || '',
+    category: p.category,
+    categorySlug: deriveCategorySlug(p.category),
+    price: p.price ?? (p.pricing?.base_price ?? 0),
+    originalPrice: p.compare_at_price ?? (p.pricing?.compare_at_price ?? null),
+    rating: p.rating ?? 5.0,
+    reviews: p.reviews ?? 0,
+    downloads: p.downloads ?? 0,
+    tags: p.tags ?? [],
+    localizations: p.localizations ?? ['en'],
+    lifecycle_state: p.lifecycle_state ?? p.status ?? 'draft',
+    featured: p.featured ?? false,
+    isBestseller: p.isBestseller ?? false,
+    isFree: p.isFree ?? false,
+    description: p.description ?? p.long_description ?? '',
+    includes: p.includes ?? [],
+  };
+}
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('featured');
+  // API-fetched products. Starts as null (loading), then resolves to array.
+  const [apiProducts, setApiProducts] = useState(null);
+
+  // Fetch live catalog from API on mount; fall back to static data on error.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API_URL}/api/products?limit=200`)
+      .then(r => r.json())
+      .then(data => {
+        if (!cancelled && Array.isArray(data.products)) {
+          setApiProducts(data.products.map(normaliseApiProduct));
+        }
+      })
+      .catch(() => {
+        // API offline — silently fall back to static data
+        if (!cancelled) setApiProducts([]);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Use API products when loaded, otherwise fall back to static list
+  const SOURCE_PRODUCTS = (apiProducts && apiProducts.length > 0) ? apiProducts : PRODUCTS;
 
   // Read category & sub from URL query params
   const activeCategory = searchParams.get('category') || 'all';
@@ -37,7 +114,7 @@ export default function Products() {
   // Excel subcategory filter bar — only shown when browsing Excel
   const showSubFilter = activeCategory === 'excel';
 
-  const filtered = PRODUCTS
+  const filtered = SOURCE_PRODUCTS
     .filter(p => {
       // Only show products in visible categories
       const catIsVisible = VISIBLE_CATEGORIES.some(c => c.slug === p.categorySlug) || p.categorySlug === 'excel';

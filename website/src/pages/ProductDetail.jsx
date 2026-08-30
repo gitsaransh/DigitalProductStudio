@@ -12,62 +12,88 @@ export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  
+
   const [claimed, setClaimed] = useState(false);
   const [purchased, setPurchased] = useState(false);
   const [checkingPurchase, setCheckingPurchase] = useState(false);
   const [buying, setBuying] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  // Live product data from API — overlaid on top of the static baseline.
+  const [liveProduct, setLiveProduct] = useState(null);
 
-  // Look up product in static database
-  let product = PRODUCTS.find(p => p.slug === slug);
+  // Static baseline lookup (immediate, no loading state)
+  let staticProduct = PRODUCTS.find(p => p.slug === slug);
 
-  // Hardcoded mockup data for the flagship product "Ultimate Finance OS" (from PRODUCT_CATALOG.md)
-  if (slug === 'ultimate-finance-os') {
-    product = {
-      id: "ultimate-finance-os",
-      sku: "DPS-XLS-001",
-      slug: "ultimate-finance-os",
-      title: "Ultimate Finance OS",
-      subtitle: "The complete Excel operating system to track expenses, manage budgets, analyze cash flow, and grow your net worth.",
-      category: "Excel Templates",
-      categorySlug: "excel",
+  // Hardcoded fallback for DPS-XLS-001 until static data index is updated
+  if (!staticProduct && slug === 'ultimate-finance-os') {
+    staticProduct = {
+      id: 'ultimate-finance-os',
+      sku: 'DPS-XLS-001',
+      slug: 'ultimate-finance-os',
+      title: 'Ultimate Finance OS',
+      subtitle: 'The complete Excel operating system to track expenses, manage budgets, analyze cash flow, and grow your net worth.',
+      category: 'Excel Templates',
+      categorySlug: 'excel',
       price: 19.00,
       originalPrice: 39.00,
       rating: 5.0,
       reviews: 142,
       downloads: 2980,
-      tags: ["Finance", "Budget", "Excel", "Spreadsheet", "Tracker"],
-      localizations: ["en"],
-      lifecycle_state: "published",
+      tags: ['Finance', 'Budget', 'Excel', 'Spreadsheet', 'Tracker'],
+      localizations: ['en'],
+      lifecycle_state: 'published',
       featured: true,
       isBestseller: true,
-      description: "Take control of your personal and business finances with the Ultimate Finance OS. A premium, dual-mode (light/dark) spreadsheet engineered for high-performance financial tracking. Tracks your MTD revenue, expenses, net worth, OKRs, and goals automatically in a fully integrated layout.",
+      description: 'Take control of your personal and business finances with the Ultimate Finance OS. A premium, dual-mode (light/dark) spreadsheet engineered for high-performance financial tracking.',
       includes: [
-        "Ultimate Finance OS Excel Spreadsheet (.xlsx)",
-        "Google Sheets duplicate version",
-        "Video setup walkthrough & instruction guide",
-        "Commercial usage license",
-        "Lifetime updates access"
-      ]
+        'Ultimate Finance OS Excel Spreadsheet (.xlsx)',
+        'Google Sheets duplicate version',
+        'Video setup walkthrough & instruction guide',
+        'Commercial usage license',
+        'Lifetime updates access',
+      ],
     };
   }
 
-  // Fallback redirect if product is not found
-  if (!product) {
+  // Redirect if product not found in static data
+  if (!staticProduct) {
     return <Navigate to="/products" replace />;
   }
 
+  // Merge: live API data takes precedence over static baseline for critical fields
+  const product = liveProduct
+    ? {
+        ...staticProduct,
+        sku: liveProduct.sku ?? staticProduct.sku,
+        price: liveProduct.price ?? staticProduct.price,
+        description: liveProduct.description || staticProduct.description,
+        tags: liveProduct.tags?.length ? liveProduct.tags : staticProduct.tags,
+      }
+    : staticProduct;
+
+  // Fetch live product data from API (by slug) to get authoritative SKU + pricing
   useEffect(() => {
-    if (isAuthenticated && product && product.sku === 'DPS-PRM-001') {
+    let cancelled = false;
+    fetch(`${API_URL}/api/products/by-slug/${slug}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!cancelled && data) setLiveProduct(data);
+      })
+      .catch(() => { /* silently use static data if API is offline */ });
+    return () => { cancelled = true; };
+  }, [slug]);
+
+  // Check purchase status whenever user is authenticated and we have an SKU
+  useEffect(() => {
+    if (isAuthenticated && product?.sku) {
       checkPurchaseStatus();
     }
-  }, [isAuthenticated, product]);
+  }, [isAuthenticated, product?.sku]);
 
   const checkPurchaseStatus = async () => {
     setCheckingPurchase(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('dps_auth_token');
       const response = await fetch(`${API_URL}/api/payments/check-purchase?sku=${product.sku}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -91,7 +117,7 @@ export default function ProductDetail() {
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('dps_auth_token');
       const response = await fetch(`${API_URL}/api/payments/download/${product.sku}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -99,11 +125,19 @@ export default function ProductDetail() {
       });
 
       if (response.ok) {
+        // Derive filename from Content-Disposition header set by the backend.
+        // Falls back to a SKU-based name so XLSX files are never saved as .csv.
+        let filename = `${product.sku}_download`;
+        const disposition = response.headers.get('Content-Disposition');
+        if (disposition) {
+          const match = disposition.match(/filename="?([^"\n]+)"?/);
+          if (match?.[1]) filename = match[1];
+        }
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${product.sku}_prompt_vault_master.csv`;
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -129,8 +163,8 @@ export default function ProductDetail() {
     setBuying(true);
 
     try {
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem('dps_auth_token');
+
       // 1. Create order on backend
       const res = await fetch(`${API_URL}/api/payments/create-order`, {
         method: 'POST',
@@ -149,11 +183,11 @@ export default function ProductDetail() {
       }
 
       const orderData = await res.json();
-      
+
       // 2. Check if mock checkout
       if (orderData.mock) {
         const mockPaymentId = `pay_mock_${Math.random().toString(36).substring(2, 12)}`;
-        
+
         // Call backend to verify mock payment
         const verifyRes = await fetch(`${API_URL}/api/payments/verify-payment`, {
           method: 'POST',
@@ -259,7 +293,7 @@ export default function ProductDetail() {
           }
           @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         `}</style>
-        
+
         <Breadcrumb crumbs={[
           { label: 'Home', to: '/' },
           { label: 'Products', to: '/products' },
@@ -465,7 +499,7 @@ export default function ProductDetail() {
                     alignItems: 'center',
                     gap: '10px'
                   }}>
-                    <CheckCircle2 size={18} color="var(--emerald)" /> 
+                    <CheckCircle2 size={18} color="var(--emerald)" />
                     Claimed successfully! Your download will begin shortly.
                   </div>
                 ) : (
