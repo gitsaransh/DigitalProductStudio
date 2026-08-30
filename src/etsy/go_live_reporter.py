@@ -9,8 +9,8 @@ from typing import Dict, Any
 
 class GoLiveReporter:
     @staticmethod
-    def generate_report(shop_name: str = "ZenithPlanners Co.", status_data: Dict[str, Any] = None) -> str:
-        report_path = os.path.abspath("./docs/GO_LIVE_REPORT.md")
+    def generate_report(shop_name: str = "ZenithPlanners Co.", status_data: Dict[str, Any] = None, output_dir: str = "./docs") -> str:
+        report_path = os.path.abspath(os.path.join(output_dir, "GO_LIVE_REPORT.md"))
         os.makedirs(os.path.dirname(report_path), exist_ok=True)
         date_str = time.strftime("%Y-%m-%d %H:%M:%S")
 

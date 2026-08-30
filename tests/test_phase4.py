@@ -43,7 +43,9 @@ class TestPhase4GoLive(unittest.TestCase):
         self.assertIn("refresh_token", refreshed)
 
     def test_go_live_reporter(self):
-        report_path = GoLiveReporter.generate_report("ZenithPlanners Co.")
+        # Writes to a temp dir, not the tracked docs/GO_LIVE_REPORT.md,
+        # so running the test suite doesn't dirty the real repo file.
+        report_path = GoLiveReporter.generate_report("ZenithPlanners Co.", output_dir=self.temp_dir)
         self.assertTrue(os.path.exists(report_path))
 
 if __name__ == "__main__":
