@@ -82,7 +82,7 @@ ahead of the real content existing.
 
 ```
 products/DPS-PRM-001/
-├── prompt_vault_master.csv   # Batch 01: 100 prompts (growing with each batch)
+├── prompt_vault_master.csv   # Batch 01: 200 prompts (growing with each batch)
 ├── README.md                 # this file
 └── product_metadata.json     # product/version/status metadata
 ```
