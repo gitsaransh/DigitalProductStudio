@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext.jsx';
 import { ShoppingBag, Download, AlertTriangle, ArrowLeft, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { supabase } from '../lib/supabaseClient.js';
 
 export default function MyOrders() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -29,51 +28,46 @@ export default function MyOrders() {
   const fetchOrders = async () => {
     setLoading(true);
     setError('');
-    try {
-      const token = localStorage.getItem('dps_auth_token');
-      const response = await fetch(`${API_URL}/api/payments/orders`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setOrders(data);
-      } else {
-        const errData = await response.json();
-        setError(errData.detail || 'Failed to fetch order transactions.');
-      }
-    } catch (err) {
-      setError('Could not connect to the backend server. Make sure FastAPI is running.');
-    } finally {
-      setLoading(false);
+    // RLS on `orders` already scopes results to the current user.
+    const { data, error: fetchErr } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (fetchErr) {
+      setError(fetchErr.message || 'Failed to fetch order transactions.');
+    } else {
+      setOrders(data || []);
     }
+    setLoading(false);
   };
 
   const handleDownload = async (sku) => {
     setDownloading(prev => ({ ...prev, [sku]: true }));
     try {
-      const token = localStorage.getItem('dps_auth_token');
-      const response = await fetch(`${API_URL}/api/payments/download/${sku}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      const { data: product, error: productErr } = await supabase
+        .from('products')
+        .select('file_placeholder')
+        .eq('sku', sku)
+        .single();
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${sku}_prompt_vault_master.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } else {
-        const errData = await response.json();
-        alert(errData.detail || 'Failed to download the product file. Verify purchase status.');
+      const filename = product?.file_placeholder || `${sku}_download`;
+      const { data: blob, error: downloadErr } = await supabase.storage
+        .from('product-files')
+        .download(`${sku}/${filename}`);
+
+      if (productErr || downloadErr || !blob) {
+        alert(downloadErr?.message || 'Failed to download the product file. Verify purchase status.');
+        return;
       }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       alert('An error occurred while downloading the product file.');
     } finally {

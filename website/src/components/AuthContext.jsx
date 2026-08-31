@@ -1,72 +1,63 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient.js';
 
 const AuthContext = createContext(null);
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem('dps_auth_token'));
+  const [session, setSession] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  async function loadProfile(userId) {
+    const { data, error: profileErr } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    if (profileErr) {
+      console.error('Failed to load profile:', profileErr);
+      setError('Could not load your account profile.');
+      return;
+    }
+    setProfile(data);
+  }
+
   useEffect(() => {
-    async function loadUser() {
-      if (!token) {
-        setLoading(false);
-        return;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) loadProfile(session.user.id);
+      setLoading(false);
+    });
+
+    // Keeps session/profile in sync across tabs and after OAuth redirects.
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      if (newSession?.user) {
+        loadProfile(newSession.user.id);
+      } else {
+        setProfile(null);
       }
+    });
 
-      try {
-        const response = await fetch(`${API_URL}/api/auth/me`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          // Token is invalid/expired
-          localStorage.removeItem('dps_auth_token');
-          setToken(null);
-          setUser(null);
-        }
-      } catch (err) {
-        console.error('Failed to load user profile:', err);
-        setError('Connection error. Could not verify session.');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadUser();
-  }, [token]);
-
-  const login = (newToken, userData) => {
-    localStorage.setItem('dps_auth_token', newToken);
-    setToken(newToken);
-    if (userData) {
-      setUser(userData);
-    }
-    setLoading(false);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('dps_auth_token');
-    setToken(null);
-    setUser(null);
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setProfile(null);
   };
 
   const value = {
-    user,
-    token,
+    user: profile,
+    session,
+    token: session?.access_token ?? null,
     loading,
     error,
-    login,
     logout,
-    isAuthenticated: !!user,
-    isAdmin: user?.role === 'admin',
+    isAuthenticated: !!session,
+    isAdmin: profile?.role === 'admin',
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

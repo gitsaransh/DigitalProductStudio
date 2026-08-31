@@ -5,8 +5,7 @@ import Breadcrumb from '../components/Breadcrumb.jsx';
 import CTABanner from '../components/CTABanner.jsx';
 import { PRODUCTS } from '../data/index.js';
 import { useAuth } from '../components/AuthContext.jsx';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { supabase } from '../lib/supabaseClient.js';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -65,25 +64,28 @@ export default function ProductDetail() {
     ? {
         ...staticProduct,
         sku: liveProduct.sku ?? staticProduct.sku,
-        price: liveProduct.price ?? staticProduct.price,
+        price: liveProduct.base_price ?? staticProduct.price,
         description: liveProduct.description || staticProduct.description,
         tags: liveProduct.tags?.length ? liveProduct.tags : staticProduct.tags,
       }
     : staticProduct;
 
-  // Fetch live product data from API (by slug) to get authoritative SKU + pricing
+  // Fetch live product data from Supabase (by slug) to get authoritative SKU + pricing
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_URL}/api/products/by-slug/${slug}`)
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (!cancelled && data) setLiveProduct(data);
-      })
-      .catch(() => { /* silently use static data if API is offline */ });
+    supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .single()
+      .then(({ data, error }) => {
+        if (!cancelled && data && !error) setLiveProduct(data);
+      });
     return () => { cancelled = true; };
   }, [slug]);
 
-  // Check purchase status whenever user is authenticated and we have an SKU
+  // Check purchase status whenever user is authenticated and we have an SKU.
+  // RLS on `orders` already scopes results to the current user, so no user_id filter needed.
   useEffect(() => {
     if (isAuthenticated && product?.sku) {
       checkPurchaseStatus();
@@ -93,16 +95,13 @@ export default function ProductDetail() {
   const checkPurchaseStatus = async () => {
     setCheckingPurchase(true);
     try {
-      const token = localStorage.getItem('dps_auth_token');
-      const response = await fetch(`${API_URL}/api/payments/check-purchase?sku=${product.sku}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setPurchased(data.purchased);
-      }
+      const { data, error } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('sku', product.sku)
+        .eq('status', 'paid')
+        .limit(1);
+      if (!error) setPurchased((data || []).length > 0);
     } catch (err) {
       console.error('Error checking purchase status:', err);
     } finally {
@@ -117,35 +116,23 @@ export default function ProductDetail() {
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const token = localStorage.getItem('dps_auth_token');
-      const response = await fetch(`${API_URL}/api/payments/download/${product.sku}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const path = `${product.sku}/${liveProduct?.file_placeholder ?? ''}`;
+      const { data: blob, error } = await supabase.storage.from('product-files').download(path);
 
-      if (response.ok) {
-        // Derive filename from Content-Disposition header set by the backend.
-        // Falls back to a SKU-based name so XLSX files are never saved as .csv.
-        let filename = `${product.sku}_download`;
-        const disposition = response.headers.get('Content-Disposition');
-        if (disposition) {
-          const match = disposition.match(/filename="?([^"\n]+)"?/);
-          if (match?.[1]) filename = match[1];
-        }
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } else {
-        const errData = await response.json();
-        alert(errData.detail || 'Failed to download the product file.');
+      if (error || !blob) {
+        alert(error?.message || 'Failed to download the product file.');
+        return;
       }
+
+      const filename = liveProduct?.file_placeholder || `${product.sku}_download`;
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download error:', err);
       alert('An error occurred while downloading the product file.');
@@ -163,46 +150,30 @@ export default function ProductDetail() {
     setBuying(true);
 
     try {
-      const token = localStorage.getItem('dps_auth_token');
-
-      // 1. Create order on backend
-      const res = await fetch(`${API_URL}/api/payments/create-order`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ sku: product.sku })
+      // 1. Create order via Edge Function (holds the Razorpay secret server-side)
+      const { data: orderData, error: orderErr } = await supabase.functions.invoke('create-order', {
+        body: { sku: product.sku },
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        alert(errData.detail || 'Failed to create payment order.');
+      if (orderErr || !orderData) {
+        alert(orderData?.detail || orderErr?.message || 'Failed to create payment order.');
         setBuying(false);
         return;
       }
-
-      const orderData = await res.json();
 
       // 2. Check if mock checkout
       if (orderData.mock) {
         const mockPaymentId = `pay_mock_${Math.random().toString(36).substring(2, 12)}`;
 
-        // Call backend to verify mock payment
-        const verifyRes = await fetch(`${API_URL}/api/payments/verify-payment`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
+        const { error: verifyErr } = await supabase.functions.invoke('verify-payment', {
+          body: {
             razorpay_order_id: orderData.order_id,
             razorpay_payment_id: mockPaymentId,
-            razorpay_signature: 'mock_signature_approved'
-          })
+            razorpay_signature: 'mock_signature_approved',
+          },
         });
 
-        if (verifyRes.ok) {
+        if (!verifyErr) {
           setPurchased(true);
           alert('Test payment completed successfully! Product file has been unlocked.');
         } else {
@@ -241,20 +212,15 @@ export default function ProductDetail() {
         order_id: orderData.order_id,
         handler: async function (response) {
           setBuying(true);
-          const verifyRes = await fetch(`${API_URL}/api/payments/verify-payment`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
+          const { error: verifyErr } = await supabase.functions.invoke('verify-payment', {
+            body: {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            })
+              razorpay_signature: response.razorpay_signature,
+            },
           });
 
-          if (verifyRes.ok) {
+          if (!verifyErr) {
             setPurchased(true);
             alert('Payment completed successfully! Product file has been unlocked.');
           } else {

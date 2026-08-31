@@ -5,8 +5,7 @@ import ProductCard from '../components/ProductCard.jsx';
 import CTABanner from '../components/CTABanner.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 import { PRODUCTS, CATEGORIES, EXCEL_SUBCATEGORIES } from '../data/index.js';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import { supabase } from '../lib/supabaseClient.js';
 
 // Only show visible categories in the filter bar
 const VISIBLE_CATEGORIES = CATEGORIES.filter(c => c.visible);
@@ -48,7 +47,7 @@ function normaliseApiProduct(p) {
     subtitle: p.short_description || p.subtitle || '',
     category: p.category,
     categorySlug: deriveCategorySlug(p.category),
-    price: p.price ?? (p.pricing?.base_price ?? 0),
+    price: p.price ?? p.base_price ?? (p.pricing?.base_price ?? 0),
     originalPrice: p.compare_at_price ?? (p.pricing?.compare_at_price ?? null),
     rating: p.rating ?? 5.0,
     reviews: p.reviews ?? 0,
@@ -71,19 +70,23 @@ export default function Products() {
   // API-fetched products. Starts as null (loading), then resolves to array.
   const [apiProducts, setApiProducts] = useState(null);
 
-  // Fetch live catalog from API on mount; fall back to static data on error.
+  // Fetch live catalog from Supabase on mount; fall back to static data on error.
+  // RLS already restricts anonymous reads to published products server-side.
   useEffect(() => {
     let cancelled = false;
-    fetch(`${API_URL}/api/products?limit=200`)
-      .then(r => r.json())
-      .then(data => {
-        if (!cancelled && Array.isArray(data.products)) {
-          setApiProducts(data.products.map(normaliseApiProduct));
+    supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200)
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error('Failed to load products from Supabase:', error);
+          setApiProducts([]);
+          return;
         }
-      })
-      .catch(() => {
-        // API offline — silently fall back to static data
-        if (!cancelled) setApiProducts([]);
+        setApiProducts((data || []).map(normaliseApiProduct));
       });
     return () => { cancelled = true; };
   }, []);
