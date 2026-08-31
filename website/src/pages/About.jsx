@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bot, Zap, Globe, ShieldCheck, BarChart3, Layers } from 'lucide-react';
+import { Bot, Zap, Globe, ShieldCheck, Layers } from 'lucide-react';
 import CTABanner from '../components/CTABanner.jsx';
 import Breadcrumb from '../components/Breadcrumb.jsx';
 
@@ -53,12 +53,10 @@ export default function About() {
           {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '64px' }}>
             {[
-              { num: '100K+', label: 'Digital Assets', icon: <Layers size={20} color="var(--primary-light)" /> },
-              { num: '10', label: 'Marketplace Adapters', icon: <Globe size={20} color="var(--cyan)" /> },
-              { num: '8', label: 'AI Agents', icon: <Bot size={20} color="var(--purple)" /> },
-              { num: '7', label: 'Languages', icon: <Globe size={20} color="var(--emerald)" /> },
-              { num: '95.6%', label: 'Production Readiness', icon: <ShieldCheck size={20} color="var(--amber)" /> },
-              { num: '5.0★', label: 'Average Rating', icon: <BarChart3 size={20} color="var(--rose)" /> },
+              { num: 'AI-Assisted', label: 'Content Creation', icon: <Bot size={20} color="var(--purple)" /> },
+              { num: 'Instant', label: 'Digital Delivery', icon: <Layers size={20} color="var(--primary-light)" /> },
+              { num: '100%', label: 'Secure Checkout', icon: <ShieldCheck size={20} color="var(--amber)" /> },
+              { num: 'New', label: 'Products Added Regularly', icon: <Globe size={20} color="var(--emerald)" /> },
             ].map(({ num, label, icon }) => (
               <div key={label} className="glass" style={{ padding: '24px', textAlign: 'center' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>{icon}</div>

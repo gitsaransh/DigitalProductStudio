@@ -53,7 +53,7 @@ export default function Footer() {
             </div>
           </Link>
           <p className="footer-brand-desc">
-            AI-powered digital publishing studio delivering premium planners, templates, prompt vaults, and creator tools across 10 global marketplaces.
+            AI-assisted digital publishing studio delivering premium planners, templates, and prompt vaults for creators and professionals.
           </p>
           <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
             {[
@@ -150,11 +150,11 @@ export default function Footer() {
             ))}
           </div>
           <div style={{ marginTop: '28px', padding: '14px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid var(--border-glass)' }}>
-            <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI-Powered Platform</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-sub)', lineHeight: '1.6' }}>Powered by 8-agent swarm. 10 marketplace adapters. 100K+ digital assets.</div>
+            <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI-Assisted Platform</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-sub)', lineHeight: '1.6' }}>Instant digital delivery. Secure checkout. New products added regularly.</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '8px' }}>
               <Zap size={11} color="var(--emerald)" />
-              <span style={{ fontSize: '11px', color: 'var(--emerald)', fontWeight: '700' }}>Enterprise Production Ready</span>
+              <span style={{ fontSize: '11px', color: 'var(--emerald)', fontWeight: '700' }}>Secure Checkout</span>
             </div>
           </div>
         </div>
