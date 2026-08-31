@@ -10,11 +10,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const PRICE_MAP: Record<string, { amount: number; currency: string }> = {
-  "DPS-PRM-001": { amount: 499, currency: "INR" },
-  "DPS-XLS-001": { amount: 1500, currency: "INR" },
-};
-
 const PLACEHOLDER_PREFIX = "rzp_test_placeholder";
 
 function isLiveMode(keyId: string | null): boolean {
@@ -56,12 +51,27 @@ Deno.serve(async (req) => {
   }
 
   const { sku } = await req.json();
-  const priceInfo = PRICE_MAP[sku];
-  if (!priceInfo) {
+
+  // Service-role client — reads the authoritative price and is the only writer
+  // allowed into `orders` (see RLS policy). Price comes from the same `products`
+  // table the storefront catalog reads, so checkout can never drift from the
+  // displayed price.
+  const adminClient = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+  const { data: product, error: productErr } = await adminClient
+    .from("products")
+    .select("base_price, currency")
+    .eq("sku", sku)
+    .eq("status", "published")
+    .single();
+  if (productErr || !product) {
     return jsonResponse({ detail: "Invalid SKU or product not configured for purchase" }, 400);
   }
 
-  const { amount, currency } = priceInfo;
+  const amount = product.base_price;
+  const currency = product.currency;
   const amountPaise = Math.round(amount * 100);
 
   const keyId = Deno.env.get("RAZORPAY_KEY_ID") ?? null;
@@ -100,11 +110,6 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Service-role client — the only writer allowed into `orders` (see RLS policy).
-  const adminClient = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
   const { error: insertErr } = await adminClient.from("orders").insert({
     user_id: user.id,
     sku,

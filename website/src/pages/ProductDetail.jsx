@@ -12,7 +12,6 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
 
-  const [claimed, setClaimed] = useState(false);
   const [purchased, setPurchased] = useState(false);
   const [checkingPurchase, setCheckingPurchase] = useState(false);
   const [buying, setBuying] = useState(false);
@@ -59,12 +58,16 @@ export default function ProductDetail() {
     return <Navigate to="/products" replace />;
   }
 
-  // Merge: live API data takes precedence over static baseline for critical fields
+  // Merge: live API data takes precedence over static baseline for critical fields.
+  // Price and currency always come from the live product — this is the exact same
+  // row the checkout Edge Function reads, so catalog and checkout can never drift.
   const product = liveProduct
     ? {
         ...staticProduct,
         sku: liveProduct.sku ?? staticProduct.sku,
         price: liveProduct.base_price ?? staticProduct.price,
+        originalPrice: liveProduct.compare_at_price ?? staticProduct.originalPrice,
+        currency: liveProduct.currency ?? 'USD',
         description: liveProduct.description || staticProduct.description,
         tags: liveProduct.tags?.length ? liveProduct.tags : staticProduct.tags,
       }
@@ -107,10 +110,6 @@ export default function ProductDetail() {
     } finally {
       setCheckingPurchase(false);
     }
-  };
-
-  const handleClaim = () => {
-    setClaimed(true);
   };
 
   const handleDownload = async () => {
@@ -248,7 +247,8 @@ export default function ProductDetail() {
     }
   };
 
-  const isRazorpayProduct = product.sku === 'DPS-PRM-001';
+  const CURRENCY_SYMBOLS = { INR: '₹', USD: '$', EUR: '€', GBP: '£' };
+  const currencySymbol = CURRENCY_SYMBOLS[product.currency] ?? `${product.currency} `;
 
   return (
     <>
@@ -374,7 +374,7 @@ export default function ProductDetail() {
               {product.isBestseller && (
                 <span className="badge badge-amber">🏆 Bestseller</span>
               )}
-              <span className="badge badge-primary">{isRazorpayProduct ? 'INR Checkout' : 'Excel Compatible'}</span>
+              <span className="badge badge-primary">{product.currency} Checkout</span>
             </div>
 
             <h1 style={{ color: 'white', fontSize: 'clamp(26px, 4vw, 38px)', fontWeight: '900', margin: '0 0 12px' }}>
@@ -390,93 +390,60 @@ export default function ProductDetail() {
             {/* Price display */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '28px' }}>
               <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
-                {isRazorpayProduct ? '₹499' : `$${product.price.toFixed(2)}`}
+                {currencySymbol}{product.price.toFixed(2)}
               </span>
-              {!isRazorpayProduct && product.originalPrice && (
+              {product.originalPrice && (
                 <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
-                  ${product.originalPrice.toFixed(2)}
+                  {currencySymbol}{product.originalPrice.toFixed(2)}
                 </span>
               )}
-              {isRazorpayProduct && (
-                <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
-                  ₹999
+              {product.originalPrice && (
+                <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
+                  -{Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
                 </span>
               )}
-              <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
-                -50% OFF
-              </span>
             </div>
 
             {/* Checkout / Download CTA */}
             <div style={{ marginBottom: '32px' }}>
-              {isRazorpayProduct ? (
-                // Razorpay checkout product
-                checkingPurchase ? (
-                  <button className="btn btn-secondary btn-lg" disabled style={{ width: '100%', justifyContent: 'center' }}>
-                    <Loader2 className="spinner" size={18} /> Validating status...
-                  </button>
-                ) : purchased ? (
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={handleDownload}
-                    disabled={downloading}
-                    style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
-                  >
-                    {downloading ? (
-                      <>
-                        <Loader2 className="spinner" size={18} /> Downloading...
-                      </>
-                    ) : (
-                      <>
-                        <Download size={18} /> Download CSV File
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={handleCheckout}
-                    disabled={buying}
-                    style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
-                  >
-                    {buying ? (
-                      <>
-                        <Loader2 className="spinner" size={18} /> Initiating Checkout...
-                      </>
-                    ) : (
-                      <>
-                        <Download size={18} /> Pay ₹499 (Test Mode)
-                      </>
-                    )}
-                  </button>
-                )
+              {checkingPurchase ? (
+                <button className="btn btn-secondary btn-lg" disabled style={{ width: '100%', justifyContent: 'center' }}>
+                  <Loader2 className="spinner" size={18} /> Validating status...
+                </button>
+              ) : purchased ? (
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
+                >
+                  {downloading ? (
+                    <>
+                      <Loader2 className="spinner" size={18} /> Downloading...
+                    </>
+                  ) : (
+                    <>
+                      <Download size={18} /> Download File
+                    </>
+                  )}
+                </button>
               ) : (
-                // Free / Other standard instant download product
-                claimed ? (
-                  <div className="glass" style={{
-                    padding: '16px 20px',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(16,185,129,0.3)',
-                    background: 'rgba(16,185,129,0.06)',
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                  }}>
-                    <CheckCircle2 size={18} color="var(--emerald)" />
-                    Claimed successfully! Your download will begin shortly.
-                  </div>
-                ) : (
-                  <button
-                    className="btn btn-primary btn-lg"
-                    onClick={handleClaim}
-                    style={{ width: '100%', zIndex: 1, justifyContent: 'center', padding: '16px', fontSize: '16px' }}
-                  >
-                    <Download size={18} /> Instant Download
-                  </button>
-                )
+                <button
+                  className="btn btn-primary btn-lg"
+                  onClick={handleCheckout}
+                  disabled={buying}
+                  style={{ width: '100%', justifyContent: 'center', padding: '16px', fontSize: '16px', gap: '8px' }}
+                >
+                  {buying ? (
+                    <>
+                      <Loader2 className="spinner" size={18} /> Initiating Checkout...
+                    </>
+                  ) : (
+                    <>
+                      <Download size={18} /> Pay {currencySymbol}{product.price.toFixed(2)} (Test Mode)
+                    </>
+                  )}
+                </button>
               )}
             </div>
 

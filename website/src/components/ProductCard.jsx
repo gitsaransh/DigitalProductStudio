@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Download, Star, Globe } from 'lucide-react';
 
+const CURRENCY_SYMBOLS = { INR: '₹', USD: '$', EUR: '€', GBP: '£' };
+
 export default function ProductCard({ product, index = 0 }) {
   const delay = Math.min(index * 0.08, 0.48);
+  const currencySymbol = CURRENCY_SYMBOLS[product.currency] ?? `${product.currency ?? 'USD'} `;
   return (
     <div
       className="glass product-card animate-fade-in-up"
@@ -48,10 +51,10 @@ export default function ProductCard({ product, index = 0 }) {
         <div>
           <div className="product-price-sub">Instant Download</div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-            <span className="product-price">${product.price}</span>
+            <span className="product-price">{currencySymbol}{product.price}</span>
             {product.originalPrice && (
               <span style={{ fontSize: '13px', color: 'var(--text-sub)', textDecoration: 'line-through' }}>
-                ${product.originalPrice}
+                {currencySymbol}{product.originalPrice}
               </span>
             )}
           </div>

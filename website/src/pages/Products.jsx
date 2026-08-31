@@ -49,6 +49,7 @@ function normaliseApiProduct(p) {
     categorySlug: deriveCategorySlug(p.category),
     price: p.price ?? p.base_price ?? (p.pricing?.base_price ?? 0),
     originalPrice: p.compare_at_price ?? (p.pricing?.compare_at_price ?? null),
+    currency: p.currency ?? (p.pricing?.currency ?? 'USD'),
     rating: p.rating ?? 5.0,
     reviews: p.reviews ?? 0,
     downloads: p.downloads ?? 0,
