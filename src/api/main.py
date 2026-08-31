@@ -27,7 +27,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5174",
         "http://localhost:5173",
-        "https://digitalproductstudio.in"
+        "https://digitalproductstudio.in",
+        "https://www.digitalproductstudio.in"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
