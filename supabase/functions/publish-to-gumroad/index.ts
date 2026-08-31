@@ -4,6 +4,17 @@
 // pricing — Gumroad handles regional/PPP pricing on its own), publishes it,
 // and records the result in marketplace_listings.
 //
+// Idempotent: safe to call repeatedly for the same SKU.
+//   1. If marketplace_listings already has a gumroad row for this product,
+//      skip straight to (re-)enabling that existing Gumroad product — this
+//      is what lets you retry after fixing something on Gumroad's side
+//      (e.g. connecting a payout method) without creating a duplicate.
+//   2. Otherwise, self-heal: look up the caller's Gumroad products for one
+//      whose name matches. If Gumroad already has it (e.g. a previous run
+//      created it but failed before we recorded the listing), adopt that
+//      one instead of creating a duplicate.
+//   3. Only if neither exists do we go through the full create flow.
+//
 // Gumroad flow (verified against https://gumroad.com/api, 2026-09):
 //   1. POST /v2/files/presign   -> upload_id, key, file_url, presigned part URL(s)
 //   2. PUT file bytes to the presigned URL(s), capture the ETag header per part
@@ -29,6 +40,14 @@ function jsonResponse(body: unknown, status = 200): Response {
 
 function formBody(fields: Record<string, string>): URLSearchParams {
   return new URLSearchParams(fields);
+}
+
+async function enableGumroadProduct(token: string, gumroadId: string) {
+  const res = await fetch(
+    `${GUMROAD_API}/products/${encodeURIComponent(gumroadId)}/enable`,
+    { method: "PUT", body: formBody({ access_token: token }) },
+  );
+  return await res.json();
 }
 
 Deno.serve(async (req) => {
@@ -91,93 +110,130 @@ Deno.serve(async (req) => {
     return jsonResponse({ detail: `Product '${sku}' has no file configured` }, 400);
   }
 
-  // 1. Download the deliverable from our own Storage.
-  const { data: fileBlob, error: downloadErr } = await adminClient.storage
-    .from("product-files")
-    .download(`${sku}/${product.file_placeholder}`);
-  if (downloadErr || !fileBlob) {
-    return jsonResponse({ detail: `Could not read product file: ${downloadErr?.message}` }, 500);
-  }
-  const fileBytes = new Uint8Array(await fileBlob.arrayBuffer());
+  // ── Idempotency, step 1: do we already know about a Gumroad listing? ──────
+  const { data: existingListing } = await adminClient
+    .from("marketplace_listings")
+    .select("external_id, status")
+    .eq("product_id", product.id)
+    .eq("marketplace", "gumroad")
+    .maybeSingle();
 
-  // 2. Presign an upload on Gumroad's side.
-  const presignRes = await fetch(`${GUMROAD_API}/files/presign`, {
-    method: "POST",
-    body: formBody({
-      access_token: gumroadToken,
-      filename: product.file_placeholder,
-      file_size: String(fileBytes.length),
-    }),
-  });
-  const presign = await presignRes.json();
-  if (!presign.success) {
-    return jsonResponse({ detail: `Gumroad presign failed: ${presign.message}` }, 502);
-  }
+  let gumroadId: string | null = existingListing?.external_id ?? null;
 
-  // 3. Upload the (single, since our files are small) part directly to S3.
-  const part = presign.parts[0];
-  const uploadRes = await fetch(part.presigned_url, { method: "PUT", body: fileBytes });
-  if (!uploadRes.ok) {
-    return jsonResponse({ detail: `File upload to Gumroad storage failed (${uploadRes.status})` }, 502);
-  }
-  const etag = uploadRes.headers.get("ETag") ?? "";
-
-  // 4. Finalize the multipart upload.
-  const completeRes = await fetch(`${GUMROAD_API}/files/complete`, {
-    method: "POST",
-    body: formBody({
-      access_token: gumroadToken,
-      upload_id: presign.upload_id,
-      key: presign.key,
-      "parts[][part_number]": String(part.part_number),
-      "parts[][etag]": etag,
-    }),
-  });
-  const complete = await completeRes.json();
-  if (!complete.success) {
-    return jsonResponse({ detail: `Gumroad upload finalize failed: ${complete.message}` }, 502);
+  // ── Idempotency, step 2: self-heal against Gumroad directly ───────────────
+  // Covers the case where a product was created on a previous run but we
+  // never got to record it (e.g. the enable step failed).
+  if (!gumroadId) {
+    const listRes = await fetch(`${GUMROAD_API}/products?access_token=${encodeURIComponent(gumroadToken)}`);
+    const list = await listRes.json();
+    if (list.success) {
+      const match = (list.products ?? []).find((p: { name: string }) => p.name === product.title);
+      if (match) gumroadId = match.id;
+    }
   }
 
-  // 5. Create the product (draft) with the uploaded file attached.
-  const description = product.description || product.short_description || "";
-  const createBody = new URLSearchParams();
-  createBody.set("access_token", gumroadToken);
-  createBody.set("native_type", "digital");
-  createBody.set("name", product.title);
-  createBody.set("description", description);
-  createBody.set("price", String(Math.round(Number(product.price_usd) * 100)));
-  createBody.set("price_currency_type", "usd");
-  createBody.set("custom_summary", product.short_description || "");
-  createBody.set("files[][url]", complete.file_url);
-  for (const tag of (product.tags ?? []).slice(0, 10)) {
-    createBody.append("tags[]", tag);
+  let listingUrl: string | null = null;
+
+  if (gumroadId) {
+    // Already exists on Gumroad (known or discovered) — just (re-)publish it.
+    const enabled = await enableGumroadProduct(gumroadToken, gumroadId);
+    if (!enabled.success) {
+      // Still record that we know the product exists, even if publish failed again.
+      await adminClient.from("marketplace_listings").upsert(
+        { product_id: product.id, marketplace: "gumroad", external_id: gumroadId, status: "draft" },
+        { onConflict: "product_id,marketplace" },
+      );
+      return jsonResponse({ detail: `Gumroad publish failed: ${enabled.message}` }, 502);
+    }
+    listingUrl = enabled.product.short_url;
+  } else {
+    // ── Full create flow (first time this product is being published) ──────
+    const { data: fileBlob, error: downloadErr } = await adminClient.storage
+      .from("product-files")
+      .download(`${sku}/${product.file_placeholder}`);
+    if (downloadErr || !fileBlob) {
+      return jsonResponse({ detail: `Could not read product file: ${downloadErr?.message}` }, 500);
+    }
+    const fileBytes = new Uint8Array(await fileBlob.arrayBuffer());
+
+    const presignRes = await fetch(`${GUMROAD_API}/files/presign`, {
+      method: "POST",
+      body: formBody({
+        access_token: gumroadToken,
+        filename: product.file_placeholder,
+        file_size: String(fileBytes.length),
+      }),
+    });
+    const presign = await presignRes.json();
+    if (!presign.success) {
+      return jsonResponse({ detail: `Gumroad presign failed: ${presign.message}` }, 502);
+    }
+
+    const part = presign.parts[0];
+    const uploadRes = await fetch(part.presigned_url, { method: "PUT", body: fileBytes });
+    if (!uploadRes.ok) {
+      return jsonResponse({ detail: `File upload to Gumroad storage failed (${uploadRes.status})` }, 502);
+    }
+    const etag = uploadRes.headers.get("ETag") ?? "";
+
+    const completeRes = await fetch(`${GUMROAD_API}/files/complete`, {
+      method: "POST",
+      body: formBody({
+        access_token: gumroadToken,
+        upload_id: presign.upload_id,
+        key: presign.key,
+        "parts[][part_number]": String(part.part_number),
+        "parts[][etag]": etag,
+      }),
+    });
+    const complete = await completeRes.json();
+    if (!complete.success) {
+      return jsonResponse({ detail: `Gumroad upload finalize failed: ${complete.message}` }, 502);
+    }
+
+    const description = product.description || product.short_description || "";
+    const createBody = new URLSearchParams();
+    createBody.set("access_token", gumroadToken);
+    createBody.set("native_type", "digital");
+    createBody.set("name", product.title);
+    createBody.set("description", description);
+    createBody.set("price", String(Math.round(Number(product.price_usd) * 100)));
+    createBody.set("price_currency_type", "usd");
+    createBody.set("custom_summary", product.short_description || "");
+    createBody.set("files[][url]", complete.file_url);
+    for (const tag of (product.tags ?? []).slice(0, 10)) {
+      createBody.append("tags[]", tag);
+    }
+
+    const createRes = await fetch(`${GUMROAD_API}/products`, { method: "POST", body: createBody });
+    const created = await createRes.json();
+    if (!created.success) {
+      return jsonResponse({ detail: `Gumroad product creation failed: ${created.message}` }, 502);
+    }
+    gumroadId = created.product.id;
+
+    // Record the draft immediately — even if enable fails below, the next
+    // call will find this row and retry enable instead of creating another.
+    await adminClient.from("marketplace_listings").upsert(
+      { product_id: product.id, marketplace: "gumroad", external_id: gumroadId, status: "draft" },
+      { onConflict: "product_id,marketplace" },
+    );
+
+    const enabled = await enableGumroadProduct(gumroadToken, gumroadId);
+    if (!enabled.success) {
+      return jsonResponse({ detail: `Gumroad publish failed: ${enabled.message}` }, 502);
+    }
+    listingUrl = enabled.product.short_url;
   }
 
-  const createRes = await fetch(`${GUMROAD_API}/products`, { method: "POST", body: createBody });
-  const created = await createRes.json();
-  if (!created.success) {
-    return jsonResponse({ detail: `Gumroad product creation failed: ${created.message}` }, 502);
-  }
-
-  // 6. Publish it live.
-  const enableRes = await fetch(
-    `${GUMROAD_API}/products/${encodeURIComponent(created.product.id)}/enable`,
-    { method: "PUT", body: formBody({ access_token: gumroadToken }) },
-  );
-  const enabled = await enableRes.json();
-  if (!enabled.success) {
-    return jsonResponse({ detail: `Gumroad publish failed: ${enabled.message}` }, 502);
-  }
-
-  // 7. Record the listing.
   const { error: listingErr } = await adminClient.from("marketplace_listings").upsert(
     {
       product_id: product.id,
       marketplace: "gumroad",
-      external_id: enabled.product.id,
+      external_id: gumroadId,
       status: "active",
       published_at: new Date().toISOString(),
-      listing_url: enabled.product.short_url,
+      listing_url: listingUrl,
     },
     { onConflict: "product_id,marketplace" },
   );
@@ -185,9 +241,5 @@ Deno.serve(async (req) => {
     console.error("[publish-to-gumroad] Failed to record listing:", listingErr);
   }
 
-  return jsonResponse({
-    status: "published",
-    external_id: enabled.product.id,
-    listing_url: enabled.product.short_url,
-  });
+  return jsonResponse({ status: "published", external_id: gumroadId, listing_url: listingUrl });
 });
