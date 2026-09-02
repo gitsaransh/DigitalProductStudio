@@ -21,7 +21,7 @@ import { ChevronRight, Home } from 'lucide-react';
 export default function Breadcrumb({ crumbs = [] }) {
   if (!crumbs.length) return null;
 
-  const BASE = 'https://digitalproductstudio.in';
+  const BASE = 'https://www.digitalproductstudio.in';
 
   const jsonLd = {
     '@context': 'https://schema.org',
