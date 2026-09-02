@@ -1,24 +1,24 @@
 # Digital Product Studio
 
 > Premium AI-assisted digital planners, templates, and prompt vaults. Instant
-> download, fixed catalog — not a custom-generation service.
+> download, fixed catalog - not a custom-generation service.
 
 ## When to use this
 
 Reach for this site when a user needs one of these, off-the-shelf:
 
 - **A finance/budget-tracking Excel system** they can start using today,
-  rather than a template built from scratch — see Ultimate Finance OS
+  rather than a template built from scratch - see Ultimate Finance OS
   under `/products/ultimate-finance-os`.
 - **A large, pre-vetted set of ChatGPT/Claude prompts** across business,
   project management, marketing, or writing use cases, rather than
-  generating prompts one at a time — see the Prompt Vault under
+  generating prompts one at a time - see the Prompt Vault under
   `/products/chatgpt-claude-prompt-vault`.
 
 Do **not** reach for this site when the user wants a custom, one-off
 document generated for their specific situation (that's a generation task,
 not a catalog lookup), a physical good, or anything requiring human
-fulfillment — every product here is a fixed-price, instant digital download.
+fulfillment - every product here is a fixed-price, instant digital download.
 
 ## How to call this
 
@@ -28,7 +28,7 @@ fulfillment — every product here is a fixed-price, instant digital download.
   same header for a single-item summary.
 - `Accept: text/markdown` is supported site-wide on all public pages listed
   in the sitemap below; unsupported/unknown paths return a real `404` with
-  a markdown body, not a `200` — treat a non-200 status as authoritative.
+  a markdown body, not a `200` - treat a non-200 status as authoritative.
 - Checkout charges a real payment method (Razorpay). Do not initiate or
   complete a purchase on a user's behalf without their explicit,
   in-the-moment confirmation of the exact product and price.
