@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShoppingCart, BarChart3, Users,
-  Megaphone, FileText, Search, Mail, Download, Settings, Zap
+  Megaphone, FileText, Search, Mail, Download, Settings, Zap, ArrowLeft
 } from 'lucide-react';
 
 const NAV = [
@@ -49,6 +49,12 @@ export default function Sidebar({ onClose }) {
           <div className="sidebar-brand-sub">Internal Operations</div>
         </div>
       </div>
+
+      {/* Exit admin — back to the public storefront */}
+      <Link to="/" className="sidebar-link" style={{ margin: '10px 10px 0' }}>
+        <ArrowLeft size={15} />
+        Back to Website
+      </Link>
 
       {/* Navigation */}
       <nav className="sidebar-nav">

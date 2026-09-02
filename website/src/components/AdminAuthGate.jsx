@@ -56,8 +56,10 @@ export default function AdminAuthGate({ children }) {
             </div>
             <h2 style={styles.title}>Access Denied</h2>
             <p style={styles.subtitle}>
-              The Operator Admin Portal is restricted to system administrators. 
-              Your active account <strong>{user.email}</strong> is registered as a customer and does not have permission.
+              The Operator Admin Portal is restricted to system administrators.
+              {user?.email
+                ? <> Your active account <strong>{user.email}</strong> is registered as a customer and does not have permission.</>
+                : ' We could not verify your account permissions — please try signing in again.'}
             </p>
           </div>
           
