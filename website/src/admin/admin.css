@@ -161,13 +161,15 @@ img { max-width: 100%; }
 .sidebar-user-role { font-size: 10px; color: var(--text-sub); }
 
 /* ── Main Area ── */
-/* margin-left / width are set via inline styles in AdminLayout (App.jsx).
-   These CSS rules provide baseline structural properties only. */
+/* Sidebar is position:fixed (out of flow), so this offset is real margin,
+   not grid/flex auto-placement — see AdminLayout in App.jsx. Reset to 0
+   under the mobile breakpoint below, where the sidebar transforms off-screen. */
 .admin-main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow-x: hidden;
+  margin-left: var(--sidebar-width);
 }
 
 /* ── Top Bar ── */
@@ -435,8 +437,8 @@ img { max-width: 100%; }
 @media (max-width: 850px) {
   .menu-toggle { display: flex !important; }
   .sidebar { transform: translateX(-100%); }
-  /* margin-left / width reset handled by isMobile inline styles in App.jsx */
-  
+  .admin-main { margin-left: 0; }
+
   .sidebar-open .sidebar {
     transform: translateX(0);
     box-shadow: 10px 0 30px rgba(0,0,0,0.5);

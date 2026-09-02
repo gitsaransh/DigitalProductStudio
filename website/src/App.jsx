@@ -85,37 +85,18 @@ function AdminLayout() {
   return (
     <AdminAuthGate>
       {/*
-        CSS Grid layout:
-        - Column 1 (ADMIN_SIDEBAR_W px): reserved for the fixed sidebar — no content renders here,
-          but this grid track pushes column 2 to start at exactly the right x position.
-        - Column 2 (1fr): the main admin shell — fills all remaining viewport width.
-        This pattern works regardless of whether #root is flex, block, or grid.
+        Sidebar is position:fixed (out of normal flow, so CSS Grid/Flexbox
+        auto-placement can't account for it). admin-main is offset with
+        margin-left: var(--sidebar-width) in admin.css instead, which the
+        existing @media (max-width: 850px) block resets to 0 once the
+        sidebar transforms off-screen — see admin.css.
       */}
-      <div
-        className={`admin-layout${sidebarOpen ? ' sidebar-open' : ''}`}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `${ADMIN_SIDEBAR_W}px 1fr`,
-          minHeight: '100vh',
-          width: '100%',
-        }}
-      >
+      <div className={`admin-layout${sidebarOpen ? ' sidebar-open' : ''}`}>
         {sidebarOpen && <div onClick={closeSidebar} className="sidebar-backdrop" />}
 
-        {/* Sidebar: position:fixed — overlays the reserved grid column visually */}
         <Sidebar onClose={closeSidebar} />
 
-        {/* Main shell: naturally occupies column 2 (starts at x = ADMIN_SIDEBAR_W) */}
-        <main
-          className="admin-main"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-            overflowX: 'hidden',
-            // grid places this in column 2 automatically — no margin-left needed
-          }}
-        >
+        <main className="admin-main">
           <Outlet />
         </main>
       </div>
