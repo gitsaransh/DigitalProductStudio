@@ -124,6 +124,62 @@ function notFound(pathname) {
   });
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Builds a real HTML response for a product detail page by fetching the
+// actual built /index.html (correct hashed script tag, fonts, JSON-LD, etc —
+// whatever the current deploy actually serves) and swapping the empty/home
+// content inside <div id="root"> for this product's real details. React
+// still mounts from the same script tag and replaces it on load, so browsers
+// see zero change; a crawler that never runs JS now sees the real product,
+// price and category instead of the generic homepage fallback.
+//
+// Fetches /index.html specifically (not `request` itself) — that path is a
+// static asset (isStaticAsset() is true for it), so it can never re-enter
+// this same dynamic-path branch and loop. Any failure here — network error,
+// unexpected shape, no match — falls back to normal passthrough; this is a
+// pure enhancement, never load-bearing.
+async function productDetailHtml(request, product, pathname) {
+  try {
+    const res = await fetch(new URL('/index.html', request.url));
+    if (!res.ok) return null;
+    const html = await res.text();
+
+    const block = `<main>
+        <h1>${escapeHtml(product.title)}</h1>
+        <p>${escapeHtml(product.category)} &mdash; ${escapeHtml(product.price)}</p>
+        <p>Instant digital download from Digital Product Studio.</p>
+        <p><a href="/products">Browse all products</a></p>
+      </main>`;
+
+    // Match up to end of body, not "followed by <script>" — Vite's production
+    // build hoists the module script into <head>, so it never follows the
+    // root div in the built output (only in the raw dev-time index.html).
+    const rootRe = /<div id="root">[\s\S]*?<\/div>\s*(?=<\/body>)/;
+    if (!rootRe.test(html)) return null;
+    // Use replacer functions, not string replacements: a plain-string
+    // replacement value containing "$" (e.g. a price like "$19.00") gets
+    // reinterpreted by String.replace as a $1-style backreference token.
+    let out = html.replace(rootRe, () => `<div id="root">${block}</div>\n    `);
+
+    const title = `${product.title} — Digital Product Studio`;
+    const desc = `${product.title} (${product.category}) — ${product.price}. Instant digital download.`;
+    out = out.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeHtml(title)}</title>`);
+    out = out.replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => `${a}${escapeHtml(desc)}${b}`);
+    out = out.replace(/(<link rel="canonical" href=")[^"]*(")/, (_, a, b) => `${a}${SITE}${pathname}${b}`);
+
+    return out;
+  } catch {
+    return null;
+  }
+}
+
 function pageMarkdown(pathname) {
   if (pathname === '/products') {
     const lines = PRODUCTS.map(p => `- **${p.title}** (${p.category}) — ${p.price} — ${SITE}/products/${p.slug}`);
@@ -151,7 +207,7 @@ function pageMarkdown(pathname) {
   return `# ${pathname}\n\nFull page: ${SITE}${pathname}\n`;
 }
 
-export default function middleware(request) {
+export default async function middleware(request) {
   const url = new URL(request.url);
   const pathname = url.pathname === '' ? '/' : url.pathname;
 
@@ -169,6 +225,23 @@ export default function middleware(request) {
 
   if (prefersMarkdown(request.headers.get('Accept'))) {
     return markdownResponse(pageMarkdown(pathname));
+  }
+
+  // Product detail pages: even a plain HTML request (no explicit Accept:
+  // text/markdown) should carry real product content in raw HTML, not just
+  // the generic homepage fallback — see productDetailHtml() above.
+  if (pathname.startsWith('/products/')) {
+    const slug = pathname.slice('/products/'.length).replace(/\/$/, '');
+    const product = PRODUCTS.find(p => p.slug === slug);
+    if (product) {
+      const html = await productDetailHtml(request, product, pathname);
+      if (html) {
+        return new Response(html, {
+          status: 200,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' },
+        });
+      }
+    }
   }
 
   return; // fall through to the normal SPA response, unchanged
