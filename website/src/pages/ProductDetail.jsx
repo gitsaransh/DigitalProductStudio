@@ -18,6 +18,11 @@ export default function ProductDetail() {
   const [downloading, setDownloading] = useState(false);
   // Live product data from API — overlaid on top of the static baseline.
   const [liveProduct, setLiveProduct] = useState(null);
+  // True until the live-price fetch settles (success, failure, or no-row) —
+  // gates the price/CTA render so the static baseline's price is never shown
+  // if it differs from the authoritative live value (they're different
+  // catalog values, not a currency conversion of each other).
+  const [priceLoading, setPriceLoading] = useState(true);
   // Inline notice replacing alert() for checkout/download outcomes: { type: 'error' | 'success', title, message }
   const [notice, setNotice] = useState(null);
 
@@ -84,7 +89,11 @@ export default function ProductDetail() {
       .eq('slug', slug)
       .single()
       .then(({ data, error }) => {
-        if (!cancelled && data && !error) setLiveProduct(data);
+        if (cancelled) return;
+        if (data && !error) setLiveProduct(data);
+        // Resolve loading regardless of outcome — falls back to the static
+        // baseline price on error/no-row rather than loading forever.
+        setPriceLoading(false);
       });
     return () => { cancelled = true; };
   }, [slug]);
@@ -386,7 +395,7 @@ export default function ProductDetail() {
               {product.isBestseller && (
                 <span className="badge badge-amber">🏆 Bestseller</span>
               )}
-              <span className="badge badge-primary">{product.currency} Checkout</span>
+              {!priceLoading && <span className="badge badge-primary">{product.currency} Checkout</span>}
             </div>
 
             <h1 style={{ color: 'white', fontSize: 'clamp(26px, 4vw, 38px)', fontWeight: '900', margin: '0 0 12px' }}>
@@ -399,20 +408,28 @@ export default function ProductDetail() {
 
             <div className="divider" style={{ marginBottom: '24px' }} />
 
-            {/* Price display */}
+            {/* Price display — gated on priceLoading so the static baseline's
+                price (a different catalog value from the live price, not a
+                currency conversion of it) is never shown even briefly. */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
-                {currencySymbol}{product.price.toFixed(2)}
-              </span>
-              {product.originalPrice && (
-                <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
-                  {currencySymbol}{product.originalPrice.toFixed(2)}
-                </span>
-              )}
-              {product.originalPrice && (
-                <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
-                  -{Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
-                </span>
+              {priceLoading ? (
+                <span className="skeleton" style={{ width: '140px', height: '36px' }}>0000.00</span>
+              ) : (
+                <>
+                  <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
+                    {currencySymbol}{product.price.toFixed(2)}
+                  </span>
+                  {product.originalPrice && (
+                    <span style={{ fontSize: '18px', color: 'var(--text-sub)', textDecoration: 'line-through', fontFamily: 'var(--font-mono)' }}>
+                      {currencySymbol}{product.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  {product.originalPrice && (
+                    <span className="badge badge-rose" style={{ marginLeft: '4px' }}>
+                      -{Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+                    </span>
+                  )}
+                </>
               )}
             </div>
 
@@ -444,7 +461,11 @@ export default function ProductDetail() {
 
             {/* Checkout / Download CTA */}
             <div style={{ marginBottom: '32px' }}>
-              {checkingPurchase ? (
+              {priceLoading ? (
+                <button className="btn btn-secondary btn-lg" disabled style={{ width: '100%', justifyContent: 'center' }}>
+                  <Loader2 className="spinner" size={18} /> Loading price...
+                </button>
+              ) : checkingPurchase ? (
                 <button className="btn btn-secondary btn-lg" disabled style={{ width: '100%', justifyContent: 'center' }}>
                   <Loader2 className="spinner" size={18} /> Validating status...
                 </button>
