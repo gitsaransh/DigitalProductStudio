@@ -700,6 +700,10 @@ p { color: var(--text-muted); }
   .coming-soon-email { flex-direction: column; }
   .cat-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .why-grid { grid-template-columns: 1fr !important; }
+  /* Product detail: price/CTA before the decorative mockup — the buyer
+     shouldn't have to scroll past a visual before seeing what this costs. */
+  .product-hero-mockup { order: 2; }
+  .product-hero-info { order: 1; }
   .blog-featured-grid { grid-template-columns: 1fr !important; }
 }
 

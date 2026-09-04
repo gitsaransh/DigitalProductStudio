@@ -300,7 +300,7 @@ export default function ProductDetail() {
           marginBottom: '64px'
         }}>
           {/* Left Column — Visual CSS Mockup */}
-          <div>
+          <div className="product-hero-mockup">
             <div className="glass" style={{
               padding: '36px',
               borderRadius: '24px',
@@ -348,28 +348,16 @@ export default function ProductDetail() {
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }}></span>
                 </div>
 
-                <div style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
-                  Operating System Active
-                </div>
-                <h4 style={{ color: 'white', fontSize: '18px', fontWeight: '900', marginBottom: '12px' }}>
+                <h4 style={{ color: 'white', fontSize: '18px', fontWeight: '900', marginBottom: '14px' }}>
                   {product.title.split('|')[0].trim()}
                 </h4>
 
-                {/* Progress bars representing dashboard charts */}
+                {/* Real product contents, not fabricated stats — accurate for any category */}
                 <div style={{ display: 'flex', zIndex: 1, flexDirection: 'column', gap: '10px' }}>
-                  {[
-                    { label: 'System Accuracy Index', val: 98, col: 'var(--emerald)' },
-                    { label: 'Curation Completeness', val: 100, col: 'var(--cyan)' },
-                    { label: 'Prompt Deduplication Score', val: 95, col: 'var(--primary)' }
-                  ].map(pBar => (
-                    <div key={pBar.label}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', marginBottom: '3px', fontWeight: '600' }}>
-                        <span style={{ color: 'var(--text-sub)' }}>{pBar.label}</span>
-                        <span style={{ color: 'white' }}>{pBar.val}%</span>
-                      </div>
-                      <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '10px', overflow: 'hidden' }}>
-                        <div style={{ width: `${pBar.val}%`, height: '100%', background: pBar.col, borderRadius: 'inherit' }} />
-                      </div>
+                  {product.includes.slice(0, 3).map(item => (
+                    <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-muted)' }}>
+                      <CheckCircle2 size={13} color="var(--primary-light)" style={{ flexShrink: 0 }} />
+                      {item}
                     </div>
                   ))}
                 </div>
@@ -390,7 +378,7 @@ export default function ProductDetail() {
           </div>
 
           {/* Right Column — Product Pricing and Action */}
-          <div style={{ textAlign: 'left' }}>
+          <div className="product-hero-info" style={{ textAlign: 'left' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               {product.isBestseller && (
                 <span className="badge badge-amber">🏆 Bestseller</span>
