@@ -73,7 +73,7 @@ export default function ProductDetail() {
         description: liveProduct.description || staticProduct.description,
         tags: liveProduct.tags?.length ? liveProduct.tags : staticProduct.tags,
       }
-    : staticProduct;
+    : { ...staticProduct, currency: staticProduct.currency ?? 'USD' };
 
   // Fetch live product data from Supabase (by slug) to get authoritative SKU + pricing
   useEffect(() => {
