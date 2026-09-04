@@ -18,6 +18,8 @@ export default function ProductDetail() {
   const [downloading, setDownloading] = useState(false);
   // Live product data from API — overlaid on top of the static baseline.
   const [liveProduct, setLiveProduct] = useState(null);
+  // Inline notice replacing alert() for checkout/download outcomes: { type: 'error' | 'success', title, message }
+  const [notice, setNotice] = useState(null);
 
   // Static baseline lookup (immediate, no loading state)
   let staticProduct = PRODUCTS.find(p => p.slug === slug);
@@ -113,13 +115,15 @@ export default function ProductDetail() {
   };
 
   const handleDownload = async () => {
+    setNotice(null);
     setDownloading(true);
     try {
       const path = `${product.sku}/${liveProduct?.file_placeholder ?? ''}`;
       const { data: blob, error } = await supabase.storage.from('product-files').download(path);
 
       if (error || !blob) {
-        alert(error?.message || 'Failed to download the product file.');
+        console.error('Download error:', error);
+        setNotice({ type: 'error', title: 'Download failed', message: 'We couldn\'t retrieve your file. Please try again or contact support.' });
         return;
       }
 
@@ -134,7 +138,7 @@ export default function ProductDetail() {
       window.URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download error:', err);
-      alert('An error occurred while downloading the product file.');
+      setNotice({ type: 'error', title: 'Download failed', message: 'Something went wrong on our end. Please try again.' });
     } finally {
       setDownloading(false);
     }
@@ -146,6 +150,7 @@ export default function ProductDetail() {
       return;
     }
 
+    setNotice(null);
     setBuying(true);
 
     try {
@@ -155,7 +160,8 @@ export default function ProductDetail() {
       });
 
       if (orderErr || !orderData) {
-        alert(orderData?.detail || orderErr?.message || 'Failed to create payment order.');
+        console.error('Order creation error:', orderErr, orderData);
+        setNotice({ type: 'error', title: 'Couldn\'t start checkout', message: 'We couldn\'t create your order. Please try again in a moment.' });
         setBuying(false);
         return;
       }
@@ -174,9 +180,9 @@ export default function ProductDetail() {
 
         if (!verifyErr) {
           setPurchased(true);
-          alert('Test payment completed successfully! Product file has been unlocked.');
+          setNotice({ type: 'success', title: 'Payment successful', message: 'Your file has been unlocked — you can download it below.' });
         } else {
-          alert('Mock payment verification failed.');
+          setNotice({ type: 'error', title: 'Payment verification failed', message: `Contact support with order ${orderData.order_id} and we'll resolve it right away.` });
         }
         setBuying(false);
         return;
@@ -196,7 +202,7 @@ export default function ProductDetail() {
 
       const scriptLoaded = await loadScript();
       if (!scriptLoaded) {
-        alert('Failed to load Razorpay Checkout SDK. Verify your network connection.');
+        setNotice({ type: 'error', title: 'Couldn\'t load payment form', message: 'Check your internet connection and try again.' });
         setBuying(false);
         return;
       }
@@ -221,9 +227,15 @@ export default function ProductDetail() {
 
           if (!verifyErr) {
             setPurchased(true);
-            alert('Payment completed successfully! Product file has been unlocked.');
+            setNotice({ type: 'success', title: 'Payment successful', message: 'Your file has been unlocked — you can download it below.' });
           } else {
-            alert('Payment verification failed.');
+            // The charge may have already gone through even though verification failed —
+            // give the buyer an order reference to hand to support instead of a dead end.
+            setNotice({
+              type: 'error',
+              title: 'Payment verification failed',
+              message: `If you were charged, contact support with order ${response.razorpay_order_id} and we'll resolve it right away.`,
+            });
           }
           setBuying(false);
         },
@@ -241,7 +253,7 @@ export default function ProductDetail() {
 
     } catch (err) {
       console.error('Checkout error:', err);
-      alert('An error occurred during the checkout process.');
+      setNotice({ type: 'error', title: 'Checkout error', message: 'Something went wrong. Please try again.' });
     } finally {
       setBuying(false);
     }
@@ -273,7 +285,7 @@ export default function ProductDetail() {
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: '48px',
           alignItems: 'start',
           marginBottom: '64px'
@@ -285,7 +297,7 @@ export default function ProductDetail() {
               borderRadius: '24px',
               border: '1px solid var(--border-accent)',
               background: 'linear-gradient(135deg, rgba(13, 18, 32, 0.95) 0%, rgba(5, 7, 12, 0.98) 100%)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+              boxShadow: '0 24px 64px rgba(99,102,241,0.18), 0 8px 24px rgba(0,0,0,0.4)',
               minHeight: '380px',
               display: 'flex',
               flexDirection: 'column',
@@ -388,7 +400,7 @@ export default function ProductDetail() {
             <div className="divider" style={{ marginBottom: '24px' }} />
 
             {/* Price display */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '28px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '28px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
                 {currencySymbol}{product.price.toFixed(2)}
               </span>
@@ -403,6 +415,32 @@ export default function ProductDetail() {
                 </span>
               )}
             </div>
+
+            {/* Inline notice — replaces alert() for checkout/download outcomes */}
+            {notice && (
+              <div
+                role="status"
+                aria-live="polite"
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  padding: '14px 16px',
+                  borderRadius: 'var(--radius)',
+                  marginBottom: '20px',
+                  background: notice.type === 'error' ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)',
+                  border: `1px solid ${notice.type === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}`,
+                }}
+              >
+                {notice.type === 'error'
+                  ? <ShieldAlert size={16} color="var(--rose)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  : <CheckCircle2 size={16} color="var(--emerald)" style={{ flexShrink: 0, marginTop: '2px' }} />}
+                <div style={{ fontSize: '13px', lineHeight: '1.5' }}>
+                  <strong style={{ color: notice.type === 'error' ? 'var(--rose)' : 'var(--emerald)' }}>{notice.title}</strong>
+                  {notice.message && <div style={{ marginTop: '2px', color: 'var(--text-muted)' }}>{notice.message}</div>}
+                </div>
+              </div>
+            )}
 
             {/* Checkout / Download CTA */}
             <div style={{ marginBottom: '32px' }}>
@@ -440,7 +478,7 @@ export default function ProductDetail() {
                     </>
                   ) : (
                     <>
-                      <Download size={18} /> Pay {currencySymbol}{product.price.toFixed(2)} (Test Mode)
+                      <Download size={18} /> Pay {currencySymbol}{product.price.toFixed(2)}
                     </>
                   )}
                 </button>
@@ -492,7 +530,7 @@ export default function ProductDetail() {
             <span className="section-label" style={{ justifyContent: 'center' }}>Help Desk</span>
             <h2>Frequently Asked Questions</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {[
               { q: 'How do I access these files?', a: 'Immediately after purchase confirmation, you will receive an automated email containing your unique access link. This will let you download the templates instantly.' },
               { q: 'Are these spreadsheets editable?', a: 'Yes, completely. All templates are fully unlocked without structural passwords so you can customize layout, columns, formulas, and visual themes.' },
