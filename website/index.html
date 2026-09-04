@@ -42,52 +42,54 @@
       <!--
         Static fallback content for the homepage. React replaces this on mount —
         it exists so curl, view-source, and non-JS crawlers/agents see real,
-        meaningful markup instead of an empty shell. Keep this in sync with the
-        real copy in src/pages/Home.jsx when that changes.
+        meaningful markup instead of an empty shell. Wrapped in the same
+        .hero/.container/.hero-title classes as the real hero (Home.jsx) so a
+        real browser doesn't see a mismatched flash of unstyled, differently-
+        worded content before React hydrates and replaces it. Keep both the
+        classes and the copy in sync with Home.jsx's hero when that changes.
       -->
       <main>
-        <h1>Digital Product Studio</h1>
-        <p>
-          Premium AI-powered digital planners, templates, prompt vaults, and
-          creative assets for creators, entrepreneurs, and digital brands.
-          Every product is an instant download — no waiting, no approval queues.
-        </p>
+        <section class="hero" style="padding: 80px 0 100px">
+          <div class="container">
+            <h1 class="hero-title" style="text-align: left; margin-bottom: 20px;">Ultimate Finance OS</h1>
+            <p style="color: var(--text-muted); line-height: 1.6; max-width: 580px; margin-bottom: 32px;">
+              The complete Excel operating system to track expenses, manage budgets,
+              analyze cash flow, and grow your net worth. Engineered for
+              high-performance creators and business owners.
+            </p>
+            <p><a href="/products" class="btn btn-primary btn-lg">Explore Templates</a></p>
+          </div>
+        </section>
 
-        <h2>Ultimate Finance OS</h2>
-        <p>
-          The complete Excel operating system to track expenses, manage budgets,
-          analyze cash flow, and grow your net worth. Engineered for
-          high-performance creators and business owners.
-        </p>
-        <p><a href="/products">Explore all templates</a></p>
-
-        <h2>Why Choose Us</h2>
-        <ul>
-          <li>
-            <h3>Premium Quality</h3>
-            <p>Every product is hand-reviewed by professionals and AI-enhanced before release.</p>
-          </li>
-          <li>
-            <h3>Instant Download</h3>
-            <p>Get your files seconds after purchase — no waiting, no approval queues.</p>
-          </li>
-          <li>
-            <h3>Commercial License</h3>
-            <p>Use in client work and commercial projects where applicable — clearly marked per product.</p>
-          </li>
-          <li>
-            <h3>Lifetime Updates</h3>
-            <p>Selected products receive free updates forever — you pay once, benefit always.</p>
-          </li>
-          <li>
-            <h3>Human Reviewed</h3>
-            <p>Every template is tested by real professionals before it reaches you.</p>
-          </li>
-          <li>
-            <h3>AI Enhanced</h3>
-            <p>Built with AI-assisted workflows for maximum accuracy, consistency and speed.</p>
-          </li>
-        </ul>
+        <section class="section container">
+          <h2>Why Choose Us</h2>
+          <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px;">
+            <li>
+              <h3>Premium Quality</h3>
+              <p>Every product is hand-reviewed by professionals and AI-enhanced before release.</p>
+            </li>
+            <li>
+              <h3>Instant Download</h3>
+              <p>Get your files seconds after purchase — no waiting, no approval queues.</p>
+            </li>
+            <li>
+              <h3>Commercial License</h3>
+              <p>Use in client work and commercial projects where applicable — clearly marked per product.</p>
+            </li>
+            <li>
+              <h3>Lifetime Updates</h3>
+              <p>Selected products receive free updates forever — you pay once, benefit always.</p>
+            </li>
+            <li>
+              <h3>Human Reviewed</h3>
+              <p>Every template is tested by real professionals before it reaches you.</p>
+            </li>
+            <li>
+              <h3>AI Enhanced</h3>
+              <p>Built with AI-assisted workflows for maximum accuracy, consistency and speed.</p>
+            </li>
+          </ul>
+        </section>
       </main>
     </div>
     <script type="module" src="/src/main.jsx"></script>
