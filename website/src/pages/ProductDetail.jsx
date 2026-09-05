@@ -368,7 +368,7 @@ export default function ProductDetail() {
                   <span style={{ fontSize: '11px', color: 'white', fontWeight: 'bold' }}>{product.rating}</span>
                   <span style={{ fontSize: '11px', color: 'var(--text-sub)' }}>({product.reviews} reviews)</span>
                 </div>
-                <div style={{ fontSize: '11px', color: 'var(--emerald)', fontWeight: 'bold' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 'bold' }}>
                   {product.downloads.toLocaleString()}+ Downloaded
                 </div>
               </div>
@@ -402,7 +402,7 @@ export default function ProductDetail() {
                 <span className="skeleton" style={{ width: '140px', height: '36px' }}>0000.00</span>
               ) : (
                 <>
-                  <span style={{ fontSize: '36px', color: 'white', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ fontSize: '36px', color: 'var(--emerald)', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>
                     {currencySymbol}{product.price.toFixed(2)}
                   </span>
                   {product.originalPrice && (
@@ -496,7 +496,7 @@ export default function ProductDetail() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {[
                 { icon: <Globe size={16} color="var(--primary-light)" />, text: 'Instant Delivery: Access link sent immediately upon confirmation' },
-                { icon: <ShieldCheck size={16} color="var(--emerald)" />, text: 'Commercial Use: Full rights for client and personal projects included' },
+                { icon: <ShieldCheck size={16} color="var(--primary-light)" />, text: 'Commercial Use: Full rights for client and personal projects included' },
                 { icon: <RefreshCw size={16} color="var(--cyan)" />, text: 'Lifetime Updates: Free future updates to this template' }
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: '12px', zIndex: 1, alignItems: 'flex-start' }}>
@@ -524,7 +524,7 @@ export default function ProductDetail() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '16px' }}>
               {product.includes.map(inc => (
                 <div key={inc} style={{ display: 'flex', zIndex: 1, alignItems: 'center', gap: '10px', fontSize: '14px', color: 'var(--text)' }}>
-                  <CheckCircle2 size={14} color="var(--emerald)" /> {inc}
+                  <CheckCircle2 size={14} color="var(--primary-light)" /> {inc}
                 </div>
               ))}
             </div>
