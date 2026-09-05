@@ -304,9 +304,7 @@ export default function ProductDetail() {
             <div className="glass" style={{
               padding: '36px',
               borderRadius: '24px',
-              border: '1px solid var(--border-accent)',
               background: 'linear-gradient(135deg, rgba(13, 18, 32, 0.95) 0%, rgba(5, 7, 12, 0.98) 100%)',
-              boxShadow: '0 24px 64px rgba(99,102,241,0.18), 0 8px 24px rgba(0,0,0,0.4)',
               minHeight: '380px',
               display: 'flex',
               flexDirection: 'column',

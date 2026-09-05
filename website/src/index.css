@@ -124,9 +124,9 @@ p { color: var(--text-muted); }
 .btn-primary {
   background: linear-gradient(135deg, var(--primary), var(--purple));
   color: white;
-  box-shadow: 0 4px 20px var(--primary-glow);
 }
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-primary:focus-visible {
   box-shadow: 0 8px 30px rgba(99,102,241,0.5);
   transform: translateY(-2px);
 }
