@@ -43,14 +43,20 @@ export default function Login() {
     setMessage('');
 
     if (mode === 'sign-up') {
-      const { error: signUpErr } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { full_name: name || 'Customer' } },
       });
       if (signUpErr) {
         setError(signUpErr.message);
+      } else if (signUpData?.session) {
+        // Email confirmation is disabled on this project, so signUp() already
+        // returns an active session — the user is logged in now. AuthContext's
+        // onAuthStateChange picks it up and the redirect effect above navigates
+        // once isAuthenticated flips true; nothing else to do here.
       } else {
+        // Only reachable if email confirmation is ever re-enabled.
         setMessage('Account created. Check your email to confirm, then sign in below.');
         setMode('sign-in');
       }
