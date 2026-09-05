@@ -152,9 +152,9 @@ p { color: var(--text-muted); }
 .btn-emerald {
   background: linear-gradient(135deg, var(--emerald), #059669);
   color: white;
-  box-shadow: 0 4px 20px var(--emerald-glow);
 }
-.btn-emerald:hover {
+.btn-emerald:hover,
+.btn-emerald:focus-visible {
   box-shadow: 0 8px 30px rgba(16,185,129,0.4);
   transform: translateY(-2px);
 }
